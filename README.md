@@ -37,7 +37,7 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 
 The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key)
 
-### Deployment 
+### Deployment Location
 
 The following variables dictate the location of the deployent.
 
@@ -53,8 +53,77 @@ variable "vpc_zone" {
 }
 ```
 
+Currently Bare Metal for VPC is supported in Frankfurt (eu-de) and Dallas (us-south) only.
 
+### Deployment Customization
 
+The following variables dictate the boolean inclusion of certain optional features.
 
+```hcl
+variable "deploy_iam" {
+  description = "Boolean to enable IAM deployment."
+  default = true
+}
+
+variable "deploy_fileshare" {
+  description = "Boolean to enable fileshare deployment. Alternatively customize the cluster map."
+  default = true
+}
+
+variable "deploy_dns" {
+  description = "Boolean to enable DNS service deployment."
+  default = true
+}
+
+variable "enable_vcf_mode" {
+  description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
+  default = false
+}
+
+```
+
+*Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
+
+### Deployment architecture
+
+The zone_clusters variables describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
+
+In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. We can increase the number of hosts or clusters by manipulating this variable.
+```hcl
+variable "zone_clusters" {
+  description = "Clusters in VPC"
+  type        = map
+  default     = {
+    cluster_0 = {
+      name = "mgmt"
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 1
+      vpc_file_shares = [
+        {
+          name = "cluster0_share1" 
+          size = 500 
+          profile = "tier-3iops" 
+          target = "cluster0_share1_target"
+        }
+      ]
+    }
+  }
+}
+```hcl
+The ESXI image type is the same across all Bare Metal servers and is described as follows:
+
+```hcl
+variable "esxi_image" {
+  description = "Base ESXI image name, terraform will find the latest available image id"
+  default = "esxi-7-byol"
+}
+```
+Terraform will find the latest avialable version based on the above image type.
+
+In order to determine the available image types, run the following IBM CLoud console command:
+
+```
+> ibmcloud is images | grep esx
+```
 
 
