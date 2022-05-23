@@ -109,7 +109,7 @@ variable "zone_clusters" {
     }
   }
 }
-```hcl
+```
 The ESXI image type is the same across all Bare Metal servers and is described as follows:
 
 ```hcl
@@ -124,6 +124,12 @@ In order to determine the available image types, run the following IBM CLoud con
 
 ```
 > ibmcloud is images | grep esx
+
+r006-a40de20b-f936-454b-94de-395a2f4cf940   ibm-esxi-7-amd64-4                                 available    amd64   esxi-7                               7.x                                         1               public       provider     none         -   
+r006-199c5cfc-a692-4682-a3c6-a81cfafd3755   ibm-esxi-7-byol-amd64-4                            available    amd64   esxi-7-byol                          7.x                                         1               public       provider     none         -   
+r006-2d1f36b0-df65-4570-82eb-df7ae5f778b1   ibm-esxi-7-amd64-1                                 deprecated   amd64   esxi-7                               7.x                                         1               public       provider     none         -   
+r006-95325076-0a3a-4e2e-8678-56908ddfcea0   ibm-esxi-7-byol-amd64-1                            deprecated   amd64   esxi-7-byol                          7.x                                         1               public       provider     none         -   
+
 ```
 
 
