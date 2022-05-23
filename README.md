@@ -34,6 +34,20 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 - Terraform 0.14 and above.
 - IBM Cloud Terraform provider 1.41.1 and above
 
+## Install
+
+### Terraform
+
+Be sure you have the correct Terraform version (0.13), you can choose the binary here:
+- https://releases.hashicorp.com/terraform/
+
+### Terraform plugins
+
+Be sure you have the compiled plugins on $HOME/.terraform.d/plugins/
+
+- [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+
+
 ## Running this template
 
 ### IBM Cloud API Key
