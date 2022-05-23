@@ -121,7 +121,7 @@ variable "zone_clusters" {
   default     = {
     cluster_0 = {
       name = "mgmt"
-      vmw_host_profile = "bx2d-metaldev4-160x768"
+      vmw_host_profile = "bx2d-metal-96x384"
       host_count = 1
       vpc_file_shares = [
         {
