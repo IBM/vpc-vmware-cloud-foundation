@@ -16,9 +16,3 @@ data "ibm_resource_group" "resource_group_vmw" {
   ]
 }
 
-
-variable "resource_group_name" {
-  description = "Name of the resource group to deploy the assets. If left empty, then resource group will be created for you."
-}
-
-

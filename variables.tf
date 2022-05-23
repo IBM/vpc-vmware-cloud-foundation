@@ -5,10 +5,19 @@ variable "ibmcloud_api_key" {
   description = "Enter your IBM Cloud API Key"
 }
 
+
+### Resource group name
+
+variable "resource_group_name" {
+  description = "Name of the resource group to deploy the assets. If left empty, then resource group will be created for you."
+}
+
+
+
 ### Resource prefix for each item
 
 variable "resource_prefix" {
-  description = "Resource Group Prefix to create in the IBM Cloud account"
+  description = "Resource Group Prefix to create in the IBM Cloud account."
   default = "vmw"
 }
 
