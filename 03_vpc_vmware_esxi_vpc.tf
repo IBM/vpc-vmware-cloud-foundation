@@ -49,7 +49,7 @@ resource "ibm_is_security_group" "sg" {
   for_each = var.security_group_rules
   name           = "${local.resources_prefix}-${each.key}-sg"
   vpc            = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-  resource_group = ibm_resource_group.resource_group_vmw.id
+  resource_group = data.ibm_resource_group.resource_group_vmw.id
 
     depends_on =  [
       module.vpc-subnets

@@ -24,7 +24,7 @@ resource "ibm_iam_access_group_policy" "vmware_platform_and_service_access_polic
   roles        = ["Operator", "Writer"]
 
   resources {
-    resource_group_id = ibm_resource_group.resource_group_vmw.id
+    resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   }
 }
 
@@ -40,9 +40,9 @@ resource "ibm_iam_access_group_policy" "vmware_resource_group_access_policy" {
   roles        = ["Viewer"]
 
   resources {
-    resource = ibm_resource_group.resource_group_vmw.id
+    resource = data.ibm_resource_group.resource_group_vmw.id
     resource_type = "resource-group"
-    resource_group_id = ibm_resource_group.resource_group_vmw.id
+    resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   }
 
 }
