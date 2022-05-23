@@ -3,6 +3,7 @@
 ![Architecture](images/arch.png)
 
 The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares.
+
 After the bare metal server provisioning and initial VMware configurations, you can access and manage the IBM-hosted environment. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools. These options can be combined with IBM Cloud automation solutions, such as using IBM Cloud Terraform provider with Schematics.
 
 For the required common services, such as NTP and DNS, you can use IBM Cloud VPC basic services and solutions. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure.
@@ -11,10 +12,14 @@ For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivit
 
 On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
 
+For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui) and [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview) in IBM Cloud Docs.
+
 ## Key responsibilities
 
 With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, ordering the IBM Cloud bare metal server and setting up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage.
+
 The IBM Cloud bare metal server for IBM Cloud VPC has the VMware ESXi™ 7.x hypervisor preinstalled. IBM can manage the licensing, or you can bring your own license to the solution.
+
 For day two of operation, it is your responsibility to monitor and manage the vCenter and NSX-T, including backups, patching, configuration, and monitoring of the VMware software and the underlying vSphere hypervisor.
 
 ## Key benefits
@@ -38,7 +43,7 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 
 ### Terraform
 
-Be sure you have the correct Terraform version (0.13), you can choose the binary here:
+Be sure you have the correct Terraform version, you can choose the binary here:
 - https://releases.hashicorp.com/terraform/
 
 ### Terraform plugins
@@ -70,7 +75,7 @@ variable "vpc_zone" {
 }
 ```
 
-Currently Bare Metal for VPC is supported in Frankfurt (eu-de) and Dallas (us-south) only.
+Note. Currently Bare Metal for VPC is supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. 
 
 ### Resource Creation
 
@@ -99,6 +104,7 @@ locals {
   resources_prefix = "${var.resource_prefix}-${random_string.resource_code.result}"
 }
 ```
+
 ### Deployment Customization
 
 The following variables dictate the boolean inclusion of certain optional features.
@@ -133,6 +139,7 @@ variable "enable_vcf_mode" {
 The zone_clusters variables describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
 In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. We can increase the number of hosts or clusters by manipulating this variable.
+
 ```hcl
 variable "zone_clusters" {
   description = "Clusters in VPC"
@@ -154,6 +161,7 @@ variable "zone_clusters" {
   }
 }
 ```
+
 The ESXI image type is the same across all Bare Metal servers and is described as follows:
 
 ```hcl
@@ -166,7 +174,7 @@ Terraform will find the latest avialable version based on the above image type.
 
 In order to determine the available image types, run the following IBM CLoud console command:
 
-```
+```bash
 > ibmcloud is images | grep esx
 
 r006-a40de20b-f936-454b-94de-395a2f4cf940   ibm-esxi-7-amd64-4                                 available    amd64   esxi-7                               7.x                                         1               public       provider     none         -   
@@ -178,7 +186,7 @@ r006-95325076-0a3a-4e2e-8678-56908ddfcea0   ibm-esxi-7-byol-amd64-1             
 
 The key *vmw_host_profile* represents the host profile and may be customised for each cluster. Valid values may be determined fromt the IBM Cloud console:
 
-```
+```bash
 >  ibmcloud is bm-prs 
 Listing bare metal server profiles in region us-south under account IBM - IC4VS - Architecture as user ...
 Name                 Architecture   Family     CPU socket count   CPU core count   Memory(GiB)   Network(Mbps)   Storage(GB)   

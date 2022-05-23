@@ -9,7 +9,7 @@ variable "ibmcloud_api_key" {
 ### Resource group name
 
 variable "resource_group_name" {
-  description = "Name of the resource group to deploy the assets. If left empty, then resource group will be created for you."
+  description = "Name of the resource group to deploy the assets. If left empty, then a resource group will be created for you."
 }
 
 
