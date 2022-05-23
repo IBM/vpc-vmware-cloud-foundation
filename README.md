@@ -26,35 +26,34 @@ The architecture provides fundamental building blocks, which include VMware vSph
 With this single-tenant IBM Cloud bare metal server infrastructure that is provided in IBM Cloud VPC, you can quickly deploy network, compute, and storage capacity for your VMware environment to the IBM Cloud in minutes.
 - Unlike the managed service offerings, this architecture gives you flexibility to design a solution for your needs, and provides you full and complete access to all components.
 
-
 ## Compatibility
 
-Terraform 0.14 and above.
+- Terraform 0.14 and above.
+- IBM Cloud Terraform provider 1.41.1 and above
 
-## IBM Cloud Authentication
+## Running this template
+
+### IBM Cloud API Key
+
+The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key)
+
+### Deployment 
+
+The following variables dictate the location of the deployent.
+
+```hcl
+variable "ibmcloud_vpc_region" {
+  description = "Enter the target Region of IBM Cloud"
+  default = "eu-de"
+}
+
+variable "vpc_zone" {
+  description = "VPC Zone"
+  default     = "eu-de-1"
+}
+```
 
 
-## Modules
-
-
-## Resources Installed
-
-
-## Key Varibales
-
-
-### Flow Control
-
-
-
-### Cluster Configuration
-
-
-### VPC Configuration
-
-
-
-### Bare Metal Nic Configuration
 
 
 
