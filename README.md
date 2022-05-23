@@ -300,6 +300,20 @@ variable "security_group_rules" {
 
 ## Logical template flow
 
-The terraform file names have been ordered to indicate the logical order of the resource creation.
+The terraform file names have been named to indicate the logical order of the resource creation and to group resource types into a single file, this has been done for convenience only.
+
+```
+00_vpc_vmware_esxi_random.tf
+01_vpc_vmware_esxi_iam.tf
+02_vpc_vmware_esxi_rg.tf
+03_vpc_vmware_esxi_vpc.tf
+04_vpc_vmware_esxi_dns_service.tf
+05_vpc_vmware_esxi_ssh_key.tf
+06_vpc_vmware_esxi_bare_metal.tf
+07_vpc_vmware_esxi_vcenter.tf
+08_vpc_vmware_esxi_nsxt.tf
+10_vpc_vmware_esxi_dns_records.tf
+99_vpc_vmware_output.tf
+```
 
 
