@@ -104,8 +104,8 @@ resource "ibm_is_bare_metal_server" "esx_host" {
       content {
         # pci2
         subnet = var.vmw_host_subnet
-        # allowed_vlans = [100, 200, 300, 400, 700, 710] ## this currently works only in dev
-        allowed_vlans = [10]
+        allowed_vlans = [100, 200, 300, 400, 700, 710] ## this currently works only in dev
+        # allowed_vlans = [10]
         name = "pci-nic-vmnic1-uplink2"
         security_groups = [var.vmw_sg_mgmt]
         enable_infrastructure_nat = true
