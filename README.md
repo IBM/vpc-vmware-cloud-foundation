@@ -134,9 +134,82 @@ variable "enable_vcf_mode" {
 
 *Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
 
+### VPC network architecture
+
+The terraform deploys the network infrastucture as described in the [reference architecture for VMware deployment in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-vpc-vmw). The `vpc_zone_prefix` and `vpc_zone_prefix_t0_uplinks` variables describe the prefixes used for *infrastucture and NSX-T T0 uplink subnets*.
+
+```hcl
+variable "vpc_zone_prefix" {
+  description = "This is the address prefix for VMware components for each zone. /22 is recommended for appx. 120 hosts, /23 for appx. 60 hosts etc."
+  default  = "10.100.0.0/22"
+}
+
+variable "vpc_zone_prefix_t0_uplinks" {
+  description = "This is the NSX-T uplink address prefix for each zone."
+  default  = "192.168.10.0/24"
+}
+```
+
+The variable `vpc` defines the *subnets* to be created using the created prefixes. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`).
+
+```hcl
+variable "vpc" {
+    description = "VPC Data Structure"
+    type        = map
+    default = {
+      vpc = {
+        zones = {
+            vpc_zone = {
+              infrastructure = {
+                  vpc_zone_subnet_size = 3
+                  public_gateways = ["subnet-public-gateway"]
+                  subnets = {
+                    host-mgmt = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    inst-mgmt = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                        public_gateway = "subnet-public-gateway"
+                    },
+                    vmot = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"
+                    },
+                    vsan = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"
+                    },
+                    tep = {
+                        cidr_offset = 4
+                        ip_version = "ipv4"
+                    }
+                }
+              },
+              t0-uplink = {
+                  vpc_zone_subnet_size = 4
+                  subnets = {
+                    t0-priv = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    t0-pub = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                    }
+                  }
+              }
+            }
+        }
+      }
+    }
+}
+```
+
 ### Deployment architecture
 
-The zone_clusters variables describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
+The `zone_clusters` variable describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
 In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. We can increase the number of hosts or clusters by manipulating this variable.
 
@@ -199,6 +272,7 @@ cx2d-metal-96x192    amd64          compute    2                  48            
 mx2-metal-96x768     amd64          memory     2                  48               768           100000          1x960   
 mx2d-metal-96x768    amd64          memory     2                  48               768           100000          1x960, 8x3200   
 ```
+
 ### Security Groups
 
 The terraform template will create a variable number of security groups, the default set is provided below. These groups should not be removed, however, it is possible to add custom groups to for example open a port from a Bastion Server to the Bare Metal hosts.

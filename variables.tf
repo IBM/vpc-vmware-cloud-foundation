@@ -76,35 +76,17 @@ variable "vpc_name" {
 }
 
 
-variable "vpc_zone_subnet_size" {
-  description = "This is the number of additional bits with which to extend the prefix for each VMware infrastructure subnet."
-  default     = 3 
-}
-
 variable "vpc_zone_prefix_t0_uplinks" {
   description = "This is the NSX-T uplink address prefix for each zone."
   default  = "192.168.10.0/24"
 }
 
-variable "vpc_zone_t0_uplinks_subnet_size" {
-  description = "This is the number of additional bits with which to extend the prefix for each uplink subnet."
-  default     = 4 
-}
 
 variable "vpc_t0_public_ips" {
   description = "Number of public / floating IPs for T0."
   default     = 0 
 }
 
-# Use 'ibmcloud is images | grep esx' to get the images for esx.
-/*
-variable "vmw_esx_image_name" {
-  description = "ESX image - default IBM license"
-#  default = "r010-85e78310-b809-4e03-9257-52c7959435ea"
-#  default = "ibm-esxi-7-amd64-1"
-   default = "ibm-esxi-7-amd64-3-tes"
-}
-*/
   
 variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id"
@@ -247,7 +229,6 @@ variable "vpc" {
         zones = {
             vpc_zone = {
               infrastructure = {
-                  vpc_zone_prefix = "10.100.0.0/22"
                   vpc_zone_subnet_size = 3
                   public_gateways = ["subnet-public-gateway"]
                   subnets = {
@@ -275,7 +256,6 @@ variable "vpc" {
                 }
               },
               t0-uplink = {
-                  vpc_zone_prefix = "192.168.10.0/24"
                   vpc_zone_subnet_size = 4
                   subnets = {
                     t0-priv = {

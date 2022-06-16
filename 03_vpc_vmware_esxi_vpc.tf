@@ -8,13 +8,13 @@ locals {
         "${var.vpc_zone}" = {
           infrastructure = {
             vpc_zone_prefix = var.vpc_zone_prefix
-            vpc_zone_subnet_size = var.vpc_zone_subnet_size
+            vpc_zone_subnet_size = v.zones.vpc_zone.infrastructure.vpc_zone_subnet_size
             public_gateways = lookup(v.zones.vpc_zone.infrastructure, "public_gateways", [])
             subnets = v.zones.vpc_zone.infrastructure.subnets
           }
           t0-uplink = {
             vpc_zone_prefix = var.vpc_zone_prefix_t0_uplinks
-            vpc_zone_subnet_size = var.vpc_zone_t0_uplinks_subnet_size
+            vpc_zone_subnet_size = v.zones.vpc_zone.t0-uplink.vpc_zone_subnet_size
             public_gateways = lookup(v.zones.vpc_zone.t0-uplink, "public_gateways", [])
             subnets = v.zones.vpc_zone.t0-uplink.subnets
           }          
