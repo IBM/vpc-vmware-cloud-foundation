@@ -14,7 +14,7 @@ On-premises connectivity over public internet can be arranged by using IBM Cloud
 
 For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui) and [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview) in IBM Cloud Docs.
 
-## Key responsibilities
+## Key Responsibilities
 
 With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, ordering the IBM Cloud bare metal server and setting up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage.
 
@@ -22,7 +22,7 @@ The IBM Cloud bare metal server for IBM Cloud VPC has the VMware ESXi™ 7.x hyp
 
 For day two of operation, it is your responsibility to monitor and manage the vCenter and NSX-T, including backups, patching, configuration, and monitoring of the VMware software and the underlying vSphere hypervisor.
 
-## Key benefits
+## Key Benefits
 
 The architecture provides fundamental building blocks, which include VMware vSphere, vCenter Server, VMware NSX-T, and shared storage options, such as VMware vSAN or IBM Cloud VPC file share. These building blocks are needed to flexibly design a VMware software-defined data center solution that best fits your workloads.
 
@@ -46,14 +46,14 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 Be sure you have the correct Terraform version, you can choose the binary here:
 - https://releases.hashicorp.com/terraform/
 
-### Terraform plugins
+### Terraform Plugins
 
 Be sure you have the compiled plugins on $HOME/.terraform.d/plugins/
 
 - [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
 
 
-## Running this template
+## Running This Template
 
 ### IBM Cloud API Key
 
@@ -134,7 +134,7 @@ variable "enable_vcf_mode" {
 
 *Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
 
-### VPC network architecture
+### VPC Network Architecture
 
 The terraform deploys the network infrastucture as described in the [reference architecture for VMware deployment in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-vpc-vmw). The `vpc_zone_prefix` and `vpc_zone_prefix_t0_uplinks` variables describe the prefixes used for *infrastucture and NSX-T T0 uplink subnets*.
 
@@ -207,7 +207,7 @@ variable "vpc" {
 }
 ```
 
-### Deployment architecture
+### Deployment Architecture
 
 The `zone_clusters` variable describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
@@ -380,7 +380,7 @@ variable "security_group_rules" {
 ```
 
 
-## Logical template flow
+## Logical Template Flow
 
 The terraform file names have been named to indicate the logical order of the resource creation and to group resource types into a single file, this has been done for convenience only.
 
