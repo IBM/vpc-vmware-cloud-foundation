@@ -144,7 +144,7 @@ resource "ibm_is_instance" "bastion" {
   vpc  = module.vpc-subnets[var.vpc_name].vmware_vpc.id
   zone = var.vpc_zone
   keys = [ibm_is_ssh_key.bastion_key.id]
-  user_data = file("bastion_windows_userdata")
+  user_data = file("scripts/bastion_windows_userdata.txt")
 }
 
 
