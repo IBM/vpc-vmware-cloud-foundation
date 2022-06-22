@@ -33,3 +33,10 @@ variable "vmw_sg_mgmt" {
   
 }
 
+
+
+###
+
+variable "vmw_mgmt_vlan_id" {
+
+}

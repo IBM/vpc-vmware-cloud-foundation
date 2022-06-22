@@ -9,13 +9,12 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "nsx_t_edge_mg
     name   = "vlan-nic-edge-${count.index}-mgmt"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false
-    vlan = 100
-    #allow_interface_to_float = true
+    vlan = var.vmw_mgmt_vlan_id
 }
 
 
 output "vmw_nsx_t_edge_mgmt_ip" {
-   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_edge_mgmt.*
+   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_edge_mgmt[*]
 }
 
 ##############################################################
@@ -29,12 +28,11 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "nsx_t_edge_te
     name   = "vlan-nic-tep-edge-${count.index}"
     security_groups = [var.vmw_sg_tep]
     allow_ip_spoofing = false
-    vlan = 400
-    #allow_interface_to_float = true
+    vlan = var.vmw_tep_vlan_id
 }
 
 output "vmw_nsx_t_edge_tep_ip" {
-   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_edge_tep.*
+   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_edge_tep[*]
 }
 
 

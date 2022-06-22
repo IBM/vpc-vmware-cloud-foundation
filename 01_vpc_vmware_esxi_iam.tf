@@ -5,7 +5,7 @@
 ##############################################################
 
 resource "ibm_iam_access_group" "vmware_provision_access_group" {
-  count = var.deploy_iam ? 1 : 0 
+  count       = var.deploy_iam ? 1 : 0 
   name        = "${local.resources_prefix}-vmware-ryo-access-group"
   description = "Personnel who can provision resources into the Resource Group"
 }
@@ -19,9 +19,9 @@ resource "ibm_iam_access_group" "vmware_provision_access_group" {
 ##############################################################
 
 resource "ibm_iam_access_group_policy" "vmware_platform_and_service_access_policy" {
-  count = var.deploy_iam ? 1 : 0
+  count           = var.deploy_iam ? 1 : 0
   access_group_id = ibm_iam_access_group.vmware_provision_access_group[count.index].id
-  roles        = ["Operator", "Writer"]
+  roles           = ["Operator", "Writer"]
 
   resources {
     resource_group_id = data.ibm_resource_group.resource_group_vmw.id
@@ -35,9 +35,9 @@ resource "ibm_iam_access_group_policy" "vmware_platform_and_service_access_polic
 ##############################################################
 
 resource "ibm_iam_access_group_policy" "vmware_resource_group_access_policy" {
-  count = var.deploy_iam ? 1 : 0
+  count           = var.deploy_iam ? 1 : 0
   access_group_id = ibm_iam_access_group.vmware_provision_access_group[count.index].id
-  roles        = ["Viewer"]
+  roles           = ["Viewer"]
 
   resources {
     resource = data.ibm_resource_group.resource_group_vmw.id

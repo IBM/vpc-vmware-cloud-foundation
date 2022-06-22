@@ -11,6 +11,7 @@ module "zone_vcenter" {
   vmw_inst_mgmt_subnet = local.subnets.inst_mgmt.subnet_id
   vmw_vcenter_esx_host_id = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt = ibm_is_security_group.sg["mgmt"].id
+  vmw_mgmt_vlan_id = var.mgmt_vlan_id
 #  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance.guid
 #  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone.zone_id
   depends_on = [
@@ -39,7 +40,7 @@ module "zone_vcenter" {
 resource "random_string" "vcenter_password" {
   length           = 16
   special          = true
-  number           = true
+  number          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
@@ -58,7 +59,7 @@ locals {
     ip_address = module.zone_vcenter.vmw_vcenter_ip
     prefix_length = local.subnets.inst_mgmt.prefix_length
     default_gateway = local.subnets.inst_mgmt.default_gateway
-    vlan_id = "100"
+    vlan_id = var.mgmt_vlan_id
     vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
     username = "administrator@${var.dns_root_domain}"
     password = random_string.vcenter_password.result

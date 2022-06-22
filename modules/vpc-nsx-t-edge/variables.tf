@@ -65,3 +65,22 @@ variable "vmw_sg_uplink" {
 
 
 
+
+###
+
+variable "vmw_mgmt_vlan_id" {
+
+}
+
+variable "vmw_tep_vlan_id" {
+
+}
+
+variable "vmw_edge_uplink_public_vlan_id" {
+
+}
+
+variable "vmw_edge_uplink_private_vlan_id" {
+
+}
+

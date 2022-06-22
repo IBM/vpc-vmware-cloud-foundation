@@ -47,7 +47,7 @@ module "zone_nxt_t" {
   vmw_inst_mgmt_subnet_id         = local.subnets.inst_mgmt.subnet_id
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
-
+  vmw_mgmt_vlan_id                = var.mgmt_vlan_id
   depends_on = [
       module.vpc-subnets,
       module.zone_bare_metal_esxi["cluster_0"],
@@ -73,6 +73,10 @@ module "zone_nxt_t_edge" {
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_sg_tep                      = ibm_is_security_group.sg["tep"].id
   vmw_sg_uplink                   = ibm_is_security_group.sg["uplink"].id
+  vmw_mgmt_vlan_id                = var.mgmt_vlan_id
+  vmw_tep_vlan_id                 = var.tep_vlan_id
+  vmw_edge_uplink_public_vlan_id  = var.edge_uplink_public_vlan_id
+  vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id
   depends_on = [
       module.vpc-subnets,
       module.zone_bare_metal_esxi["cluster_0"],
@@ -124,7 +128,7 @@ resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip
 resource "random_string" "nsxt_mgr_password" {
   length           = 16
   special          = true
-  number           = true
+  number          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
@@ -135,7 +139,7 @@ resource "random_string" "nsxt_mgr_password" {
 resource "random_string" "nsxt_edge_password" {
   length           = 16
   special          = true
-  number           = true
+  number          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
@@ -158,7 +162,7 @@ locals {
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].id
       username = "admin"
       password = random_string.nsxt_mgr_password.result
-      vlan_id = "100"
+      vlan_id = var.mgmt_vlan_id
     }
     nsx_t_1 = {
       fqdn = "nsx-t-1.${var.dns_root_domain}"
@@ -168,7 +172,7 @@ locals {
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].id
       username = "admin"
       password = random_string.nsxt_mgr_password.result
-      vlan_id = "100"
+      vlan_id = var.mgmt_vlan_id
     }
     nsx_t_2 = {
       fqdn = "nsx-t-2.${var.dns_root_domain}"
@@ -178,7 +182,7 @@ locals {
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].id
       username = "admin"
       password = random_string.nsxt_mgr_password.result
-      vlan_id = "100"
+      vlan_id = var.mgmt_vlan_id
     }
     nsx_t_vip = {
       fqdn = "nsx-t-vip.${var.dns_root_domain}"
@@ -188,7 +192,7 @@ locals {
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.id
       username = "admin"
       password = random_string.nsxt_mgr_password.result
-      vlan_id = "100"
+      vlan_id = var.mgmt_vlan_id
     }
   }
 }
@@ -204,7 +208,7 @@ locals {
         prefix_length = local.subnets.inst_mgmt.prefix_length
         default_gateway = local.subnets.inst_mgmt.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].id
-        vlan_id = "100"
+        vlan_id = var.mgmt_vlan_id
       }
       tep = {
         fqdn = ""
@@ -212,7 +216,7 @@ locals {
         prefix_length = local.subnets.tep.prefix_length
         default_gateway = local.subnets.tep.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id
-        vlan_id = "400"
+        vlan_id = var.tep_vlan_id
       }
     }
     edge_1 = {
@@ -224,7 +228,7 @@ locals {
         prefix_length = local.subnets.inst_mgmt.prefix_length
         default_gateway = local.subnets.inst_mgmt.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].id
-        vlan_id = "100"
+        vlan_id = var.mgmt_vlan_id
       }
       tep = {
         fqdn = ""
@@ -232,7 +236,7 @@ locals {
         prefix_length = local.subnets.tep.prefix_length
         default_gateway = local.subnets.tep.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id
-        vlan_id = "400"
+        vlan_id = var.tep_vlan_id
       }
     }
   }
@@ -247,7 +251,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.private.prefix_length
         default_gateway = local.nsxt_uplink_subnets.private.default_gateway
         public_ips = ""
-        vlan_id = "710"
+        vlan_id = var.edge_uplink_private_vlan_id
       }
       public_uplink = {
         id = module.zone_nxt_t_edge.t0_uplink_public[0].id
@@ -255,7 +259,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.public.prefix_length
         default_gateway = local.nsxt_uplink_subnets.public.default_gateway
         public_ips = ""
-        vlan_id = "700"
+        vlan_id = var.edge_uplink_public_vlan_id
       }
     }
     edge_1 = {
@@ -265,7 +269,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.private.prefix_length
         default_gateway = local.nsxt_uplink_subnets.private.default_gateway
         public_ips = ""
-        vlan_id = "710"
+        vlan_id = var.edge_uplink_private_vlan_id
 
       }
       public_uplink = {
@@ -274,7 +278,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.public.prefix_length
         default_gateway = local.nsxt_uplink_subnets.public.default_gateway
         public_ips = ""
-        vlan_id = "700"
+        vlan_id = var.edge_uplink_public_vlan_id
       }
     }
     ha-vip = {
@@ -284,7 +288,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.private.prefix_length
         default_gateway = local.nsxt_uplink_subnets.private.default_gateway
         public_ips = ""
-        vlan_id = "710"
+        vlan_id = var.edge_uplink_private_vlan_id
 
       }
       public_uplink = {
@@ -293,7 +297,7 @@ locals {
         prefix_length = local.nsxt_uplink_subnets.public.prefix_length
         default_gateway = local.nsxt_uplink_subnets.public.default_gateway
         public_ips = var.vpc_t0_public_ips == 0 ? [] : ibm_is_bare_metal_server_network_interface_floating_ip.t0_public_vip_floating_ip[*].address
-        vlan_id = "700"
+        vlan_id = var.edge_uplink_public_vlan_id
       }
     }
   }

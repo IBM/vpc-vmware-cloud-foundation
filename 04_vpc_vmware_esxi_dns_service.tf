@@ -48,7 +48,6 @@ resource "ibm_dns_zone" "dns_services_zone" {
 
   depends_on = [ibm_resource_instance.dns_services_instance]
   name        = var.dns_root_domain
-  #instance_id = ibm_resource_instance.dns_services_instance.guid
   instance_id = ibm_resource_instance.dns_services_instance[0].guid
   description = "VMware Cloud Private DNS Zone"
   label       = "dns_zone"

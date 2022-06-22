@@ -38,57 +38,9 @@ variable "vmw_vcenter_esx_host_id" {
 
 
 
-# delete 
 
-/*
+###
 
-variable "vmw_zone_prefix_t0_uplinks" {
-  
+variable "vmw_mgmt_vlan_id" {
+
 }
-
-
-variable "vmw_zone_t0_uplinks_subnet_size" {
-  
-}
-
-
-
-variable "vmw_tep_subnet_id" {
-  
-}
-
-
-
-variable "vmw_dns_instance_guid" {
-  
-}
-
-variable "vmw_dns_zone_id" {
-  
-}
-
-
-
-
-
-variable "vmw_sg_tep" {
-  
-}
-
-variable "vmw_sg_uplink" {
-  
-}
-
-
-
-*/
-
-
-
-/*
-
-variable "vmw_edge_public_ips" {
-  
-}
-
-*/

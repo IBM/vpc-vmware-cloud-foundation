@@ -91,3 +91,30 @@ variable "vmw_sg_tep" {
   
 }
 
+
+###
+
+variable "vmw_mgmt_vlan_id" {
+
+}
+
+variable "vmw_vmot_vlan_id" {
+
+}
+
+variable "vmw_vsan_vlan_id" {
+
+}
+
+variable "vmw_tep_vlan_id" {
+
+}
+
+variable "vmw_edge_uplink_public_vlan_id" {
+
+}
+
+variable "vmw_edge_uplink_private_vlan_id" {
+
+}
+

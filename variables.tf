@@ -93,6 +93,48 @@ variable "esxi_image" {
   default = "esxi-7-byol"
 }
 
+
+### ESX virtual switch networking / VLAN IDs
+
+variable "mgmt_vlan_id" {
+  description = "VLAN ID for management network"
+  # default     = 100 ## IBM Cloud ref arch
+  default     = 1611 ## VCF default
+}
+
+variable "vmot_vlan_id" {
+  description = "VLAN ID for vMotion network"
+  # default     = 200
+  default     = 1612 ## VCF default
+}
+
+variable "vsan_vlan_id" {
+  description = "VLAN ID for vSAN network"
+  # default     = 300
+  default     = 1613 ## VCF default
+}
+
+variable "tep_vlan_id" {
+  description = "VLAN ID for TEP network"
+  # default     = 400
+  default     = 1614 ## VCF default
+}
+
+variable "edge_uplink_public_vlan_id" {
+  description = "VLAN ID for T0 public uplink network"
+  # default     = 700
+  default     = 2711 ## VCF default
+}
+
+variable "edge_uplink_private_vlan_id" {
+  description = "VLAN ID for T0 private uplink network"
+  # default     = 710
+  default     = 2712 ## VCF default
+}
+
+
+
+
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 
 
 # Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.

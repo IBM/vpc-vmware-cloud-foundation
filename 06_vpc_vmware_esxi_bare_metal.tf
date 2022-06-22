@@ -43,6 +43,12 @@ module "zone_bare_metal_esxi" {
   vmw_vmot_subnet = local.subnets.vmot.subnet_id
   vmw_vsan_subnet = local.subnets.vsan.subnet_id
   vmw_tep_subnet = local.subnets.tep.subnet_id
+  vmw_mgmt_vlan_id = var.mgmt_vlan_id
+  vmw_vmot_vlan_id = var.vmot_vlan_id
+  vmw_vsan_vlan_id = var.vsan_vlan_id
+  vmw_tep_vlan_id = var.tep_vlan_id
+  vmw_edge_uplink_public_vlan_id = var.edge_uplink_public_vlan_id
+  vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id
   vmw_sg_mgmt = ibm_is_security_group.sg["mgmt"].id
   vmw_sg_vmot = ibm_is_security_group.sg["vmot"].id
   vmw_sg_vsan = ibm_is_security_group.sg["vsan"].id
@@ -55,6 +61,10 @@ module "zone_bare_metal_esxi" {
     ibm_is_security_group.sg,
   ]
 }
+
+
+
+
 
 ##############################################################
 # Define cluster host setups / details 
@@ -71,7 +81,7 @@ locals {
      for cluster_name in local.cluster_list: {
          "name": "${cluster_name}",
          "hosts": [
-           for host in range(length(module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn.*)): {
+           for host in range(length(module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[*])): {
              "host" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[host],
              "username" : "root",
              "password" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_initialization[host].user_accounts[0].password,
@@ -82,7 +92,7 @@ locals {
                 "cidr" : var.enable_vcf_mode == false ? local.subnets.hosts.cidr : local.subnets.inst_mgmt.cidr,
                 "prefix_length" : var.enable_vcf_mode == false ? local.subnets.hosts.prefix_length : local.subnets.inst_mgmt.prefix_length ,
                 "default_gateway" : var.enable_vcf_mode == false ? local.subnets.hosts.default_gateway : local.subnets.inst_mgmt.default_gateway,
-                "vlan_id" : var.enable_vcf_mode == false ? "0" : "100"
+                "vlan_id" : var.enable_vcf_mode == false ? "0" : var.mgmt_vlan_id
               },
               "vmot" : {
                 "ip_address" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_network_interface_vmot[host].primary_ip[0].address,
@@ -90,7 +100,7 @@ locals {
                 "cidr" : local.subnets.vmot.cidr,
                 "prefix_length" : local.subnets.vmot.prefix_length,
                 "default_gateway" : local.subnets.vmot.default_gateway,
-                "vlan_id" : "200"
+                "vlan_id" : var.vmot_vlan_id
               },
               "vsan" : {
                 "ip_address" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_network_interface_vsan[host].primary_ip[0].address,
@@ -98,7 +108,7 @@ locals {
                 "cidr" : local.subnets.vsan.cidr,
                 "prefix_length" : local.subnets.vsan.prefix_length,
                 "default_gateway" : local.subnets.vsan.default_gateway,
-                "vlan_id" : "300"
+                "vlan_id" : var.vsan_vlan_id
               },
               "tep" : {
                 "ip_address" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_network_interface_tep[host].primary_ip[0].address,
@@ -106,7 +116,7 @@ locals {
                 "cidr" : local.subnets.tep.cidr,
                 "prefix_length" : local.subnets.tep.prefix_length,
                 "default_gateway" : local.subnets.tep.default_gateway,
-                "vlan_id" : "400"
+                "vlan_id" : var.tep_vlan_id
               }
             }
          ]

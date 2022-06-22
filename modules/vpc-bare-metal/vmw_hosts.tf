@@ -46,7 +46,7 @@ data "template_file" "userdata" {
 
   vars = {
     hostname_fqdn = "${local.hostname}-${format("%03s", count.index)}.${var.vmw_dns_root_domain}"
-    mgmt_vlan = 100
+    mgmt_vlan = var.vmw_mgmt_vlan_id
     #new_mgmt_ip_address = local.mgmt_ip_list[count.index]
     new_mgmt_ip_address = var.vmw_enable_vcf_mode ? ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt[count.index].address : ""
     new_mgmt_netmask = var.vmw_enable_vcf_mode ? cidrnetmask(data.ibm_is_subnet.vmw_mgmt_subnet.ipv4_cidr_block) : ""
@@ -56,6 +56,13 @@ data "template_file" "userdata" {
 }
 
 
+##############################################################
+# List for allowed VLANs
+##############################################################
+
+locals {
+  allowed_vlans_list = [var.vmw_mgmt_vlan_id, var.vmw_vmot_vlan_id, var.vmw_vsan_vlan_id, var.vmw_tep_vlan_id, var.vmw_edge_uplink_public_vlan_id, var.vmw_edge_uplink_private_vlan_id]
+}
 
 
 # Interface name        | Interface type | VLAN ID | Subnet              | Allow float
@@ -75,7 +82,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
     keys = [var.vmw_key]
     primary_network_interface {
       subnet = var.vmw_host_subnet
-      allowed_vlans = [100, 200, 300, 400, 700, 710]
+      allowed_vlans = local.allowed_vlans_list
       name = var.vmw_enable_vcf_mode ? "pci-nic-vmnic1-uplink2" : "pci-nic-vmnic0-vmk0"
       #name = "pci-nic-vmnic0-vmk0"
       security_groups = [var.vmw_sg_mgmt]
@@ -104,7 +111,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
       content {
         # pci2
         subnet = var.vmw_host_subnet
-        allowed_vlans = [100, 200, 300, 400, 700, 710] ## this currently works only in dev
+        allowed_vlans = local.allowed_vlans_list ## this currently works only in dev
         # allowed_vlans = [10]
         name = "pci-nic-vmnic1-uplink2"
         security_groups = [var.vmw_sg_mgmt]
@@ -187,7 +194,7 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vcf_mgmt" {
     name   = "vlan-nic-vcf-vmk1"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false
-    vlan = 100
+    vlan = var.vmw_mgmt_vlan_id
     primary_ip {
         reserved_ip = ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt[count.index].reserved_ip
     } 
@@ -228,7 +235,7 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vmot" {
     name   = "vlan-nic-vmotion-vmk1"
     security_groups = [var.vmw_sg_vmot]
     allow_ip_spoofing = false
-    vlan = 200
+    vlan = var.vmw_vmot_vlan_id
     allow_interface_to_float = false
 
     
@@ -257,7 +264,7 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vsan" {
     name   = "vlan-nic-vsan-vmk2"
     security_groups = [var.vmw_sg_vsan]
     allow_ip_spoofing = false
-    vlan = 300
+    vlan = var.vmw_vsan_vlan_id
     allow_interface_to_float = false
 
     depends_on = [
@@ -284,7 +291,7 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_tep" {
     name   = "vlan-nic-tep-vmk10-${format("%03s", count.index)}"
     security_groups = [var.vmw_sg_tep]
     allow_ip_spoofing = false
-    vlan = 400
+    vlan = var.vmw_tep_vlan_id
     allow_interface_to_float = false
 
     depends_on = [

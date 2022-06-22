@@ -9,12 +9,11 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "nsx_t_manager
     name   = "vlan-nic-nsx-t-${count.index}"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false
-    vlan = 100
-    #allow_interface_to_float = true
+    vlan = var.vmw_mgmt_vlan_id
 }
 
 output "vmw_nsx_t_manager_ip" {
-   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_manager.*
+   value = ibm_is_bare_metal_server_network_interface_allow_float.nsx_t_manager[*]
 }
 
 
@@ -24,8 +23,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "nsx_t_manager
     name   = "vlan-nic-nsx-t-vip"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false
-    vlan = 100
-    #allow_interface_to_float = true
+    vlan = var.vmw_mgmt_vlan_id
 }
 
 output "vmw_nsx_t_manager_ip_vip" {
