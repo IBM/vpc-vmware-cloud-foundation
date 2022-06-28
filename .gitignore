@@ -35,4 +35,7 @@ override.tf.json
 # SSH Keys, do not publish to github
 
 vpc-vmware-iaas/SSH_KEYS/*
+SSH_KEYS/*
 .DS_Store
+
+
