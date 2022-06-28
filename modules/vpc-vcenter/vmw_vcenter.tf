@@ -9,7 +9,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "vcenter" {
     name   = "vlan-nic-vcenter"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false
-    vlan = 100
+    vlan = var.vmw_mgmt_vlan_id
     #allow_interface_to_float = true
 }
 

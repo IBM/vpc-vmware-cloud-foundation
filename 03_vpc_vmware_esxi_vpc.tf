@@ -3,7 +3,7 @@
 ##############################################################
 
 locals {
-  vpc = {for k, v in var.vpc: var.vpc_name => {
+  vpc = {for k, v in var.enable_vcf_mode ? var.vpc_vcf : var.vpc : var.vpc_name => {
       zones = {
         "${var.vpc_zone}" = {
           infrastructure = {
@@ -98,6 +98,7 @@ module "security_group_rules" {
 
 # This calculates the prefix length and gateway IP for each subnet.
 
+
 locals {
   subnets = {
     hosts = {
@@ -107,7 +108,7 @@ locals {
       prefix_length = split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].ipv4_cidr_block)[1]
       default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].ipv4_cidr_block,1)
       pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].public_gateway == null ? false : true
-      vlan_id =  "0"
+      vlan_id =  var.host_vlan_id
     },
     inst_mgmt = {
       name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].name
@@ -149,7 +150,7 @@ locals {
 }
 
 locals {
-  nsxt_uplink_subnets = {
+  nsxt_edge_subnets = {
     private = {
       name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].name
       subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].id
@@ -158,7 +159,7 @@ locals {
       default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].ipv4_cidr_block,1)
       pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].public_gateway == null ? false : true
       vlan_id =  var.edge_uplink_private_vlan_id
-    }
+    },
     public = {
       name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].name
       subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].id
@@ -167,6 +168,16 @@ locals {
       default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].ipv4_cidr_block,1)
       pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].public_gateway == null ? false : true
       vlan_id =  var.edge_uplink_public_vlan_id
+    },
+    edge_tep = {
+      name = var.enable_vcf_mode ? module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].name : "none"
+      subnet_id = var.enable_vcf_mode ? module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].id : "none"
+      cidr = var.enable_vcf_mode ? module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block : "none"
+      prefix_length = var.enable_vcf_mode ? split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block)[1] : "none"
+      default_gateway = var.enable_vcf_mode ? cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block,1) : "none"
+      pgw = var.enable_vcf_mode ? module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].public_gateway : null == null ? false : true 
+      vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : "none" 
     }
   }
 }
+

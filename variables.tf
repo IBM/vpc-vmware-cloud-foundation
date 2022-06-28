@@ -44,6 +44,10 @@ variable "enable_vcf_mode" {
   default = false
 }
 
+variable "deploy_bastion" {
+  default = false
+}
+
 
 ### DNS root domain
 
@@ -96,6 +100,11 @@ variable "esxi_image" {
 
 ### ESX virtual switch networking / VLAN IDs
 
+variable "host_vlan_id" {
+  description = "VLAN ID for host network"
+  default     = 0 
+}
+
 variable "mgmt_vlan_id" {
   description = "VLAN ID for management network"
   # default     = 100 ## IBM Cloud ref arch
@@ -120,6 +129,7 @@ variable "tep_vlan_id" {
   default     = 1614 ## VCF default
 }
 
+
 variable "edge_uplink_public_vlan_id" {
   description = "VLAN ID for T0 public uplink network"
   # default     = 700
@@ -132,7 +142,20 @@ variable "edge_uplink_private_vlan_id" {
   default     = 2712 ## VCF default
 }
 
+variable "edge_tep_vlan_id" {
+  description = "VLAN ID for TEP network"
+  default     = 2713 ## VCF default
+}
 
+variable "vcf_host_pool_size" {
+  description = "Size of the host network pool to reserve VPC subnet IPs."
+  default = 20
+}
+
+variable "vcf_edge_pool_size" {
+  description = "Size of the edge network pool to reserve VPC subnet IPs."
+  default = 4
+}
 
 
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 
@@ -158,6 +181,8 @@ variable "zone_clusters" {
     }
   }
 }
+
+
 
 # Security Groups Rules
 
@@ -314,4 +339,81 @@ variable "vpc" {
         }
       }
     }
+}
+
+
+variable "vpc_vcf" {
+    description = "VPC Data Structure"
+    type        = map
+    default = {
+      vpc = {
+        zones = {
+            vpc_zone = {
+              infrastructure = {
+                  vpc_zone_subnet_size = 3
+                  public_gateways = ["subnet-public-gateway"]
+                  subnets = {
+                    host-mgmt = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    inst-mgmt = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                        public_gateway = "subnet-public-gateway"
+                    },
+                    vmot = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"
+                    },
+                    vsan = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"
+                    },
+                    tep = {
+                        cidr_offset = 4
+                        ip_version = "ipv4"
+                    }
+                }
+              },
+              t0-uplink = {
+                  vpc_zone_subnet_size = 4
+                  subnets = {
+                    t0-priv = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    t0-pub = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                    },
+                    edge-tep = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"                      
+                    }
+                  }
+              }
+            }
+        }
+      }
+    }
+}
+
+
+### Windows AD/DNS server
+
+variable "vsi_profile_bastion" {
+  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
+  default     = "bx2-2x8"
+}
+
+
+variable "vsi_image_architecture" {
+  description = "CPU architecture for VSI deployment"
+  default = "amd64"
+}
+
+variable "vsi_image_os" {
+  description = "OS for VSI deployment"
+  default = "windows-2019-amd64"
 }

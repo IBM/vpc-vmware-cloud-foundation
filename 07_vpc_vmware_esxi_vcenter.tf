@@ -12,8 +12,6 @@ module "zone_vcenter" {
   vmw_vcenter_esx_host_id = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id = var.mgmt_vlan_id
-#  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance.guid
-#  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone.zone_id
   depends_on = [
     module.vpc-subnets,
     ibm_is_security_group.sg,
@@ -40,7 +38,7 @@ module "zone_vcenter" {
 resource "random_string" "vcenter_password" {
   length           = 16
   special          = true
-  number          = true
+  number           = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
@@ -50,7 +48,7 @@ resource "random_string" "vcenter_password" {
 
 
 ##############################################################
-# Define output maps and output
+# Define output maps for vCenter
 ##############################################################
 
 locals {

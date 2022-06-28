@@ -249,3 +249,95 @@ module "zone_dns_ptr_for_nsxt_edge" {
     module.zone_nxt_t
   ]
 }
+
+
+
+
+##############################################################
+# Create DNS records for VCF Cloud Builder
+##############################################################
+
+
+module "zone_dns_record_for_cloud_builder" {
+  source = "./modules/vpc-dns-record"
+  count =  var.deploy_dns ? var.enable_vcf_mode ? 1 : 0 : 0
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = "cloud-builder"
+  vmw_dns_type = "A"
+  vmw_ip_address = ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+    ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder
+  ]
+}
+
+module "zone_dns_ptr_for_cloud_builder" {
+  source = "./modules/vpc-dns-record"
+  count =  var.deploy_dns ? var.enable_vcf_mode ? 1 : 0 : 0
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = "cloud-builder"
+  vmw_dns_type = "PTR"
+  vmw_ip_address = ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+    ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder
+  ]
+}
+
+
+##############################################################
+# Create DNS records for VCF SDDC Manager
+##############################################################
+
+
+module "zone_dns_record_for_sddc_manager" {
+  source = "./modules/vpc-dns-record"
+  count =  var.deploy_dns ? var.enable_vcf_mode ? 1 : 0 : 0
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = "sddc-manager"
+  vmw_dns_type = "A"
+  vmw_ip_address = ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+    ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager
+  ]
+}
+
+
+module "zone_dns_ptr_for_sddc_manager" {
+  source = "./modules/vpc-dns-record"
+  count =  var.deploy_dns ? var.enable_vcf_mode ? 1 : 0 : 0
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = "sddc-manager"
+  vmw_dns_type = "PTR"
+  vmw_ip_address = ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+    ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager
+  ]
+}
+

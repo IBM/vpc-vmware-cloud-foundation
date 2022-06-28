@@ -77,15 +77,7 @@ output "zone_nsx_t_mgr" {
   value = local.nsx_t_mgr
 }
 
-#/*
-output "zone_host_tep_list" {
-  value = [ibm_is_bare_metal_server_network_interface_allow_float.zone_host_teps[*].primary_ip[0].address]
-}
 
-output "zone_host_teps" {
-  value = local.zone_host_teps
-}
-#*/
 
 ##############################################################
 #  Output NSX-T edge and T0
@@ -95,8 +87,8 @@ output "zone_nsx_t_edge" {
   value = local.nsx_t_edge
 }
 
-output "zone_subnets_nsxt_uplinks" {
-  value = local.nsxt_uplink_subnets
+output "zone_subnets_edge" {
+  value = local.nsxt_edge_subnets
 }
 
 output "nsx_t_t0" {
@@ -104,4 +96,34 @@ output "nsx_t_t0" {
 }
 
 
+
+##############################################################
+# Output VCF 
+##############################################################
+
+
+
+output "vcf" {
+  value = var.enable_vcf_mode ? local.vcf : {}
+}
+
+output "vcf_pools" {
+  value = var.enable_vcf_mode ? local.vcf_pools : {}
+}
+
+output "vcf_vlan_nics" {
+  value = var.enable_vcf_mode ? local.vcf_vlan_nics : {}
+}
+
+
+
+##############################################################
+# Output Windows server
+##############################################################
+
+
+output "vpc_bastion" {
+  value = var.deploy_bastion ? local.bastion : {}
+  sensitive = true
+}
 

@@ -118,3 +118,6 @@ variable "vmw_edge_uplink_private_vlan_id" {
 
 }
 
+variable "vmw_edge_tep_vlan_id" {
+  
+}
