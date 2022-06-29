@@ -1,18 +1,18 @@
 # VMware on VPC IaaS
 
+The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares. For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui). 
+
+After the bare metal server provisioning and initial VMware configurations, you can access and manage the IBM-hosted environment. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools. These options can be combined with IBM Cloud automation solutions, such as using IBM Cloud Terraform provider with Schematics. 
+
+This terraform provisions VPC, subnets and hosts based on [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview). An overview of the solution is shown below.
+
 ![Architecture](images/arch.png)
-
-The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares.
-
-After the bare metal server provisioning and initial VMware configurations, you can access and manage the IBM-hosted environment. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools. These options can be combined with IBM Cloud automation solutions, such as using IBM Cloud Terraform provider with Schematics.
 
 For the required common services, such as NTP and DNS, you can use IBM Cloud VPC basic services and solutions. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure.
 
-For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC.
+For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC. VPC routes are used to route traffic to NSX-T overlay through Tier 0 Gateway.
 
 On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
-
-For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui) and [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview) in IBM Cloud Docs.
 
 ## Key Responsibilities
 
@@ -134,6 +134,8 @@ variable "enable_vcf_mode" {
 
 *Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
 
+*Please Note:* The inclusion of VCF mode is not publicly available in IBM Cloud VPC. Please set to false if this provider is not available.
+
 ### VPC Network Architecture
 
 The terraform deploys the network infrastucture as described in the [reference architecture for VMware deployment in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-vpc-vmw). The `vpc_zone_prefix` and `vpc_zone_prefix_t0_uplinks` variables describe the prefixes used for *infrastucture and NSX-T T0 uplink subnets*.
@@ -147,6 +149,56 @@ variable "vpc_zone_prefix" {
 variable "vpc_zone_prefix_t0_uplinks" {
   description = "This is the NSX-T uplink address prefix for each zone."
   default  = "192.168.10.0/24"
+}
+```
+
+`xyz_vlan_id` variables define the VLAN IDs used with BMS VLAN interfaces for `vmks`, SDDC appliances or NSX-T Tier 0 Gateway uplinks. Note that these VLAN IDs have only local significance to the BMS and ESXi host.
+
+```hcl
+variable "host_vlan_id" {
+  description = "VLAN ID for host network"
+  default     = 0 
+}
+
+variable "mgmt_vlan_id" {
+  description = "VLAN ID for management network"
+  # default     = 100 ## IBM Cloud ref arch
+  default     = 1611 ## VCF default
+}
+
+variable "vmot_vlan_id" {
+  description = "VLAN ID for vMotion network"
+  # default     = 200 ## IBM Cloud ref arch
+  default     = 1612 ## VCF default
+}
+
+variable "vsan_vlan_id" {
+  description = "VLAN ID for vSAN network"
+  # default     = 300 ## IBM Cloud ref arch
+  default     = 1613 ## VCF default
+}
+
+variable "tep_vlan_id" {
+  description = "VLAN ID for TEP network"
+  # default     = 400 ## IBM Cloud ref arch
+  default     = 1614 ## VCF default
+}
+
+variable "edge_uplink_public_vlan_id" {
+  description = "VLAN ID for T0 public uplink network"
+  # default     = 700 ## IBM Cloud ref arch
+  default     = 2711 ## VCF default
+}
+
+variable "edge_uplink_private_vlan_id" {
+  description = "VLAN ID for T0 private uplink network"
+  # default     = 710 ## IBM Cloud ref arch
+  default     = 2712 ## VCF default
+}
+
+variable "edge_tep_vlan_id" {
+  description = "VLAN ID for TEP network" ## not used in IBM Cloud ref arch
+  default     = 2713 ## VCF default
 }
 ```
 
@@ -399,3 +451,64 @@ The terraform file names have been named to indicate the logical order of the re
 ```
 
 
+## Example terraform.tfvars
+
+The following provides an example `terraform.tfvars`:
+
+```hcl
+# Deployment options
+
+deploy_dns = false
+deploy_fileshare = false
+deploy_iam = false
+enable_vcf_mode = true
+deploy_bastion = true
+
+# Resource group name to use
+# leave empty if you want to provision a new resource group
+
+resource_group_name = "Default"
+
+# Resource prefix for naming assets
+
+resource_prefix = "vcf"
+
+# DNS root domain
+
+dns_root_domain = "vcf-test-1.ibmcloud.local"
+
+# IBM CLoud Region and VPC Zone
+
+ibmcloud_vpc_region = "us-south"
+vpc_zone = "us-south-1"
+
+# Hosts and clusters
+
+zone_clusters = {
+                  cluster_0 = { 
+                     name = "mgmt"
+                     vmw_host_profile = "bx2d-metal-96x384"
+                     host_count = 4 
+                     vpc_file_shares = [ ] 
+                     },
+                 }
+
+
+# Networking
+
+vpc_zone_prefix = "10.100.0.0/22"
+vpc_zone_prefix_t0_uplinks = "192.168.10.0/24"
+
+mgmt_vlan_id = 1611
+vmot_vlan_id = 1612
+vsan_vlan_id = 1613
+tep_vlan_id	= 1614
+
+edge_uplink_public_vlan_id	= 2711
+edge_uplink_private_vlan_id = 2712
+
+vcf_host_pool_size = 10
+vcf_edge_pool_size = 4
+
+
+```
