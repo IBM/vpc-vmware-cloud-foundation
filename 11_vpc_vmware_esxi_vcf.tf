@@ -42,6 +42,67 @@ resource "null_resource" "check_edge_pool" {
 
 
 ##############################################################
+# Create IP pool reservations for vcf
+##############################################################
+
+# Reserve IP addresses from subnets to be used 
+# as IP pools when creating VLAN interfaces.
+
+resource "ibm_is_subnet_reserved_ip" "zone_vcf_vmot_pool" {
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0 # Note one IP per host needed in VCF
+    subnet = local.subnets.vmot.subnet_id
+    name   = "pool-vcf-vmot-${format("%03s", count.index)}"
+    auto_delete = false
+
+    address = cidrhost(local.subnets.vmot.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet 
+
+    depends_on = [
+      module.vpc-subnets,
+    ]
+}
+
+resource "ibm_is_subnet_reserved_ip" "zone_vcf_vsan_pool" {
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0 # Note one IP per host needed in VCF
+    subnet = local.subnets.vsan.subnet_id
+    name   = "pool-vcf-vsan-${format("%03s", count.index)}"
+    auto_delete = false
+
+    address = cidrhost(local.subnets.vsan.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
+
+    depends_on = [
+      module.vpc-subnets,
+    ]
+}
+
+resource "ibm_is_subnet_reserved_ip" "zone_vcf_tep_pool" {
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size * 2 : 0 # Note two TEPs per host in VCF
+    subnet = local.subnets.tep.subnet_id
+    name   = "pool-vcf-tep-${format("%03s", count.index)}"
+    auto_delete = false
+
+    address = cidrhost(local.subnets.tep.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
+
+    depends_on = [
+      module.vpc-subnets,
+    ]
+}
+
+
+resource "ibm_is_subnet_reserved_ip" "zone_vcf_edge_tep_pool" {
+    count = var.enable_vcf_mode ? var.vcf_edge_pool_size * 2 : 0 # Note two TEPs per edge nodes in VCF
+    subnet = local.nsxt_edge_subnets.edge_tep.subnet_id
+    name   = "pool-vcf-edge-tep-${format("%03s", count.index)}"
+    auto_delete = false
+
+    address = cidrhost(local.nsxt_edge_subnets.edge_tep.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
+
+    depends_on = [
+      module.vpc-subnets,
+    ]
+}
+
+
+##############################################################
 # Create VLAN NIC for Cloud Builder
 ##############################################################
 
@@ -90,58 +151,6 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager"
 
 
 ##############################################################
-# Create IP pool reservations for vcf
-##############################################################
-
-
-resource "ibm_is_subnet_reserved_ip" "zone_vcf_vmot_pool" {
-    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0
-    subnet = local.subnets.vmot.subnet_id
-    name   = "pool-vcf-tep-pool-${format("%03s", count.index)}"
-    auto_delete = false
-
-    depends_on = [
-      module.vpc-subnets,
-    ]
-}
-
-resource "ibm_is_subnet_reserved_ip" "zone_vcf_vsan_pool" {
-    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0
-    subnet = local.subnets.vsan.subnet_id
-    name   = "pool-vcf-tep-pool-${format("%03s", count.index)}"
-    auto_delete = false
-
-    depends_on = [
-      module.vpc-subnets,
-    ]
-}
-
-resource "ibm_is_subnet_reserved_ip" "zone_vcf_tep_pool" {
-    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0
-    subnet = local.subnets.tep.subnet_id
-    name   = "pool-vcf-tep-pool-${format("%03s", count.index)}"
-    auto_delete = false
-
-    depends_on = [
-      module.vpc-subnets,
-    ]
-}
-
-
-resource "ibm_is_subnet_reserved_ip" "zone_vcf_edge_tep_pool" {
-    count = var.enable_vcf_mode ? var.vcf_edge_pool_size : 0
-    subnet = local.nsxt_edge_subnets.edge_tep.subnet_id
-    name   = "pool-vcf-tep-pool-${format("%03s", count.index)}"
-    auto_delete = false
-
-    depends_on = [
-      module.vpc-subnets,
-    ]
-}
-
-
-
-##############################################################
 # Create VLAN interface resources for host vmot (vcf)
 ##############################################################
 
@@ -154,8 +163,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_edge_tep_pool" {
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vmot" {
     count = var.enable_vcf_mode ? local.hosts_total : 0
 
-    #bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[count.index]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
     subnet = local.subnets.vmot.subnet_id
     vlan = var.vmot_vlan_id
@@ -165,8 +173,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[count.index].id ## CHANGE ME
-        #reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[count.index].reserved_ip
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[count.index].reserved_ip
     }
 
     depends_on = [
@@ -188,8 +195,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vsan" {
     count = var.enable_vcf_mode ? local.hosts_total : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[count.index]
-    #bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
     subnet = local.subnets.vsan.subnet_id
     vlan = var.vsan_vlan_id
@@ -199,8 +205,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[count.index].id ## CHANGE ME
-        #reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[count.index].reserved_ip
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[count.index].reserved_ip
     }
 
     depends_on = [
@@ -221,10 +226,9 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 # in a VCF pool and configured in any host
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_teps" {
-    count = var.enable_vcf_mode ? local.hosts_total : 0
+    count = var.enable_vcf_mode ? local.hosts_total * 2 : 0  # Note two TEPs per host in VCF
 
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[count.index]
-    #bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
     subnet = local.subnets.tep.subnet_id
     vlan = var.tep_vlan_id
@@ -234,8 +238,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[count.index].id ## CHANGE ME
-        #reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[count.index].reserved_ip
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[count.index].reserved_ip
     } 
 
     depends_on = [
@@ -258,7 +261,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge_teps" {
-    count = var.enable_vcf_mode ? local.edges_total : 0
+    count = var.enable_vcf_mode ? local.edges_total * 2 : 0  # Note two TEPs per edge nodes in VCF
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
@@ -270,8 +273,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[count.index].id ## CHANGE ME
-        #reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[count.index].reserved_ip 
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[count.index].reserved_ip 
     } 
 
     depends_on = [
@@ -281,6 +283,56 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge
       ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool
     ] 
 }
+
+
+
+##############################################################
+# Create VPC routes to AVN networks
+##############################################################
+
+
+
+
+
+resource "ibm_is_vpc_route" "zone_vcf_avn_local_network" {
+    count = var.enable_vcf_mode ? 1 : 0  
+    name        = "vcf-avn-local-network-${count.index + 1}"
+
+    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    zone        = var.vpc_zone
+    #zone        = "${var.ibmcloud_vpc_region}-${count.index + 1}"
+
+
+    destination = var.vcf_avn_local_network_prefix
+    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+
+    depends_on = [
+      module.vpc-subnets,
+      module.zone_nxt_t_edge
+    ] 
+}
+
+resource "ibm_is_vpc_route" "zone_vcf_avn_x_region_network" {
+    count = var.enable_vcf_mode ? 1 : 0  
+    name        = "vcf-avn-x-region-network-${count.index + 1}"
+
+    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    zone        = var.vpc_zone
+    #zone        = "${var.ibmcloud_vpc_region}-${count.index + 1}"
+
+    destination = var.vcf_avn_local_network_prefix
+    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+
+    depends_on = [
+      module.vpc-subnets,
+      module.zone_nxt_t_edge
+    ] 
+}
+
+
+
+
+
 
 
 

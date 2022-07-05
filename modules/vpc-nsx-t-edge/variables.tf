@@ -62,10 +62,13 @@ variable "vmw_sg_tep" {
   
 }
 
-variable "vmw_sg_uplink" {
+variable "vmw_sg_uplink_priv" {
   
 }
 
+variable "vmw_sg_uplink_pub" {
+  
+}
 
 
 

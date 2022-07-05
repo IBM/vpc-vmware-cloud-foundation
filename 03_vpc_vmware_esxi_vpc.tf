@@ -98,7 +98,6 @@ module "security_group_rules" {
 
 # This calculates the prefix length and gateway IP for each subnet.
 
-
 locals {
   subnets = {
     hosts = {

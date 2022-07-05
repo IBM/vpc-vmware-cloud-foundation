@@ -32,6 +32,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco install notepadplusplus -y
 choco install vmware-powercli-psmodule -y
 choco install firefox -y
+choco install googlechrome -y
 choco install mremoteng -y
 choco install winscp -y
 choco install putty -y

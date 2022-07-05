@@ -39,7 +39,8 @@ module "zone_nxt_t_edge" {
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_sg_tep                      = ibm_is_security_group.sg["tep"].id
-  vmw_sg_uplink                   = ibm_is_security_group.sg["uplink"].id
+  vmw_sg_uplink_pub               = ibm_is_security_group.sg["uplink-pub"].id
+  vmw_sg_uplink_priv              = ibm_is_security_group.sg["uplink-priv"].id
   vmw_mgmt_vlan_id                = var.mgmt_vlan_id
   vmw_tep_vlan_id                 = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
   vmw_edge_uplink_public_vlan_id  = var.edge_uplink_public_vlan_id
@@ -59,7 +60,7 @@ module "zone_nxt_t_edge" {
 
 resource "ibm_is_floating_ip" "floating_ip" {
   count             = var.vpc_t0_public_ips
-  name              = "vlan-nic-t0-uplink-public-flip-${count.index}"
+  name              = "${local.resources_prefix}-vlan-nic-t0-uplink-public-flip-${count.index}"
   zone              = var.vpc_zone
   depends_on = [
       module.vpc-subnets,
@@ -269,3 +270,5 @@ locals {
     }
   }
 }
+
+

@@ -38,9 +38,11 @@ data "ibm_is_instance_profile" "vsi_profile_bastion" {
 # Create Security Group for Bastion Host
 ##############################################################
 
+/* DELETE THIS IF OK
+
 # Security Group for Bastion/Jump Host - Allow Connection from remote (i.e. Public Internet)
 
-resource "ibm_is_security_group" "vpc_security_group_bastion" {
+resource "ibm_is_security_group" "sg_bastion" {
   count = var.deploy_bastion ? 1 : 0
 
   name           = "${local.resources_prefix}-bastion-sg"
@@ -50,10 +52,10 @@ resource "ibm_is_security_group" "vpc_security_group_bastion" {
 
 # Security Group Rule for bastion Host - Allow Inbound 3389 connection from remote (i.e. Public Internet)
 
-resource "ibm_is_security_group_rule" "vpc_security_group_bastion_inbound_rdp" {
+resource "ibm_is_security_group_rule" "sg_bastion_inbound_rdp" {
   count = var.deploy_bastion ? 1 : 0
 
-  group     = ibm_is_security_group.vpc_security_group_bastion[0].id
+  group     = ibm_is_security_group.sg_bastion[0].id
   direction = "inbound"
   remote    = "0.0.0.0/0"
     tcp {
@@ -61,22 +63,26 @@ resource "ibm_is_security_group_rule" "vpc_security_group_bastion_inbound_rdp" {
       port_max = 3389
     }
   depends_on = [
-    ibm_is_security_group.vpc_security_group_bastion
+    ibm_is_security_group.sg_bastion
   ]
 }
 
 # Allow Outbound connection
 
-resource "ibm_is_security_group_rule" "vpc_security_group_bastion_outbound_all" {
+resource "ibm_is_security_group_rule" "sg_bastion_outbound_all" {
   count = var.deploy_bastion ? 1 : 0
 
-  group     = ibm_is_security_group.vpc_security_group_bastion[0].id
+  group     = ibm_is_security_group.sg_bastion[0].id
   direction = "outbound"
   remote    = "0.0.0.0/0"
   depends_on = [
-    ibm_is_security_group.vpc_security_group_bastion
+    ibm_is_security_group.sg_bastion
   ]
 }
+
+
+*/
+
 
 ##############################################################
 # Calculate the most recently available OS Image Name for the 
@@ -113,7 +119,7 @@ resource "ibm_is_instance" "bastion" {
   primary_network_interface {
     name = "eth0"
     subnet = local.subnets["inst_mgmt"]["subnet_id"]
-    security_groups = [ibm_is_security_group.vpc_security_group_bastion[0].id, ibm_is_security_group.sg["mgmt"].id]
+    security_groups = [ibm_is_security_group.sg["bastion"].id, ibm_is_security_group.sg["mgmt"].id]
   }
  
   vpc  = module.vpc-subnets[var.vpc_name].vmware_vpc.id
@@ -123,7 +129,7 @@ resource "ibm_is_instance" "bastion" {
   user_data      = templatefile("scripts/bastion_windows_userdata.tpl", { dns_suffix_list = var.dns_root_domain })
 
   depends_on = [
-    ibm_is_security_group_rule.vpc_security_group_bastion_outbound_all[0]
+    module.security_group_rules
   ]
 }
 

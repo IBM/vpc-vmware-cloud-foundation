@@ -95,7 +95,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
       content {
        # vcf mgmt
        subnet = var.vmw_mgmt_subnet
-       vlan = 100
+       vlan = var.vmw_mgmt_vlan_id
        name   = "vlan-nic-vcf-${var.vmw_cluster_prefix}-${format("%03s", count.index)}-vmk1"
        security_groups = [var.vmw_sg_mgmt]
        enable_infrastructure_nat = true
@@ -143,7 +143,7 @@ output "ibm_is_bare_metal_server_fqdn" {
 ##############################################################
 
 #/*
-resource "ibm_is_bare_metal_server_network_interface" "esx_host_vcf_mgmt" {
+resource "ibm_is_bare_metal_server_network_interface_allow_float" "esx_host_vcf_mgmt" {
     count = var.vmw_enable_vcf_mode ? var.vmw_host_count : 0
     bare_metal_server = ibm_is_bare_metal_server.esx_host[count.index].id
     subnet = var.vmw_mgmt_subnet
@@ -154,7 +154,6 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vcf_mgmt" {
     primary_ip {
         reserved_ip = ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt[count.index].reserved_ip
     } 
-    allow_interface_to_float = false
     depends_on = [
       ibm_is_bare_metal_server.esx_host,
       ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt
@@ -172,12 +171,12 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vcf_mgmt" {
 # Note. Create a dummy list for IPs and IDs to return IF the VCF mode is NOT ceated for conditinal checks in outputs.
 
 output "ibm_is_bare_metal_server_mgmt_interface_ip_address" {
-  value = var.vmw_enable_vcf_mode ? ibm_is_bare_metal_server_network_interface.esx_host_vcf_mgmt[*].primary_ip[0].address : ibm_is_bare_metal_server.esx_host[*].primary_network_interface[0].primary_ip[0].address
+  value = var.vmw_enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[*].primary_ip[0].address : ibm_is_bare_metal_server.esx_host[*].primary_network_interface[0].primary_ip[0].address
 }
 
 
 output "ibm_is_bare_metal_server_mgmt_interface_id" {
-  value = var.vmw_enable_vcf_mode ? ibm_is_bare_metal_server_network_interface.esx_host_vcf_mgmt[*].id : [ for host in range(var.vmw_host_count): "primary PCI interface" ]
+  value = var.vmw_enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[*].id : [ for host in range(var.vmw_host_count): "primary PCI interface" ]
 }
 
 
@@ -211,7 +210,7 @@ output "ibm_is_bare_metal_server_network_interface_vcf_mgmt" {
 
 
 output "ibm_is_bare_metal_server_network_interface_vcf_mgmt" {
-  value = ibm_is_bare_metal_server_network_interface.esx_host_vcf_mgmt[*]
+  value = ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[*]
 }
 
 

@@ -68,10 +68,6 @@ variable "vpc_zone" {
   default     = "eu-de-1"
 }
 
-variable "vpc_zone_prefix" {
-  description = "This is the address prefix for VMware components for each zone. /22 is recommended for appx. 120 hosts, /23 for appx. 60 hosts etc."
-  default  = "10.100.0.0/22"
-}
 
 
 variable "vpc_name" {
@@ -79,11 +75,6 @@ variable "vpc_name" {
   default     = "vpc"
 }
 
-
-variable "vpc_zone_prefix_t0_uplinks" {
-  description = "This is the NSX-T uplink address prefix for each zone."
-  default  = "192.168.10.0/24"
-}
 
 
 variable "vpc_t0_public_ips" {
@@ -96,6 +87,40 @@ variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id"
   default = "esxi-7-byol"
 }
+
+
+# Networks
+
+variable "vpc_zone_prefix" {
+  description = "This is the address prefix for VMware components for each zone. /22 is recommended for appx. 120 hosts, /23 for appx. 60 hosts etc."
+  default  = "10.100.0.0/22"
+}
+
+variable "vpc_zone_prefix_t0_uplinks" {
+  description = "This is the NSX-T uplink address prefix for each zone."
+  default  = "192.168.10.0/24"
+}
+
+
+variable "vcf_avn_local_network_prefix" {
+  default = "172.27.16.0/24"
+}
+
+variable "vcf_avn_x_region_network_prefix" {
+  default = "172.27.16.0/24"
+}
+
+
+variable "vcf_host_pool_size" {
+  description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
+  default = 10  
+}
+
+variable "vcf_edge_pool_size" {
+  description = "Size of the edge network pool to reserve VPC subnet IPs # of edge nodes."
+  default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
+}
+
 
 
 ### ESX virtual switch networking / VLAN IDs
@@ -147,15 +172,6 @@ variable "edge_tep_vlan_id" {
   default     = 2713 ## VCF default
 }
 
-variable "vcf_host_pool_size" {
-  description = "Size of the host network pool to reserve VPC subnet IPs."
-  default = 20
-}
-
-variable "vcf_edge_pool_size" {
-  description = "Size of the edge network pool to reserve VPC subnet IPs."
-  default = 4
-}
 
 
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 
@@ -186,14 +202,67 @@ variable "zone_clusters" {
 
 # Security Groups Rules
 
+
+/*
+
+# Examples for Security group rules 
+
 variable "security_group_rules" {
 
-    description = "Security group Rules to create"
+    description = "Example for Security groups and rules to create"
+    type        = map
+    default = {
+        "security-group-1" = [              # security group to create
+          {
+            name      = "allow-all-from-security-group-1"
+            direction = "inbound"
+            remote_id = "security-group-1"     # name of local group
+          },
+          {
+            name      = "allow-inbound-10-8"
+            direction = "inbound"
+            remote    = "10.0.0.0/8"
+          },
+          {
+            name      = "allow-inbound-tcp-22"
+            direction = "inbound"
+            remote    = "0.0.0.0/0"
+            tcp = {
+              port_max = 22
+              port_min = 22             
+            }
+          },
+          {
+            name      = "allow-icmp-from-security-group-2"
+            direction = "inbound"
+            remote_id = "security-group-2"  # name of remote group
+            icmp = {
+              type = 8
+            }
+          },
+          {
+            name      = "allow-outbound-any"
+            direction = "outbound"
+            remote    = "0.0.0.0/0"
+          }
+        ],
+        "security-group-2" = [              # security group to create
+                                            # list or rules to create
+        ]
+    }
+}
+
+#*/
+
+
+variable "security_group_rules" {
+
+    description = "Security groups and rules rules to create"
     #type        = map
     default = {
         "mgmt" = [
           {
-            name      = "allow-icmp-mgmt"
+            name      = "allow-all-mgmt"
             direction = "inbound"
             remote_id = "mgmt"
           },
@@ -207,7 +276,7 @@ variable "security_group_rules" {
             direction = "outbound"
             remote    = "0.0.0.0/0"
           }
-        ]
+        ],
         "vmot" = [
           {
             name      = "allow-icmp-mgmt"
@@ -227,7 +296,7 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "vmot"
           }
-        ]
+        ],
         "vsan" = [
           {
             name      = "allow-icmp-mgmt"
@@ -247,7 +316,7 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "vsan"
           }
-        ]
+        ],
         "tep" = [
           {
             name      = "allow-icmp-mgmt"
@@ -267,8 +336,8 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "tep"
           }
-        ]
-        "uplink" = [
+        ],
+        "uplink-pub" = [
           {
             name      = "allow-inbound-any"
             direction = "inbound"
@@ -282,9 +351,38 @@ variable "security_group_rules" {
             direction = "outbound"
             remote    = "0.0.0.0/0"
           }
+        ],
+        "uplink-priv" = [
+          {
+            name      = "allow-inbound-any"
+            direction = "inbound"
+            remote    = "0.0.0.0/0"
+          },
+          {
+            name      = "allow-outbound-any"
+            direction = "outbound"
+            remote    = "0.0.0.0/0"
+          }
+        ],
+        "bastion" = [
+          {
+            name      = "allow-inbound-rdp"
+            direction = "inbound"
+            remote    = "0.0.0.0/0"
+            tcp = {
+              port_max = 3389
+              port_min = 3389             
+            }
+          },
+          {
+            name      = "allow-outbound-any"
+            direction = "outbound"
+            remote    = "0.0.0.0/0"
+          }
         ]
     }
 }
+
 
 ### VPC Subnets
 

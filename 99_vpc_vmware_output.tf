@@ -51,13 +51,18 @@ output "cluster_host_map_out" {
 }
 
 
+/*
+
 locals {
     cluster_host_map_out_json = jsonencode(local.cluster_host_map)
 }
 
+
 output "cluster_host_map_out_json" {
   value = local.cluster_host_map_out_json
 }
+
+*/
 
 ##############################################################
 #  Output vcenter
