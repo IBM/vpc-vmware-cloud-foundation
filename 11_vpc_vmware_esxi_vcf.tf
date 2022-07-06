@@ -296,7 +296,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge
 
 resource "ibm_is_vpc_route" "zone_vcf_avn_local_network" {
     count = var.enable_vcf_mode ? 1 : 0  
-    name        = "vcf-avn-local-network-${count.index + 1}"
+    name        = "vcf-avn-local-network-${var.ibmcloud_vpc_region}-${count.index + 1}"
 
     vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
     zone        = var.vpc_zone
@@ -314,7 +314,7 @@ resource "ibm_is_vpc_route" "zone_vcf_avn_local_network" {
 
 resource "ibm_is_vpc_route" "zone_vcf_avn_x_region_network" {
     count = var.enable_vcf_mode ? 1 : 0  
-    name        = "vcf-avn-x-region-network-${count.index + 1}"
+    name        = "vcf-avn-x-region-network-${var.ibmcloud_vpc_region}-${count.index + 1}"
 
     vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
     zone        = var.vpc_zone

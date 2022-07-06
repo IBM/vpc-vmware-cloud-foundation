@@ -58,6 +58,8 @@ edge_uplink_private_vlan_id = 710
 
 vpc_t0_public_ips = 1
 
+nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes
+
 
 # Network security
 

@@ -75,6 +75,7 @@ vcf_edge_pool_size = 2   # Note two TEPs per edge nodes in VCF >> double reserva
 
 vpc_t0_public_ips = 1
 
+nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes 
 
 # Network security
 

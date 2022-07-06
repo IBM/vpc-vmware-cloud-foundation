@@ -8,7 +8,7 @@ This terraform provisions VPC assets with two architectures. The roll-your-own o
 
 ![RYO Architecture](images/arch.png)
 
-Optionally, you can deploy VPC assets following VMware CLoud Foundation (VCF) architecture.  
+Optionally, you can deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture.  
 
 ![VCF Architecture](images/arch-vcf.png)
 
@@ -16,7 +16,7 @@ For the required common services, such as NTP and DNS, you can use IBM Cloud VPC
 
 For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC. VPC routes are used to route traffic to NSX-T overlay through Tier 0 Gateway.
 
-On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
+On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in VPN capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
 
 ## Key Responsibilities
 

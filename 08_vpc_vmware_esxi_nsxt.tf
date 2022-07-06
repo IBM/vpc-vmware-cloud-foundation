@@ -87,6 +87,67 @@ resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip
 
 
 ##############################################################
+# Create VPC routes to NSX-T overlay networks
+##############################################################
+
+
+resource "ibm_is_vpc_route" "zone_1_nsxt_overlay_routes" {
+    for_each    = toset(var.nsx_t_overlay_networks)
+    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-1"
+    #name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.vpc_zone}"
+
+    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    zone        = "${var.ibmcloud_vpc_region}-1"
+    #zone        = var.vpc_zone
+
+    destination = each.key
+    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+
+    depends_on = [
+      module.vpc-subnets,
+      module.zone_nxt_t_edge
+    ] 
+}
+
+/*
+resource "ibm_is_vpc_route" "zone_2_nsxt_overlay_routes" {
+    for_each    = toset(var.nsx_t_overlay_networks)
+    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-2"
+    #name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.vpc_zone}"
+
+    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    zone        = "${var.ibmcloud_vpc_region}-2"
+    #zone        = var.vpc_zone
+
+    destination = each.key
+    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+
+    depends_on = [
+      module.vpc-subnets,
+      module.zone_nxt_t_edge
+    ] 
+}
+
+resource "ibm_is_vpc_route" "zone_3_nsxt_overlay_routes" {
+    for_each    = toset(var.nsx_t_overlay_networks)
+    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-3"
+    #name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.vpc_zone}"
+
+    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    zone        = "${var.ibmcloud_vpc_region}-3"
+    #zone        = var.vpc_zone
+
+    destination = each.key
+    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+
+    depends_on = [
+      module.vpc-subnets,
+      module.zone_nxt_t_edge
+    ] 
+}
+*/
+
+##############################################################
 # Create NSX-T random passwords
 ##############################################################
 

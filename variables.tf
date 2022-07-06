@@ -132,6 +132,11 @@ variable "vcf_avn_dns_records" {
   }
 }
 
+variable "nsx_t_overlay_networks" {
+  description = "NSX-T overlay network prefixes to create VPC routes"
+  default = ["172.16.0.0/16"]
+}
+
 
 ### ESX virtual switch networking / VLAN IDs
 
