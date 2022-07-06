@@ -45,6 +45,7 @@ variable "enable_vcf_mode" {
 }
 
 variable "deploy_bastion" {
+  description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
   default = false
 }
 
@@ -121,6 +122,15 @@ variable "vcf_edge_pool_size" {
   default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
 }
 
+variable "vcf_avn_dns_records" {
+  description = "DNS records for VCF AVN"
+  default = {
+    lcm = {
+      name = "xint-vrslcm01"
+      ip_address = "172.27.17.20"
+    }
+  }
+}
 
 
 ### ESX virtual switch networking / VLAN IDs
@@ -184,7 +194,7 @@ variable "zone_clusters" {
   default     = {
     cluster_0 = {
       name = "mgmt"
-      vmw_host_profile = "bx2d-metaldev8-192x768"
+      vmw_host_profile = "bx2d-metal-96x384"
       host_count = 1
       vpc_file_shares = [
         {

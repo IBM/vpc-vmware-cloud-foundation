@@ -341,3 +341,45 @@ module "zone_dns_ptr_for_sddc_manager" {
   ]
 }
 
+##############################################################
+# Create DNS records for AVN appliances
+##############################################################
+/*
+
+module "zone_dns_record_for_avn_appliances" {
+  source = "./modules/vpc-dns-record"
+  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.vcf_avn_dns_records : {} : {}
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = each.value.name
+  vmw_dns_type = "A"
+  vmw_ip_address = each.value.ip_address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+  ]
+}
+
+module "zone_dns_ptr_for_avn_appliances" {
+  source = "./modules/vpc-dns-record"
+  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.vcf_avn_dns_records : {} : {}
+
+  vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
+  vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
+  vmw_dns_root_domain = var.dns_root_domain
+
+  vmw_dns_name = each.value.name
+  vmw_dns_type = "PTR"
+  vmw_ip_address = each.value.ip_address
+
+  depends_on = [
+    ibm_resource_instance.dns_services_instance,
+    ibm_dns_zone.dns_services_zone,
+  ]
+}
+
+*/

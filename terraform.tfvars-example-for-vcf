@@ -31,18 +31,13 @@ vpc_zone = "us-south-1"
 
 # Hosts and clusters
 
+# Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
+
 zone_clusters = {
       cluster_0 = { 
-         name = "type1"
-         #vmw_host_profile = "bx2d-metaldev8-192x768"
-         vmw_host_profile = "bx2d-metaldev8-160x768"
+         name = "converged"
+         vmw_host_profile = "bx2d-metal-96x384"
          host_count = 4 
-         vpc_file_shares = [ ] 
-         },
-      cluster_1 = { 
-         name = "type2"
-         vmw_host_profile = "bx2d-metaldev8-160x768"
-         host_count = 0 
          vpc_file_shares = [ ] 
          },
    }

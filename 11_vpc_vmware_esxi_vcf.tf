@@ -352,7 +352,7 @@ locals {
       username = "admin"
       password = random_string.vcenter_password.result
     },
-    sddc_namager = {
+    sddc_manager = {
       fqdn = "sddc-manager.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"
       prefix_length = local.subnets.inst_mgmt.prefix_length
