@@ -6,7 +6,7 @@ After the bare metal server provisioning and initial VMware configurations, you 
 
 This terraform provisions VPC assets with two architectures. The roll-your-own option provisions VPC, subnets and hosts based on [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview). An overview of the solution is shown below.
 
-![RYO Architecture](images/arch.png)
+![RYO Architecture](images/arch-ryo.png)
 
 Optionally, you can deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture.  
 
