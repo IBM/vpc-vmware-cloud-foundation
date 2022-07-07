@@ -142,7 +142,7 @@ variable "deploy_bastion" {
 
 *Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
 
-*Please Note:* The inclusion of VCF mode is not publicly available in IBM Cloud VPC. Please set to false if this provider is not available.
+*Please Note:* The inclusion of VCF mode is not yet publicly available in IBM Cloud VPC. Please set to `false`.
 
 ### VPC network architecture
 
