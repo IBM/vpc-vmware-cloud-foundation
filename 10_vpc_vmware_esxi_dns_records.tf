@@ -344,7 +344,7 @@ module "zone_dns_ptr_for_sddc_manager" {
 ##############################################################
 # Create DNS records for AVN appliances
 ##############################################################
-/*
+
 
 module "zone_dns_record_for_avn_appliances" {
   source = "./modules/vpc-dns-record"
@@ -382,4 +382,3 @@ module "zone_dns_ptr_for_avn_appliances" {
   ]
 }
 
-*/

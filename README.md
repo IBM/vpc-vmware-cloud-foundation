@@ -18,7 +18,7 @@ For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivit
 
 On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in VPN capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
 
-## Key Responsibilities
+## Key responsibilities
 
 With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, ordering the IBM Cloud bare metal server and setting up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage.
 
@@ -26,7 +26,7 @@ The IBM Cloud bare metal server for IBM Cloud VPC has the VMware ESXi™ 7.x hyp
 
 For day two of operation, it is your responsibility to monitor and manage the vCenter and NSX-T, including backups, patching, configuration, and monitoring of the VMware software and the underlying vSphere hypervisor.
 
-## Key Benefits
+## Key benefits
 
 The architecture provides fundamental building blocks, which include VMware vSphere, vCenter Server, VMware NSX-T, and shared storage options, such as VMware vSAN or IBM Cloud VPC file share. These building blocks are needed to flexibly design a VMware software-defined data center solution that best fits your workloads.
 
@@ -50,20 +50,20 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 Be sure you have the correct Terraform version, you can choose the binary here:
 - https://releases.hashicorp.com/terraform/
 
-### Terraform Plugins
+### Terraform plugins
 
 Be sure you have access to the provider plugins through Internet or you have doanloaded and compiled the plugins for your operating syste on $HOME/.terraform.d/plugins/
 
 - [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
 
 
-## Running This Template
+## Running this template
 
-### IBM Cloud API Key
+### IBM Cloud API key
 
 The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key)
 
-### Deployment Location
+### Deployment location
 
 The following variables dictate the location of the deployent.
 
@@ -81,7 +81,7 @@ variable "vpc_zone" {
 
 Note. Currently Bare Metal for VPC is supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. 
 
-### Resource Creation
+### Resource creation
 
 Resources created by this template are based on the *resource_prefix* and a random number assigned at execution.
 
@@ -109,7 +109,7 @@ locals {
 }
 ```
 
-### Deployment Customization
+### Deployment customization
 
 The following variables dictate the boolean inclusion of certain optional features.
 
@@ -144,7 +144,7 @@ variable "deploy_bastion" {
 
 *Please Note:* The inclusion of VCF mode is not publicly available in IBM Cloud VPC. Please set to false if this provider is not available.
 
-### VPC Network Architecture
+### VPC network architecture
 
 The terraform deploys the network infrastucture as described in the [reference architecture for VMware deployment in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-vpc-vmw). The `vpc_zone_prefix` and `vpc_zone_prefix_t0_uplinks` variables describe the prefixes used for *infrastucture and NSX-T T0 uplink subnets*.
 
@@ -267,7 +267,37 @@ variable "vpc" {
 }
 ```
 
-### Deployment Architecture
+### VPC routing tables and routes
+
+The terraform template will use the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl).
+
+In this example, you can add your own routes with the following variable.
+
+```hcl
+variable "nsx_t_overlay_networks" {
+  description = "NSX-T overlay network prefixes to create VPC routes"
+  default = ["172.16.0.0/16"]
+}
+```
+
+In VCF deployment option, in addition to the NSX-T overlay routes, the AVN networks are routed to the overlay. These networks are defined in the following variables:
+
+```hcl
+variable "vcf_avn_local_network_prefix" {
+  default = "172.27.16.0/24"
+}
+
+variable "vcf_avn_x_region_network_prefix" {
+  default = "172.27.17.0/24"
+}
+```
+
+This terraform template uses this list and the above AVN network variables to create both egress and ingress VPC routes with the NSX-T T0 HA VIP as the next-hop.
+
+Note. For ingress routing, you currently need to create a prefix in the zone to enable advertiding VPC ingress routes towards Transit Gateway and Direct Link. This terraform creates a VPC prefix for each NSX-T overlay route to simplify the process but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing in VPC. Also note the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
+
+
+### Deployment architecture
 
 The `zone_clusters` variable describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
@@ -294,6 +324,8 @@ variable "zone_clusters" {
   }
 }
 ```
+
+Note. Provisioning VPC file shares is not yet available in the public version of IBM Cloud terraform plugin.
 
 The ESXI image type is the same across all Bare Metal servers and is described as follows:
 
@@ -333,19 +365,20 @@ mx2-metal-96x768     amd64          memory     2                  48            
 mx2d-metal-96x768    amd64          memory     2                  48               768           100000          1x960, 8x3200   
 ```
 
-### Security Groups
+### Security groups
 
 The terraform template will create a variable number of security groups, the default set is provided below. These groups should not be removed, however, it is possible to add custom groups to for example open a port from a Bastion Server to the Bare Metal hosts.
 
 ```hcl
+
 variable "security_group_rules" {
 
-    description = "Security group Rules to create"
+    description = "Security groups and rules rules to create"
     #type        = map
     default = {
         "mgmt" = [
           {
-            name      = "allow-icmp-mgmt"
+            name      = "allow-all-mgmt"
             direction = "inbound"
             remote_id = "mgmt"
           },
@@ -355,11 +388,16 @@ variable "security_group_rules" {
             remote    = "10.0.0.0/8"
           },
           {
+            name      = "allow-inbound-t0-uplink"
+            direction = "inbound"
+            remote_id = "uplink-priv"
+          },
+          {
             name      = "allow-outbound-any"
             direction = "outbound"
             remote    = "0.0.0.0/0"
           }
-        ]
+        ],
         "vmot" = [
           {
             name      = "allow-icmp-mgmt"
@@ -379,7 +417,7 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "vmot"
           }
-        ]
+        ],
         "vsan" = [
           {
             name      = "allow-icmp-mgmt"
@@ -399,7 +437,7 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "vsan"
           }
-        ]
+        ],
         "tep" = [
           {
             name      = "allow-icmp-mgmt"
@@ -419,8 +457,8 @@ variable "security_group_rules" {
             direction = "outbound"
             remote_id = "tep"
           }
-        ]
-        "uplink" = [
+        ],
+        "uplink-pub" = [
           {
             name      = "allow-inbound-any"
             direction = "inbound"
@@ -434,10 +472,86 @@ variable "security_group_rules" {
             direction = "outbound"
             remote    = "0.0.0.0/0"
           }
+        ],
+        "uplink-priv" = [
+          {
+            name      = "allow-inbound-any"
+            direction = "inbound"
+            remote    = "0.0.0.0/0"
+          },
+          {
+            name      = "allow-outbound-any"
+            direction = "outbound"
+            remote    = "0.0.0.0/0"
+          }
+        ],
+        "bastion" = [
+          {
+            name      = "allow-inbound-rdp"
+            direction = "inbound"
+            remote    = "0.0.0.0/0"
+            tcp = {
+              port_max = 3389
+              port_min = 3389             
+            }
+          },
+          {
+            name      = "allow-outbound-any"
+            direction = "outbound"
+            remote    = "0.0.0.0/0"
+          }
         ]
     }
 }
 ```
+
+### DNS Service
+
+The terraform template will optionally provision IBM Cloud DNS service. it will create the zone for the DNS root domain (for example `vmw-terraform.ibmcloud.local`) as defined in the following variable.
+
+```hcl
+variable "dns_root_domain" {
+  description = "Root Domain of Private DNS used with the Virtual Server"
+  default = "vmw-terraform.ibmcloud.local"
+}
+```
+
+Then the terraform will create the following A-records and related PTR-records:
+
+* vCenter Server : `vcenter`
+* NSX-T Manager 0 : `nsx-t-0`
+* NSX-T Manager 1 : `nsx-t-1`
+* NSX-T Manager 2 : `nsx-t-2`
+* NSX-T Manager VIP : `nsx-t-vip`
+* NSX-T Edge 0 : `edge-0`
+* NSX-T Edge 1 : `edge-1`
+
+Each entry in the above list will use the created Bare Metal Server VLAN interface IP as the target. 
+
+In VCF deployment option, in addition to the list above, the following A-records and related PTR-records are created:
+
+* Cloud Builder : `cloud-builder`
+* SDDC Manager : `sddc-manager`
+
+Each entry in the above list will use the created Bare Metal Server VLAN interface IP as the target. 
+
+In VCF deployment option, you can optionally define additional DNS entries (for example VCF assets running on the AVN overlay networks) 
+
+```hcl
+variable "vcf_avn_dns_records" {
+  description = "DNS records for VCF AVN"
+  default = {
+    lcm = {
+      name = "xint-vrslcm01"
+      ip_address = "172.27.17.20"
+    }
+  }
+}
+```
+
+The above example map would create the following A-record and the related PTR-record for the specified IP address:
+
+* vRealize Life Cycle Manager : `xint-vrslcm01`
 
 
 ## Logical Template Flow
@@ -457,6 +571,7 @@ The terraform file names have been named to indicate the logical order of the re
 10_vpc_vmware_esxi_dns_records.tf
 11_vpc_vmware_esxi_vcf.tf
 12_vpc_vmware_vsi_windows.tf
+13_vpc_vmware_routes.tf
 99_vpc_vmware_output.tf
 ```
 
@@ -503,11 +618,11 @@ vpc_zone = "us-south-1"
 
 zone_clusters = {
       cluster_0 = { 
-         name = "converged"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4 
-         vpc_file_shares = [ ] 
-         },
+        name = "converged"
+        vmw_host_profile = "bx2d-metal-96x384"
+        host_count = 4 
+        vpc_file_shares = [ ] 
+        },
    }
 
 
@@ -526,134 +641,138 @@ edge_uplink_private_vlan_id = 710
 
 vpc_t0_public_ips = 1
 
+nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes
+
 
 # Network security
 
 security_group_rules = {
       "mgmt" = [
-         {
-            name      = "allow-all-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-         },
-         {
-            name      = "allow-inbound-10-8"
-            direction = "inbound"
-            remote    = "10.0.0.0/8"
-         },
-         {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-         }
+        {
+          name      = "allow-all-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+        },
+        {
+          name      = "allow-inbound-10-8"
+          direction = "inbound"
+          remote    = "10.0.0.0/8"
+        },
+        {
+          name      = "allow-inbound-t0-uplink"
+          direction = "inbound"
+          remote_id = "uplink-priv"
+        },     
+        {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+        }
       ]
       "vmot" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vmot"
-            direction = "inbound"
-            remote_id = "vmot"
-         },
-         {
-            name      = "allow-outbound-vmot"
-            direction = "outbound"
-            remote_id = "vmot"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vmot"
+          direction = "inbound"
+          remote_id = "vmot"
+        },
+        {
+          name      = "allow-outbound-vmot"
+          direction = "outbound"
+          remote_id = "vmot"
+        }
       ]
       "vsan" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vsan"
-            direction = "inbound"
-            remote_id = "vsan"
-         },
-         {
-            name      = "allow-outbound-vsan"
-            direction = "outbound"
-            remote_id = "vsan"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vsan"
+          direction = "inbound"
+          remote_id = "vsan"
+        },
+        {
+          name      = "allow-outbound-vsan"
+          direction = "outbound"
+          remote_id = "vsan"
+        }
       ]
       "tep" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-tep"
-            direction = "inbound"
-            remote_id = "tep"
-         },
-         {
-            name      = "allow-outbound-tep"
-            direction = "outbound"
-            remote_id = "tep"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-tep"
+          direction = "inbound"
+          remote_id = "tep"
+        },
+        {
+          name      = "allow-outbound-tep"
+          direction = "outbound"
+          remote_id = "tep"
+        }
       ]
         "uplink-pub" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            icmp = {
-              type = 8
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          icmp = {
+            type = 8
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "uplink-priv" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-          }
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "bastion" = [
-          {
-            name      = "allow-inbound-rdp"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            tcp = {
-              port_max = 3389
-              port_min = 3389             
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-rdp"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          tcp = {
+            port_max = 3389
+            port_min = 3389           
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ]
   }
-
-
-
 ```
 
 
@@ -711,7 +830,7 @@ vpc_zone_prefix = "10.100.0.0/22" # infrastucture subnets
 vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
 
 vcf_avn_local_network_prefix = "172.27.16.0/24" # avn overlay local subnet
-vcf_avn_x_region_network_prefix = "172.27.16.0/24" # avn overlay x-region subnet
+vcf_avn_x_region_network_prefix = "172.27.17.0/24" # avn overlay x-region subnet
 
 vcf_avn_dns_records = {
      lcm = {
@@ -719,9 +838,6 @@ vcf_avn_dns_records = {
        ip_address = "172.27.17.20"
      },
    }
-
-
-
 
 mgmt_vlan_id = 1611
 vmot_vlan_id = 1612
@@ -737,132 +853,135 @@ vcf_edge_pool_size = 2   # Note two TEPs per edge nodes in VCF >> double reserva
 
 vpc_t0_public_ips = 1
 
+nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes 
 
 # Network security
 
 security_group_rules = {
       "mgmt" = [
-         {
-            name      = "allow-all-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-         },
-         {
-            name      = "allow-inbound-10-8"
-            direction = "inbound"
-            remote    = "10.0.0.0/8"
-         },
-         {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-         }
+        {
+          name      = "allow-all-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+        },
+        {
+          name      = "allow-inbound-10-8"
+          direction = "inbound"
+          remote    = "10.0.0.0/8"
+        },
+        {
+          name      = "allow-inbound-t0-uplink"
+          direction = "inbound"
+          remote_id = "uplink-priv"
+        },     
+        {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+        }
       ]
       "vmot" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vmot"
-            direction = "inbound"
-            remote_id = "vmot"
-         },
-         {
-            name      = "allow-outbound-vmot"
-            direction = "outbound"
-            remote_id = "vmot"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vmot"
+          direction = "inbound"
+          remote_id = "vmot"
+        },
+        {
+          name      = "allow-outbound-vmot"
+          direction = "outbound"
+          remote_id = "vmot"
+        }
       ]
       "vsan" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vsan"
-            direction = "inbound"
-            remote_id = "vsan"
-         },
-         {
-            name      = "allow-outbound-vsan"
-            direction = "outbound"
-            remote_id = "vsan"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vsan"
+          direction = "inbound"
+          remote_id = "vsan"
+        },
+        {
+          name      = "allow-outbound-vsan"
+          direction = "outbound"
+          remote_id = "vsan"
+        }
       ]
       "tep" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-tep"
-            direction = "inbound"
-            remote_id = "tep"
-         },
-         {
-            name      = "allow-outbound-tep"
-            direction = "outbound"
-            remote_id = "tep"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-tep"
+          direction = "inbound"
+          remote_id = "tep"
+        },
+        {
+          name      = "allow-outbound-tep"
+          direction = "outbound"
+          remote_id = "tep"
+        }
       ]
         "uplink-pub" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            icmp = {
-              type = 8
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          icmp = {
+            type = 8
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "uplink-priv" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-          }
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "bastion" = [
-          {
-            name      = "allow-inbound-rdp"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            tcp = {
-              port_max = 3389
-              port_min = 3389             
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-rdp"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          tcp = {
+            port_max = 3389
+            port_min = 3389           
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ]
   }
-
-
-
 ```

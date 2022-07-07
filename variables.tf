@@ -108,7 +108,7 @@ variable "vcf_avn_local_network_prefix" {
 }
 
 variable "vcf_avn_x_region_network_prefix" {
-  default = "172.27.16.0/24"
+  default = "172.27.17.0/24"
 }
 
 
@@ -285,6 +285,11 @@ variable "security_group_rules" {
             name      = "allow-inbound-10-8"
             direction = "inbound"
             remote    = "10.0.0.0/8"
+          },
+          {
+            name      = "allow-inbound-t0-uplink"
+            direction = "inbound"
+            remote_id = "uplink-priv"
           },
           {
             name      = "allow-outbound-any"

@@ -35,11 +35,11 @@ vpc_zone = "us-south-1"
 
 zone_clusters = {
       cluster_0 = { 
-         name = "converged"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4 
-         vpc_file_shares = [ ] 
-         },
+        name = "converged"
+        vmw_host_profile = "bx2d-metal-96x384"
+        host_count = 4 
+        vpc_file_shares = [ ] 
+        },
    }
 
 
@@ -65,124 +65,129 @@ nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes
 
 security_group_rules = {
       "mgmt" = [
-         {
-            name      = "allow-all-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-         },
-         {
-            name      = "allow-inbound-10-8"
-            direction = "inbound"
-            remote    = "10.0.0.0/8"
-         },
-         {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-         }
+        {
+          name      = "allow-all-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+        },
+        {
+          name      = "allow-inbound-10-8"
+          direction = "inbound"
+          remote    = "10.0.0.0/8"
+        },
+        {
+          name      = "allow-inbound-t0-uplink"
+          direction = "inbound"
+          remote_id = "uplink-priv"
+        },     
+        {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+        }
       ]
       "vmot" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vmot"
-            direction = "inbound"
-            remote_id = "vmot"
-         },
-         {
-            name      = "allow-outbound-vmot"
-            direction = "outbound"
-            remote_id = "vmot"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vmot"
+          direction = "inbound"
+          remote_id = "vmot"
+        },
+        {
+          name      = "allow-outbound-vmot"
+          direction = "outbound"
+          remote_id = "vmot"
+        }
       ]
       "vsan" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-vsan"
-            direction = "inbound"
-            remote_id = "vsan"
-         },
-         {
-            name      = "allow-outbound-vsan"
-            direction = "outbound"
-            remote_id = "vsan"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vsan"
+          direction = "inbound"
+          remote_id = "vsan"
+        },
+        {
+          name      = "allow-outbound-vsan"
+          direction = "outbound"
+          remote_id = "vsan"
+        }
       ]
       "tep" = [
-         {
-            name      = "allow-icmp-mgmt"
-            direction = "inbound"
-            remote_id = "mgmt"
-            icmp = {
-            type = 8
-            }
-         },
-         {
-            name      = "allow-inbound-tep"
-            direction = "inbound"
-            remote_id = "tep"
-         },
-         {
-            name      = "allow-outbound-tep"
-            direction = "outbound"
-            remote_id = "tep"
-         }
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-tep"
+          direction = "inbound"
+          remote_id = "tep"
+        },
+        {
+          name      = "allow-outbound-tep"
+          direction = "outbound"
+          remote_id = "tep"
+        }
       ]
         "uplink-pub" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            icmp = {
-              type = 8
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          icmp = {
+            type = 8
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "uplink-priv" = [
-          {
-            name      = "allow-inbound-any"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
-          }
+         {
+          name      = "allow-inbound-any"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ],
         "bastion" = [
-          {
-            name      = "allow-inbound-rdp"
-            direction = "inbound"
-            remote    = "0.0.0.0/0"
-            tcp = {
-              port_max = 3389
-              port_min = 3389             
-            }
-          },
-          {
-            name      = "allow-outbound-any"
-            direction = "outbound"
-            remote    = "0.0.0.0/0"
+         {
+          name      = "allow-inbound-rdp"
+          direction = "inbound"
+          remote    = "0.0.0.0/0"
+          tcp = {
+            port_max = 3389
+            port_min = 3389           
           }
+         },
+         {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+         }
         ]
   }
 

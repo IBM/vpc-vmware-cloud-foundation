@@ -100,6 +100,9 @@ output "nsx_t_t0" {
   value = local.nsx_t_t0
 }
 
+output "t0_public_ips" {
+  value = ibm_is_floating_ip.floating_ip[*].address
+}
 
 
 ##############################################################
