@@ -18,7 +18,7 @@ resource_group_name = ""
 resource_prefix = "vmw"
 
 
-# DNS root domain
+# DNS
 
 dns_root_domain = "vmw-test-1.ibmcloud.local"
 
@@ -58,7 +58,12 @@ edge_uplink_private_vlan_id = 710
 
 vpc_t0_public_ips = 1
 
-nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes
+nsx_t_overlay_networks = {
+    customer_overlay_1 = {
+      name = "customer-overlay"
+      destination = "172.16.0.0/16"
+    },
+  }
 
 
 # Network security

@@ -271,30 +271,56 @@ variable "vpc" {
 
 The terraform template will use the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl).
 
-In this example, you can add your own routes with the following variable.
+In this example, you can add your own routes with the following map variable.
 
 ```hcl
 variable "nsx_t_overlay_networks" {
   description = "NSX-T overlay network prefixes to create VPC routes"
-  default = ["172.16.0.0/16"]
+  type = map
+  default = {
+    customer_overlay_1 = {
+      name = "customer-overlay"
+      destination = "172.16.0.0/16"
+    },
+  }
 }
 ```
 
-In VCF deployment option, in addition to the NSX-T overlay routes, the AVN networks are routed to the overlay. These networks are defined in the following variables:
+This terraform template uses this map to create both egress and ingress VPC routes with the NSX-T T0 HA VIP as the next-hop.
+
+For RYO, you can use the following example value for the routes:
 
 ```hcl
-variable "vcf_avn_local_network_prefix" {
-  default = "172.27.16.0/24"
-}
-
-variable "vcf_avn_x_region_network_prefix" {
-  default = "172.27.17.0/24"
+nsx_t_overlay_networks = {
+    customer_overlay_1 = {
+      name = "customer-overlay"
+      destination = "172.16.0.0/16"
+    },
+  }
 }
 ```
 
-This terraform template uses this list and the above AVN network variables to create both egress and ingress VPC routes with the NSX-T T0 HA VIP as the next-hop.
+In VCF deployment option, in addition to the NSX-T overlay routes, the AVN networks are routed to the overlay. For example:
 
-Note. For ingress routing, you currently need to create a prefix in the zone to enable advertiding VPC ingress routes towards Transit Gateway and Direct Link. This terraform creates a VPC prefix for each NSX-T overlay route to simplify the process but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing in VPC. Also note the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
+```hcl
+nsx_t_overlay_networks = {
+    customer_overlay_1 = {
+      name = "customer-overlay"
+      destination = "172.16.0.0/16"
+    },
+    vcf_avn_local_network = {
+      name = "vcf-avn-local-network"
+      destination = "172.27.16.0/24"      
+    },
+    avn_x_region_network = {
+      name = "avn-x-region-network"
+      destination = "172.27.17.0/24"      
+    }
+  }
+}
+```
+
+Note. For ingress routing to work properly, you currently need to create a prefix in the zone to enable advertiding VPC ingress routes towards Transit Gateway and Direct Link. This terraform creates a VPC prefix for each NSX-T overlay route to simplify the process but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing in VPC. Also note the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
 
 
 ### Deployment architecture

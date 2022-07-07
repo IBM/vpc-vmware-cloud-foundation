@@ -102,16 +102,6 @@ variable "vpc_zone_prefix_t0_uplinks" {
   default  = "192.168.10.0/24"
 }
 
-
-variable "vcf_avn_local_network_prefix" {
-  default = "172.27.16.0/24"
-}
-
-variable "vcf_avn_x_region_network_prefix" {
-  default = "172.27.17.0/24"
-}
-
-
 variable "vcf_host_pool_size" {
   description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
   default = 10  
@@ -132,10 +122,19 @@ variable "vcf_avn_dns_records" {
   }
 }
 
+
 variable "nsx_t_overlay_networks" {
   description = "NSX-T overlay network prefixes to create VPC routes"
-  default = ["172.16.0.0/16"]
+  type = map
+  default = {
+    customer_overlay_1 = {
+      name = "customer-overlay"
+      destination = "172.16.0.0/16"
+    },
+  }
 }
+
+
 
 
 ### ESX virtual switch networking / VLAN IDs
@@ -212,6 +211,7 @@ variable "zone_clusters" {
     }
   }
 }
+
 
 
 
