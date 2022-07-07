@@ -22,7 +22,6 @@ resource "ibm_is_vpc_routing_table" "nsxt_overlay_route_table_ingress" {
 # Create VPC egress routes to NSX-T overlay networks
 ##############################################################
 
-## testing
 
 resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes" {
     for_each      = var.nsx_t_overlay_networks
@@ -87,6 +86,8 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
 # Create VPC ingress routes to NSX-T overlay networks
 ##############################################################
 
+# Note...VPC routes outside VPC prefix are not advertised to TGW or Direct Link  
+# this is a workaround before the capability is available.
 
 resource "ibm_is_vpc_address_prefix" "nsx_t_overlay_prefix" {
     for_each    = var.nsx_t_overlay_networks
@@ -102,7 +103,6 @@ resource "ibm_is_vpc_address_prefix" "nsx_t_overlay_prefix" {
       module.zone_nxt_t_edge
     ] 
 }
-
 
 
 resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes_ingress" {
