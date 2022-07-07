@@ -82,59 +82,6 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
 
 
 
-/* old
-
-resource "ibm_is_vpc_route" "zone_1_nsxt_overlay_routes" {
-    for_each    = toset(var.nsx_t_overlay_networks)
-    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-1"
-    #name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.vpc_zone}"
-
-    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    zone        = "${var.ibmcloud_vpc_region}-1"
-    #zone        = var.vpc_zone
-
-    destination = each.key
-    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
-
-    depends_on = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge
-    ] 
-}
-
-resource "ibm_is_vpc_route" "zone_2_nsxt_overlay_routes" {
-    for_each    = toset(var.nsx_t_overlay_networks)
-    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-2"
-
-    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    zone        = "${var.ibmcloud_vpc_region}-2"
-
-    destination = each.key
-    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
-
-    depends_on = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge
-    ] 
-}
-
-resource "ibm_is_vpc_route" "zone_3_nsxt_overlay_routes" {
-    for_each    = toset(var.nsx_t_overlay_networks)
-    name        = "nsx-t-${replace(replace(each.key, ".", "-"), "/", "-")}-${var.ibmcloud_vpc_region}-3"
-
-    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    zone        = "${var.ibmcloud_vpc_region}-3"
-
-    destination = each.key
-    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
-
-    depends_on = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge
-    ] 
-}
-*/
-
 
 ##############################################################
 # Create VPC ingress routes to NSX-T overlay networks
@@ -230,26 +177,6 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes_ingress" {
 # Create VPC egress routes to VCF AVN networks
 ##############################################################
 
-/* old
-resource "ibm_is_vpc_route" "zone_vcf_avn_local_network" {
-    count       = var.enable_vcf_mode ? 1 : 0  
-    #count       = var.enable_vcf_mode ? 3 : 0   # waiting for provider fixes
-    name        = "vcf-avn-local-network-${var.ibmcloud_vpc_region}-${count.index + 1}"
-
-    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    zone        = var.vpc_zone
-    #zone        = "${var.ibmcloud_vpc_region}-${count.index + 1}" # waiting for provider fixes
-
-
-    destination = var.vcf_avn_local_network_prefix
-    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
-
-    depends_on = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge
-    ] 
-}
-*/
 
 resource "ibm_is_vpc_routing_table_route" "zone_vcf_avn_local_network" {
     count       = var.enable_vcf_mode ? 3 : 0
@@ -270,27 +197,6 @@ resource "ibm_is_vpc_routing_table_route" "zone_vcf_avn_local_network" {
     ]
 }
 
-##
-
-/* old
-resource "ibm_is_vpc_route" "zone_vcf_avn_x_region_network" {
-    count       = var.enable_vcf_mode ? 1 : 0  
-    #count       = var.enable_vcf_mode ? 3 : 0   # waiting for provider fixes
-    name        = "vcf-avn-x-region-network-${var.ibmcloud_vpc_region}-${count.index + 1}"
-
-    vpc         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    zone        = var.vpc_zone
-    #zone        = "${var.ibmcloud_vpc_region}-${count.index + 1}" # waiting for provider fixes
-
-    destination = var.vcf_avn_x_region_network_prefix
-    next_hop    = local.nsx_t_t0.ha-vip.private_uplink.ip_address
-
-    depends_on  = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge
-    ] 
-}
-*/
 
 resource "ibm_is_vpc_routing_table_route" "zone_vcf_avn_x_region_network" {
     count       = var.enable_vcf_mode ? 3 : 0
