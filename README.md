@@ -4,15 +4,17 @@ The IBM Cloud bare metal server is integrated with the VPC network, and you can 
 
 After the bare metal server provisioning and initial VMware configurations, you can access and manage the IBM-hosted environment. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools. These options can be combined with IBM Cloud automation solutions, such as using IBM Cloud Terraform provider with Schematics. 
 
-This terraform provisions VPC assets with two architectures. The roll-your-own option provisions VPC, subnets and hosts based on [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview). An overview of the solution is shown below.
+In general, with the roll-your-own (RYO) solutions, you are responsible for provisioning the VPC, its prefixes and subnets as well as IBM Cloud Bare Metal Servers and set up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage. To ease up the provisioning process, this terraform provides and example how to provision VPC assets with optional two architectures. 
+
+The default roll-your-own option provisions a VPC, required subnets and IBM Cloud Bare Metal Servers with preinstalled ESXi based on [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview). An overview of the solution is shown below.
 
 ![RYO Architecture](images/arch-ryo.png)
 
-Optionally, you can deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture.  
+Optionally, you can deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture. 
 
 ![VCF Architecture](images/arch-vcf.png)
 
-For the required common services, such as NTP and DNS, you can use IBM Cloud VPC basic services and solutions. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure.
+For the required common services, such as NTP and DNS, you can use IBM Cloud VPC services and solutions. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure.
 
 For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC. VPC routes are used to route traffic to NSX-T overlay through Tier 0 Gateway.
 
@@ -20,7 +22,7 @@ On-premises connectivity over public internet can be arranged by using IBM Cloud
 
 ## Key responsibilities
 
-With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, ordering the IBM Cloud bare metal server and setting up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage.
+With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, you need to provision the IBM Cloud Bare Metal Servers and set up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage. For ordering the IBM Cloud assets, you can use GUI, IBM Cloud CLI or terraform. This terraform template provides you a simple way to deploy the required assets and you can fill in the required variables or customize the provided templates for your use cases and needs.  
 
 The IBM Cloud bare metal server for IBM Cloud VPC has the VMware ESXi™ 7.x hypervisor preinstalled. IBM can manage the licensing, or you can bring your own license to the solution.
 
@@ -47,12 +49,12 @@ With this single-tenant IBM Cloud bare metal server infrastructure that is provi
 
 ### Terraform
 
-Be sure you have the correct Terraform version, you can choose the binary here:
+Be sure you have the correct Terraform version, you can choose the binary here for your operating system:
 - https://releases.hashicorp.com/terraform/
 
 ### Terraform plugins
 
-Be sure you have access to the provider plugins through Internet or you have doanloaded and compiled the plugins for your operating syste on $HOME/.terraform.d/plugins/
+Be sure that you have access to the IBM Cloud terraform provider plugins through Internet or that you have downloaded and compiled the plugins for your operating system on $HOME/.terraform.d/plugins/
 
 - [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
 
@@ -61,7 +63,14 @@ Be sure you have access to the provider plugins through Internet or you have doa
 
 ### IBM Cloud API key
 
-The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key)
+The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key). 
+
+You can create an environmental variable for the API key, for example:
+
+```bash
+export TF_VAR_ibmcloud_api_key=<put_your_key_here>
+```
+
 
 ### Deployment location
 
@@ -79,7 +88,7 @@ variable "vpc_zone" {
 }
 ```
 
-Note. Currently Bare Metal for VPC is supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. 
+Note. Currently Bare Metal for VPC is supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. Check the latest availability information per region in [IBM Cloud Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-bare-metal-servers-profile&interface=ui#bare-metal-profile-availability-by-region). 
 
 ### Resource creation
 
@@ -210,7 +219,7 @@ variable "edge_tep_vlan_id" {
 }
 ```
 
-The variable `vpc` defines the *subnets* to be created using the created prefixes. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`).
+The variable `vpc` defines the *subnets* to be created using the created *VPC prefixes*. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`).
 
 ```hcl
 variable "vpc" {
@@ -269,9 +278,9 @@ variable "vpc" {
 
 ### VPC routing tables and routes
 
-The terraform template will use the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl).
+The terraform template will use the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl) with VPC routes and NSX-T overlay.
 
-In this example, you can add your own routes with the following map variable.
+You can add your own routes with the following map variable:
 
 ```hcl
 variable "nsx_t_overlay_networks" {
@@ -286,7 +295,7 @@ variable "nsx_t_overlay_networks" {
 }
 ```
 
-This terraform template uses this map to create both egress and ingress VPC routes with the NSX-T T0 HA VIP as the next-hop.
+This terraform template uses this map to create both `egress` and `ingress` VPC routes with the `NSX-T T0 HA VIP` as the next-hop.
 
 For RYO, you can use the following example value for the routes:
 
@@ -320,7 +329,9 @@ nsx_t_overlay_networks = {
 }
 ```
 
-Note. For ingress routing to work properly, you currently need to create a prefix in the zone to enable advertiding VPC ingress routes towards Transit Gateway and Direct Link. This terraform creates a VPC prefix for each NSX-T overlay route to simplify the process but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing in VPC. Also note the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
+Note. When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
+
+Note. This terraform creates a VPC prefix for each NSX-T overlay route automatically to simplify the process, but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing information in VPC. See the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
 
 
 ### Deployment architecture
@@ -361,9 +372,10 @@ variable "esxi_image" {
   default = "esxi-7-byol"
 }
 ```
-Terraform will find the latest avialable version based on the above image type.
 
-In order to determine the available image types, run the following IBM CLoud console command:
+You can use either bring your own lisence and use byol image (`ibm-esxi-7-byol`) or you can use IBM Cloud provided ESXi lisences (`ibm-esxi-7-byol`) which are montly billed. Terraform will find the latest available ESXi version based on the selected image type.
+
+In order to determine the available image types, run the following IBM Cloud console command:
 
 ```bash
 > ibmcloud is images | grep esx
@@ -577,7 +589,7 @@ variable "vcf_avn_dns_records" {
 
 The above example map would create the following A-record and the related PTR-record for the specified IP address:
 
-* vRealize Life Cycle Manager : `xint-vrslcm01`
+* vRealize Suite Lifecycle Manager : `xint-vrslcm01`
 
 
 ## Logical Template Flow
