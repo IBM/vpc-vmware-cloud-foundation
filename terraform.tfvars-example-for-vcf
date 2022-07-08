@@ -78,7 +78,7 @@ nsx_t_overlay_networks = {
       name = "vcf-avn-local-network"
       destination = "172.27.16.0/24"      
     },
-    avn_x_region_network = {
+    vcf_avn_x_region_network = {
       name = "avn-x-region-network"
       destination = "172.27.17.0/24"      
     }

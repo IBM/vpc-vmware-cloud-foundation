@@ -135,3 +135,27 @@ output "vpc_bastion" {
   sensitive = true
 }
 
+
+
+##############################################################
+# Output VPC routes
+##############################################################
+
+/*
+output "created_vpc_routes_default_egress" {
+    value = local.vpc_routes_default_egress
+}
+
+output "created_vpc_routes_tgw_dl_ingress" {
+    value = local.vpc_routes_tgw_dl_ingress
+}
+*/
+
+output "routes_default_egress_per_zone" {
+    value = local.vpc_egress_routes_per_zone
+}
+
+
+output "routes_tgw_dl_ingress_egress_per_zone" {
+    value = local.vpc_tgw_dl_ingress_routes_per_zone
+}
