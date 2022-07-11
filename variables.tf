@@ -49,12 +49,22 @@ variable "deploy_bastion" {
   default = false
 }
 
-
 ### DNS root domain
 
 variable "dns_root_domain" {
   description = "Root Domain of Private DNS used with the Virtual Server"
   default = "vmw-terraform.ibmcloud.local"
+}
+
+
+variable "dns_records" {
+  description = "DNS records to create."
+  default = {
+    xint-vrslcm = {
+      name = "xint-vrslcm01"
+      ip_address = "172.27.17.20"
+    },
+  }
 }
 
 ### IBM Cloud Region variables
@@ -110,16 +120,6 @@ variable "vcf_host_pool_size" {
 variable "vcf_edge_pool_size" {
   description = "Size of the edge network pool to reserve VPC subnet IPs # of edge nodes."
   default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
-}
-
-variable "vcf_avn_dns_records" {
-  description = "DNS records for VCF AVN"
-  default = {
-    lcm = {
-      name = "xint-vrslcm01"
-      ip_address = "172.27.17.20"
-    }
-  }
 }
 
 
@@ -534,4 +534,9 @@ variable "vsi_image_architecture" {
 variable "vsi_image_os" {
   description = "OS for VSI deployment"
   default = "windows-2019-amd64"
+}
+
+variable "number_of_bastion_hosts" {
+  description = "Number of bastion hosts to deploy."
+  default = 1
 }

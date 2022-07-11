@@ -34,55 +34,6 @@ data "ibm_is_instance_profile" "vsi_profile_bastion" {
 }
 
 
-##############################################################
-# Create Security Group for Bastion Host
-##############################################################
-
-/* DELETE THIS IF OK
-
-# Security Group for Bastion/Jump Host - Allow Connection from remote (i.e. Public Internet)
-
-resource "ibm_is_security_group" "sg_bastion" {
-  count = var.deploy_bastion ? 1 : 0
-
-  name           = "${local.resources_prefix}-bastion-sg"
-  vpc            = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-  resource_group = data.ibm_resource_group.resource_group_vmw.id
-}
-
-# Security Group Rule for bastion Host - Allow Inbound 3389 connection from remote (i.e. Public Internet)
-
-resource "ibm_is_security_group_rule" "sg_bastion_inbound_rdp" {
-  count = var.deploy_bastion ? 1 : 0
-
-  group     = ibm_is_security_group.sg_bastion[0].id
-  direction = "inbound"
-  remote    = "0.0.0.0/0"
-    tcp {
-      port_min = 3389
-      port_max = 3389
-    }
-  depends_on = [
-    ibm_is_security_group.sg_bastion
-  ]
-}
-
-# Allow Outbound connection
-
-resource "ibm_is_security_group_rule" "sg_bastion_outbound_all" {
-  count = var.deploy_bastion ? 1 : 0
-
-  group     = ibm_is_security_group.sg_bastion[0].id
-  direction = "outbound"
-  remote    = "0.0.0.0/0"
-  depends_on = [
-    ibm_is_security_group.sg_bastion
-  ]
-}
-
-
-*/
-
 
 ##############################################################
 # Calculate the most recently available OS Image Name for the 
@@ -109,9 +60,9 @@ data "ibm_is_image" "bastion_image" {
 ##############################################################
 
 resource "ibm_is_instance" "bastion" {
-  count = var.deploy_bastion ? 1 : 0
+  count = var.deploy_bastion ? var.number_of_bastion_hosts : 0
 
-  name           = "${local.resources_prefix}-bastion-windows"
+  name           = "${local.resources_prefix}-bastion-windows-${format("%02s", count.index)}"
   image          = data.ibm_is_image.bastion_image.id
   profile        = data.ibm_is_instance_profile.vsi_profile_bastion.name
   resource_group = data.ibm_resource_group.resource_group_vmw.id
@@ -140,8 +91,8 @@ resource "ibm_is_instance" "bastion" {
 
 
 data "ibm_is_instance" "bastion" {
-  count = var.deploy_bastion ? 1 : 0
-  name = var.deploy_bastion ? ibm_is_instance.bastion[0].name : ""
+  count = var.deploy_bastion ? var.number_of_bastion_hosts : 0
+  name = var.deploy_bastion ? ibm_is_instance.bastion[count.index].name : ""
   private_key = tls_private_key.bastion_rsa.private_key_pem
 }
 
@@ -151,10 +102,10 @@ data "ibm_is_instance" "bastion" {
 ##############################################################
 
 resource "ibm_is_floating_ip" "bastion_floating_ip" {
-  count = var.deploy_bastion ? 1 : 0
+  count = var.deploy_bastion ? var.number_of_bastion_hosts : 0
 
-  name           = "${local.resources_prefix}-bastion-windows-floating-ip"
-  target         = ibm_is_instance.bastion[0].primary_network_interface[0].id
+  name           = "${local.resources_prefix}-bastion-windows-floating-ip-${format("%02s", count.index)}"
+  target         = ibm_is_instance.bastion[count.index].primary_network_interface[0].id
   resource_group = data.ibm_resource_group.resource_group_vmw.id
 }
 
@@ -163,6 +114,8 @@ resource "ibm_is_floating_ip" "bastion_floating_ip" {
 # Define Bastion output maps
 ##############################################################
 
+/* to be deleted
+
 locals {
   bastion = {
     private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion[0].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
@@ -170,4 +123,17 @@ locals {
     username = "Administrator"
     password = var.deploy_bastion ? data.ibm_is_instance.bastion[0].password : ""
   }
+}
+*/
+
+locals {
+  bastion_hosts = [
+    for bastion_host in range(var.number_of_bastion_hosts) : {
+      name = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].name : "0.0.0.0"
+      private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+      public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
+      username = "Administrator"
+      password = var.deploy_bastion ? data.ibm_is_instance.bastion[bastion_host].password : ""
+    }
+  ]
 }

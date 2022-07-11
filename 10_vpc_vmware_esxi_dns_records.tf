@@ -348,7 +348,7 @@ module "zone_dns_ptr_for_sddc_manager" {
 
 module "zone_dns_record_for_avn_appliances" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.vcf_avn_dns_records : {} : {}
+  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.dns_records : {} : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
@@ -366,7 +366,7 @@ module "zone_dns_record_for_avn_appliances" {
 
 module "zone_dns_ptr_for_avn_appliances" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.vcf_avn_dns_records : {} : {}
+  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.dns_records : {} : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
@@ -382,3 +382,44 @@ module "zone_dns_ptr_for_avn_appliances" {
   ]
 }
 
+
+
+##############################################################
+# Create a local list of manual DNS entries to create 
+##############################################################
+
+locals {
+  dns_records = {
+    hosts = flatten ([
+      for cluster in local.cluster_host_map.clusters[*]: [ 
+        for hosts in cluster.hosts[*] : {
+          "name" = hosts.host
+          "ip_address" = hosts.mgmt.ip_address
+          }
+        ]
+      ]),
+    mgmt = [  
+      { name = "vcenter", "ip_address" = module.zone_vcenter.vmw_vcenter_ip },
+      { name = "nsx-t-0", "ip_address" = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].primary_ip[0].address },
+      { name = "nsx-t-1", "ip_address" = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].primary_ip[0].address },
+      { name = "nsx-t-2", "ip_address" = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].primary_ip[0].address },
+      { name = "nsx-t-vip", "ip_address" = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.primary_ip[0].address },
+      { name = "edge-0", "ip_address" = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address },
+      { name = "edge-1", "ip_address" = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address },
+    ],
+    vcf = [
+      { name = "cloud-builder", "ip_address" = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"},
+      { name = "sddc-manager", "ip_address" = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"},    
+    ],
+    other = [ 
+      for record in var.dns_records : {
+        "name=" = record.name
+        "ip_address" = record.ip_address
+      }
+    ]
+  }  
+}
+
+output "dns_records_to_create" {
+  value = var.enable_vcf_mode ? concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other) : concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.other)
+}

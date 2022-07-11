@@ -43,6 +43,10 @@ zone_clusters = {
    }
 
 
+# Bastion host
+
+number_of_bastion_hosts = 1
+
 # Networking
 
 vpc_zone_prefix = "10.100.0.0/22" # infrastucture subnets

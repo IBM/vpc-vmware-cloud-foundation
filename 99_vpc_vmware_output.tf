@@ -129,11 +129,21 @@ output "vcf_vlan_nics" {
 # Output Windows server
 ##############################################################
 
+/* to be deleted
 
 output "vpc_bastion" {
   value = var.deploy_bastion ? local.bastion : {}
   sensitive = true
 }
+
+*/
+
+
+output "vpc_bastion_hosts" {
+  value = var.deploy_bastion ? local.bastion_hosts : []
+  sensitive = true
+}
+
 
 
 
@@ -141,7 +151,8 @@ output "vpc_bastion" {
 # Output VPC routes
 ##############################################################
 
-/*
+/* to be deleted
+
 output "created_vpc_routes_default_egress" {
     value = local.vpc_routes_default_egress
 }

@@ -295,7 +295,7 @@ variable "nsx_t_overlay_networks" {
 }
 ```
 
-This terraform template uses this map to create both `egress` and `ingress` VPC routes with the `NSX-T T0 HA VIP` as the next-hop.
+This terraform template uses this map to create both `egress` and `ingress` VPC routes with the `NSX-T T0 HA VIP` as the next-hop. In this example, the VPC routes are created automatically for each `zone` to provide an easy way to add connectivity though routes in and out of your VPC.  
 
 For RYO, you can use the following example value for the routes:
 
@@ -328,6 +328,8 @@ nsx_t_overlay_networks = {
   }
 }
 ```
+
+Note. IBM Cloud® Virtual Private Cloud (VPC) automatically generates a default routing table for the VPC to manage traffic in the `zone`. By default, this routing table is empty. You can add routes to the default routing table, or create one or more custom routing tables and then add routes to it. For example, if you want a specialized routing policy for a specific subnet, you can create a routing table and associate it with one or more subnets. Routes are also always specific to a `zone`.
 
 Note. When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
 
