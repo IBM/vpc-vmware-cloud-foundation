@@ -9,6 +9,15 @@ vim-cmd hostsvc/start_esx_shell
 # Set the hostname
 esxcli system hostname set --fqdn=${hostname_fqdn}
 
+# Add DNS Server addresses
+
+esxcli network ip dns server remove --all
+esxcli network ip dns server add --server=${dns_server_1}
+esxcli network ip dns server add --server=${dns_server_2}
+
+# Add NTP Server addresses
+esxcli system ntp set --server=161.26.0.6
+
 # Create a portgroup for vCenter  
 esxcfg-vswitch vSwitch0 --add-pg=pg-mgmt
 esxcfg-vswitch vSwitch0 --pg=pg-mgmt --vlan=${mgmt_vlan}

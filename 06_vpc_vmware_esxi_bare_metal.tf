@@ -35,6 +35,7 @@ module "zone_bare_metal_esxi" {
   vmw_host_profile = each.value.vmw_host_profile
   vmw_resources_prefix = var.resource_prefix ## need to add random here
   vmw_cluster_prefix = each.value.name
+  vmw_dns_servers = var.dns_servers
   vmw_host_subnet = local.subnets.hosts.subnet_id
   vmw_mgmt_subnet = local.subnets.inst_mgmt.subnet_id
   vmw_vmot_subnet = local.subnets.vmot.subnet_id

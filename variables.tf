@@ -56,6 +56,11 @@ variable "dns_root_domain" {
   default = "vmw-terraform.ibmcloud.local"
 }
 
+variable "dns_servers" {
+  description = "DNS servers."
+  default = ["161.26.0.7", "161.26.0.8"]
+}
+
 
 variable "dns_records" {
   description = "DNS records to create."
@@ -66,6 +71,8 @@ variable "dns_records" {
     },
   }
 }
+
+
 
 ### IBM Cloud Region variables
 

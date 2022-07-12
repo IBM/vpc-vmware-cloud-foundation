@@ -37,8 +37,14 @@ esxcli network ip interface tag remove -i vmk0 -t Management
 # Update default gateway
 esxcli network ip route ipv4 add --gateway=${new_mgmt_default_gateway} --network=default
 
+# Add DNS Server addresses
+
+esxcli network ip dns server remove --all
+esxcli network ip dns server add --server=${dns_server_1}
+esxcli network ip dns server add --server=${dns_server_2}
+
 # Add NTP Server addresses
-esxcli system ntp set --server 161.26.0.6
+esxcli system ntp set --server=161.26.0.6
 
 # Allow NTP through firewall
 esxcfg-firewall -e ntpClient

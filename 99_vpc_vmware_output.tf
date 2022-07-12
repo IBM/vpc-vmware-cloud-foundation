@@ -42,6 +42,13 @@ output "dns_root_domain" {
 }
 
 
+output "dns_servers" {
+  value = var.dns_servers
+}
+
+
+
+
 ##############################################################
 #  Output cluster hosts
 ##############################################################
