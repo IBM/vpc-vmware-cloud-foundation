@@ -33,7 +33,7 @@ module "vpc-subnets" {
   resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   resources_prefix = local.resources_prefix
 
-  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+  tags = local.resource_tags
 
   depends_on = [
     ibm_resource_group.resource_group_vmw
@@ -56,7 +56,7 @@ resource "ibm_is_security_group" "sg" {
       module.vpc-subnets
     ]
 
-  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+  tags = local.resource_tags
 }
 
 ##############################################################

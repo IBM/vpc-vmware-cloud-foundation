@@ -24,6 +24,6 @@ resource "ibm_is_ssh_key" "host_ssh_key" {
   public_key = trimspace(tls_private_key.host_ssh.public_key_openssh)
   resource_group = data.ibm_resource_group.resource_group_vmw.id
 
-  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+  tags = local.resource_tags
 }
 

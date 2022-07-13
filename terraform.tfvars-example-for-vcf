@@ -14,8 +14,9 @@ resource_group_name = ""
 
 
 # Tags
+# all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
 
-tags = ["vmware:vcf"]
+tags = ["env:test"]
 
 
 # Resource prefix for naming assets

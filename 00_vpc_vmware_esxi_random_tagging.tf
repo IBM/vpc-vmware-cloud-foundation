@@ -15,3 +15,13 @@ resource "random_string" "resource_code" {
 locals {
   resources_prefix = "${var.resource_prefix}-${random_string.resource_code.result}"
 }
+
+
+##############################################################
+# Recource tagging
+##############################################################
+
+
+locals {
+  resource_tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+}
