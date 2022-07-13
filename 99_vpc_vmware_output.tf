@@ -122,7 +122,7 @@ output "vcf" {
   value = var.enable_vcf_mode ? local.vcf : {}
 }
 
-output "vcf_pools" {
+output "vcf_network_pools" {
   value = var.enable_vcf_mode ? local.vcf_pools : {}
 }
 
@@ -135,15 +135,6 @@ output "vcf_vlan_nics" {
 ##############################################################
 # Output Windows server
 ##############################################################
-
-/* to be deleted
-
-output "vpc_bastion" {
-  value = var.deploy_bastion ? local.bastion : {}
-  sensitive = true
-}
-
-*/
 
 
 output "vpc_bastion_hosts" {
@@ -158,16 +149,6 @@ output "vpc_bastion_hosts" {
 # Output VPC routes
 ##############################################################
 
-/* to be deleted
-
-output "created_vpc_routes_default_egress" {
-    value = local.vpc_routes_default_egress
-}
-
-output "created_vpc_routes_tgw_dl_ingress" {
-    value = local.vpc_routes_tgw_dl_ingress
-}
-*/
 
 output "routes_default_egress_per_zone" {
     value = local.vpc_egress_routes_per_zone

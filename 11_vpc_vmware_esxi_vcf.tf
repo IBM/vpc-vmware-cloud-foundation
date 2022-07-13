@@ -161,7 +161,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager"
 # and count.index is used to distribute is used here.  
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vmot" {
-    count = var.enable_vcf_mode ? local.hosts_total : 0
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
@@ -193,7 +193,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 # in a VCF pool and configured in any host
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vsan" {
-    count = var.enable_vcf_mode ? local.hosts_total : 0
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
@@ -226,7 +226,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 # in a VCF pool and configured in any host
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_teps" {
-    count = var.enable_vcf_mode ? local.hosts_total * 2 : 0  # Note two TEPs per host in VCF
+    count = var.enable_vcf_mode ? var.vcf_host_pool_size * 2 : 0  # Note two TEPs per host in VCF
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
@@ -261,7 +261,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge_teps" {
-    count = var.enable_vcf_mode ? local.edges_total * 2 : 0  # Note two TEPs per edge nodes in VCF
+    count = var.enable_vcf_mode ? var.vcf_edge_pool_size * 2 : 0  # Note two TEPs per edge nodes in VCF
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
@@ -331,21 +331,25 @@ locals {
   vcf_vlan_nics = {
     vmot     = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_host_vmot : {
         ip_address = vnic.primary_ip[0].address
+        reserved_ip = vnic.primary_ip[0].reserved_ip
         vlan_nic_id = vnic.id
         vlan_nic_name = vnic.name
       }] : []
     vsan     = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_host_vsan : {
         ip_address = vnic.primary_ip[0].address
+        reserved_ip = vnic.primary_ip[0].reserved_ip
         vlan_nic_id = vnic.id
         vlan_nic_name = vnic.name
       }] : []
     tep      = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_host_teps : {
         ip_address = vnic.primary_ip[0].address
+        reserved_ip = vnic.primary_ip[0].reserved_ip
         vlan_nic_id = vnic.id
         vlan_nic_name = vnic.name
       }] : []
     edge_tep = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_edge_teps : {
         ip_address = vnic.primary_ip[0].address
+        reserved_ip = vnic.primary_ip[0].reserved_ip
         vlan_nic_id = vnic.id
         vlan_nic_name = vnic.name
       }] : []

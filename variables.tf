@@ -413,6 +413,8 @@ variable "security_group_rules" {
 
 ### VPC Subnets
 
+### This defines VPC structure for RYO deployment
+
 variable "vpc" {
     description = "VPC Data Structure"
     type        = map
@@ -447,7 +449,7 @@ variable "vpc" {
                     }
                 }
               },
-              t0-uplink = {
+              edges = {
                   vpc_zone_subnet_size = 4
                   subnets = {
                     t0-priv = {
@@ -466,6 +468,7 @@ variable "vpc" {
     }
 }
 
+### This defines VPC structure for VCF deployment
 
 variable "vpc_vcf" {
     description = "VPC Data Structure"
@@ -501,7 +504,7 @@ variable "vpc_vcf" {
                     }
                 }
               },
-              t0-uplink = {
+              edges = {
                   vpc_zone_subnet_size = 4
                   subnets = {
                     t0-priv = {

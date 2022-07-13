@@ -219,7 +219,7 @@ variable "edge_tep_vlan_id" {
 }
 ```
 
-The variable `vpc` defines the *subnets* to be created using the created *VPC prefixes*. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`).
+The variables `vpc` and `vpc_vcf` define the structure of the VPC, and *subnets* to be created using the created *VPC prefixes*. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`). The following shows an example for a VPC structure for RYO deployment.
 
 ```hcl
 variable "vpc" {
@@ -256,7 +256,7 @@ variable "vpc" {
                     }
                 }
               },
-              t0-uplink = {
+              edges = {
                   vpc_zone_subnet_size = 4
                   subnets = {
                     t0-priv = {

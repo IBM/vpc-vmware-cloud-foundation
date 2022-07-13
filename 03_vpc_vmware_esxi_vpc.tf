@@ -12,11 +12,11 @@ locals {
             public_gateways = lookup(v.zones.vpc_zone.infrastructure, "public_gateways", [])
             subnets = v.zones.vpc_zone.infrastructure.subnets
           }
-          t0-uplink = {
+          edges = {
             vpc_zone_prefix = var.vpc_zone_prefix_t0_uplinks
-            vpc_zone_subnet_size = v.zones.vpc_zone.t0-uplink.vpc_zone_subnet_size
-            public_gateways = lookup(v.zones.vpc_zone.t0-uplink, "public_gateways", [])
-            subnets = v.zones.vpc_zone.t0-uplink.subnets
+            vpc_zone_subnet_size = v.zones.vpc_zone.edges.vpc_zone_subnet_size
+            public_gateways = lookup(v.zones.vpc_zone.edges, "public_gateways", [])
+            subnets = v.zones.vpc_zone.edges.subnets
           }          
         }
       }
