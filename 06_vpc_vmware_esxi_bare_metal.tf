@@ -55,6 +55,9 @@ module "zone_bare_metal_esxi" {
   vmw_key = ibm_is_ssh_key.host_ssh_key.id
   vmw_dns_root_domain = var.dns_root_domain
   vmw_instance_ssh_private_key = tls_private_key.host_ssh.private_key_pem
+
+  vmw_tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+
   depends_on = [
     module.vpc-subnets,
     ibm_is_security_group.sg,

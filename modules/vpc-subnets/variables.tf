@@ -26,3 +26,7 @@ variable "vpc_zone_prefix" {
 
 }
 */
+
+variable "tags" {
+  
+}

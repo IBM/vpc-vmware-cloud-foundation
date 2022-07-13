@@ -22,6 +22,8 @@ resource "ibm_resource_instance" "dns_services_instance" {
   resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   location          = "global"
 
+  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+
   #User can increase timeouts
   timeouts {
     create = "15m"

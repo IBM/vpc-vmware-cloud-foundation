@@ -34,7 +34,6 @@ vpc_zone_prefixes = {for vpc_zone_prefix_list in flatten([
 ##############################################################
 
 resource "ibm_is_vpc_address_prefix" "vmware_vpc_address_prefix_zone" {
-
   for_each = local.vpc_zone_prefixes
 
   name = "${var.resources_prefix}-${each.key}"
@@ -51,28 +50,29 @@ resource "ibm_is_vpc_address_prefix" "vmware_vpc_address_prefix_zone" {
 ##############################################################
 
 resource "ibm_is_public_gateway" "vpc_zone_subnet_public_gateway" {
+  for_each = { for vpc_public_gateways in flatten ([
+                    for k, v in local.vpc_zone_prefixes : [
+                      for public_gateway in v.public_gateways : {
+                          vpc_zone_prefixes = k,
+                          "public_gateway" = public_gateway
+                          zone = v.zone
+                      }
+                    ]
+              ]) : join("-", [vpc_public_gateways.zone, vpc_public_gateways.public_gateway]) => vpc_public_gateways
+  }
 
-    for_each = { for vpc_public_gateways in flatten ([
-                     for k, v in local.vpc_zone_prefixes : [
-                       for public_gateway in v.public_gateways : {
-                           vpc_zone_prefixes = k,
-                           "public_gateway" = public_gateway
-                           zone = v.zone
-                       }
-                     ]
-                ]) : join("-", [vpc_public_gateways.zone, vpc_public_gateways.public_gateway]) => vpc_public_gateways
-    }
+  name = "${var.resources_prefix}-${var.vpc_name}-${each.value.public_gateway}"
+  resource_group  = var.resource_group_id
+  vpc             = ibm_is_vpc.vmware_vpc.id
+  zone            = each.value.zone
 
-    name = "${var.resources_prefix}-${var.vpc_name}-${each.value.public_gateway}"
-    resource_group  = var.resource_group_id
-    vpc             = ibm_is_vpc.vmware_vpc.id
-    zone            = each.value.zone
+  //User can configure timeouts
+  timeouts {
+    create = "90m"
+    delete = "60m"
+  }
 
-    //User can configure timeouts
-    timeouts {
-      create = "90m"
-      delete = "60m"
-    }
+  tags = var.tags
 }
 
 ##############################################################
@@ -80,7 +80,6 @@ resource "ibm_is_public_gateway" "vpc_zone_subnet_public_gateway" {
 ##############################################################
 
 resource "ibm_is_subnet" "vpc_subnet_zone_subnet" {
-
   for_each = { for subnet_map in flatten([
         for k, v in local.vpc_zone_prefixes : [
             for subnet_name, subnet in v.subnets : {
@@ -111,4 +110,6 @@ resource "ibm_is_subnet" "vpc_subnet_zone_subnet" {
     create = "10m"
     delete = "60m"
   }
+
+  tags = var.tags
 }

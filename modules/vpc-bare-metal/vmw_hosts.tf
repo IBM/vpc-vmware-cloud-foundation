@@ -120,8 +120,10 @@ resource "ibm_is_bare_metal_server" "esx_host" {
         enable_infrastructure_nat = true
       }
     }
-    
     ## end of vcf hack ## 
+
+    tags = var.vmw_tags
+
     vpc = var.vmw_vpc
     timeouts {
       create = "30m"

@@ -1,7 +1,7 @@
 # Services deployment options
 
 deploy_dns = false
-deploy_fileshare = false
+deploy_fileshare = false # Note this is currently not supported by the provider, leave as false
 deploy_iam = false
 enable_vcf_mode = true
 deploy_bastion = true
@@ -10,7 +10,12 @@ deploy_bastion = true
 # Resource group name to use
 # leave empty if you want to provision a new resource group
 
-resource_group_name = "Default"
+resource_group_name = ""
+
+
+# Tags
+
+tags = ["vmware:vcf"]
 
 
 # Resource prefix for naming assets
@@ -70,8 +75,8 @@ edge_uplink_public_vlan_id	= 2711
 edge_uplink_private_vlan_id = 2712
 edge_tep_vlan_id = 2713
 
-vcf_host_pool_size = 8   # Creates VLAN interfaces for a pool for N hosts total, note 2 TEPs needed per host.
-vcf_edge_pool_size = 2   # Creates VLAN interfaces for a pool for N edges total, note 2 TEPs needed per host.
+vcf_host_pool_size = 8   # Creates VLAN interfaces for a pool for N hosts total = N x (1 x vmot, 1 x vsan, 2 x tep)
+vcf_edge_pool_size = 2   # Creates VLAN interfaces for a pool for N edges total = N x (2 x tep)
 
 vpc_t0_public_ips = 1
 

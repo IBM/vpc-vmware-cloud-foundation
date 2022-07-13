@@ -12,7 +12,12 @@ variable "resource_group_name" {
   description = "Name of the resource group to deploy the assets. If left empty, then a resource group will be created for you."
 }
 
+### Tag
 
+variable "tags" {
+  description = "Tag to define environment"
+  default = []
+}
 
 ### Resource prefix for each item
 

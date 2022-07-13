@@ -21,6 +21,8 @@ resource "ibm_is_ssh_key" "bastion_key" {
   count = var.deploy_bastion ? 1 : 0
   name = "${local.resources_prefix}-bastion-ssh-key"
   public_key = trimspace(tls_private_key.bastion_rsa.public_key_openssh)
+
+  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
 }
 
 
@@ -79,6 +81,8 @@ resource "ibm_is_instance" "bastion" {
   
   user_data      = templatefile("scripts/bastion_windows_userdata.tpl", { dns_suffix_list = var.dns_root_domain })
 
+  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+
   depends_on = [
     module.security_group_rules
   ]
@@ -107,6 +111,8 @@ resource "ibm_is_floating_ip" "bastion_floating_ip" {
   name           = "${local.resources_prefix}-bastion-windows-floating-ip-${format("%02s", count.index)}"
   target         = ibm_is_instance.bastion[count.index].primary_network_interface[0].id
   resource_group = data.ibm_resource_group.resource_group_vmw.id
+
+  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
 }
 
 

@@ -60,8 +60,11 @@ module "zone_nxt_t_edge" {
 
 resource "ibm_is_floating_ip" "floating_ip" {
   count             = var.vpc_t0_public_ips
-  name              = "${local.resources_prefix}-vlan-nic-t0-uplink-public-flip-${count.index}"
+  name              = "${local.resources_prefix}-vlan-nic-t0-uplink-public-floating-ip-${count.index}"
   zone              = var.vpc_zone
+
+  tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+
   depends_on = [
       module.vpc-subnets,
       module.zone_bare_metal_esxi["cluster_0"],
