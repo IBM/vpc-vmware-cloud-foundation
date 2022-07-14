@@ -69,9 +69,9 @@ vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
 mgmt_vlan_id = 1611
 vmot_vlan_id = 1612
 vsan_vlan_id = 1613
-tep_vlan_id	= 1614
+tep_vlan_id = 1614
 
-edge_uplink_public_vlan_id	= 2711
+edge_uplink_public_vlan_id = 2711
 edge_uplink_private_vlan_id = 2712
 edge_tep_vlan_id = 2713
 
