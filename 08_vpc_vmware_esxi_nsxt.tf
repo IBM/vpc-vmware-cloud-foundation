@@ -63,7 +63,7 @@ resource "ibm_is_floating_ip" "floating_ip" {
   name              = "${local.resources_prefix}-vlan-nic-t0-uplink-public-floating-ip-${count.index}"
   zone              = var.vpc_zone
 
-  tags = local.resource_tags
+  tags = local.resource_tags.floating_ip_t0
 
   depends_on = [
       module.vpc-subnets,

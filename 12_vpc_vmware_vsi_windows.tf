@@ -22,7 +22,7 @@ resource "ibm_is_ssh_key" "bastion_key" {
   name = "${local.resources_prefix}-bastion-ssh-key"
   public_key = trimspace(tls_private_key.bastion_rsa.public_key_openssh)
 
-  tags = local.resource_tags
+  tags = local.resource_tags.ssh_key
 }
 
 
@@ -81,7 +81,7 @@ resource "ibm_is_instance" "bastion" {
   
   user_data      = templatefile("scripts/bastion_windows_userdata.tpl", { dns_suffix_list = var.dns_root_domain })
 
-  tags = local.resource_tags
+  tags = local.resource_tags.vsi_bastion
 
   depends_on = [
     module.security_group_rules
@@ -112,7 +112,7 @@ resource "ibm_is_floating_ip" "bastion_floating_ip" {
   target         = ibm_is_instance.bastion[count.index].primary_network_interface[0].id
   resource_group = data.ibm_resource_group.resource_group_vmw.id
 
-  tags = local.resource_tags
+  tags = local.resource_tags.floating_ip_bastion
 }
 
 

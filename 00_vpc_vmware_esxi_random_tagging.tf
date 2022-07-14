@@ -23,5 +23,16 @@ locals {
 
 
 locals {
-  resource_tags = concat(["vmware:${local.resources_prefix}"], var.tags)
+  resource_tags = {
+    ssh_key             = concat(["vmware:${local.resources_prefix}"], var.tags)
+    vpc                 = concat(["vmware:${local.resources_prefix}"], var.tags)
+    subnets             = concat(["vmware:${local.resources_prefix}"], var.tags)
+    public_gateway      = concat(["vmware:${local.resources_prefix}"], var.tags)
+    security_group      = concat(["vmware:${local.resources_prefix}"], var.tags)
+    bms_esx             = concat(["vmware:${local.resources_prefix}"], var.tags, ["esx"])
+    vsi_bastion         = concat(["vmware:${local.resources_prefix}"], var.tags, ["bastion"])
+    dns_services        = concat(["vmware:${local.resources_prefix}"], var.tags)
+    floating_ip_t0      = concat(["vmware:${local.resources_prefix}"], var.tags, ["tier0-gateway"])
+    floating_ip_bastion = concat(["vmware:${local.resources_prefix}"], var.tags, ["bastion"])
+  }
 }

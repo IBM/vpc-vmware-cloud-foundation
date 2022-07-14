@@ -22,7 +22,7 @@ resource "ibm_resource_instance" "dns_services_instance" {
   resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   location          = "global"
 
-  tags = local.resource_tags
+  tags = local.resource_tags.dns_services
 
   #User can increase timeouts
   timeouts {
