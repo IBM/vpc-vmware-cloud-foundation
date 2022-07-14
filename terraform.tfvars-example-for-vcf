@@ -1,7 +1,6 @@
 # Services deployment options
 
 deploy_dns = false
-deploy_fileshare = false # Note this is currently not supported by the provider, leave as false
 deploy_iam = false
 enable_vcf_mode = true
 deploy_bastion = true

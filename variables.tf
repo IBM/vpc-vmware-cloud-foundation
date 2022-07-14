@@ -36,7 +36,7 @@ variable "deploy_iam" {
 
 variable "deploy_fileshare" {
   description = "Boolean to enable fileshare deployment. Alternatively customize the cluster map."
-  default = true
+  default = false
 }
 
 variable "deploy_dns" {

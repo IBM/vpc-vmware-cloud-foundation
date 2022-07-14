@@ -1,7 +1,6 @@
 # Services deployment options
 
 deploy_dns = true
-deploy_fileshare = false # Note this is currently not supported by the public tf provider, leave as false
 deploy_iam = true
 enable_vcf_mode = false
 deploy_bastion = true

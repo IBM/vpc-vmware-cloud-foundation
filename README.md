@@ -88,7 +88,7 @@ variable "vpc_zone" {
 }
 ```
 
-Note. Currently Bare Metal for VPC is supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. Check the latest availability information per region in [IBM Cloud Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-bare-metal-servers-profile&interface=ui#bare-metal-profile-availability-by-region). 
+*Please Note:* Currently, Bare Metal Servers for VPC are supported in Frankfurt (eu-de), Dallas (us-south) and Washington DC (us-east) only. Check the latest availability information per region in [IBM Cloud Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-bare-metal-servers-profile&interface=ui#bare-metal-profile-availability-by-region). 
 
 ### Resource creation
 
@@ -159,7 +159,7 @@ variable "deploy_iam" {
 
 variable "deploy_fileshare" {
   description = "Boolean to enable fileshare deployment. Alternatively customize the cluster map."
-  default = true
+  default = false
 }
 
 variable "deploy_dns" {
@@ -358,11 +358,11 @@ nsx_t_overlay_networks = {
 }
 ```
 
-Note. IBM Cloud® Virtual Private Cloud (VPC) automatically generates a default routing table for the VPC to manage traffic in the `zone`. By default, this routing table is empty. You can add routes to the default routing table, or create one or more custom routing tables and then add routes to it. For example, if you want a specialized routing policy for a specific subnet, you can create a routing table and associate it with one or more subnets. Routes are also always specific to a `zone`.
+*Please Note:* IBM Cloud® Virtual Private Cloud (VPC) automatically generates a default routing table for the VPC to manage traffic in the `zone`. By default, this routing table is empty. You can add routes to the default routing table, or create one or more custom routing tables and then add routes to it. For example, if you want a specialized routing policy for a specific subnet, you can create a routing table and associate it with one or more subnets. Routes are also always specific to a `zone`.
 
-Note. When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
+*Please Note:* When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
 
-Note. This terraform creates a VPC prefix for each NSX-T overlay route automatically to simplify the process, but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing information in VPC. See the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
+*Please Note:* This terraform creates a VPC prefix for each NSX-T overlay route automatically to simplify the process, but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing information in VPC. See the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
 
 
 ### Deployment architecture
@@ -393,7 +393,7 @@ variable "zone_clusters" {
 }
 ```
 
-Note. Provisioning VPC file shares is not yet available in the public version of IBM Cloud terraform plugin.
+*Please Note:* Provisioning VPC file shares is not yet available in the public version of IBM Cloud terraform plugin.
 
 The ESXI image type is the same across all Bare Metal servers and is described as follows:
 
@@ -653,7 +653,6 @@ The following provides an example `terraform.tfvars-example-for-ryo` for RYO dep
 # Services deployment options
 
 deploy_dns = true
-deploy_fileshare = false
 deploy_iam = true
 enable_vcf_mode = false
 deploy_bastion = true
@@ -856,7 +855,6 @@ The following provides an example `terraform.tfvars-example-for-vcf` for VCF dep
 # Services deployment options
 
 deploy_dns = false
-deploy_fileshare = false
 deploy_iam = false
 enable_vcf_mode = true
 deploy_bastion = true
