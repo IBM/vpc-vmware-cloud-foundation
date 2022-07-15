@@ -126,6 +126,10 @@ variable "vmw_dns_servers" {
   
 }
 
+variable "vmw_ntp_server" {
+  
+}
+
 variable "vmw_tags" {
   
 }

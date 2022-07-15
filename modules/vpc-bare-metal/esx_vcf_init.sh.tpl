@@ -44,7 +44,7 @@ esxcli network ip dns server add --server=${dns_server_1}
 esxcli network ip dns server add --server=${dns_server_2}
 
 # Add NTP Server addresses
-esxcli system ntp set --server=161.26.0.6
+esxcli system ntp set --server=${ntp_server}
 
 # Allow NTP through firewall
 esxcfg-firewall -e ntpClient

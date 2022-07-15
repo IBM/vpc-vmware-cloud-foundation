@@ -78,6 +78,12 @@ variable "dns_records" {
 }
 
 
+### NTP
+
+variable "ntp_server" {
+  description = "IBM Cloud DNS server"
+  default = "161.26.0.6"
+}
 
 ### IBM Cloud Region variables
 

@@ -54,6 +54,7 @@ data "template_file" "userdata" {
     old_mgmt_default_gateway = var.vmw_enable_vcf_mode ? cidrhost(data.ibm_is_subnet.vmw_host_subnet.ipv4_cidr_block,1) : ""
     dns_server_1 = var.vmw_enable_vcf_mode ? var.vmw_dns_servers[0] : var.vmw_dns_servers[0]
     dns_server_2 = var.vmw_enable_vcf_mode ? var.vmw_dns_servers[1] : var.vmw_dns_servers[1]
+    ntp_server = var.vmw_ntp_server
   }
 }
 

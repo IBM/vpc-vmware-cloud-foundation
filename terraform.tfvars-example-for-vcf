@@ -113,7 +113,17 @@ security_group_rules = {
           name      = "allow-inbound-t0-uplink"
           direction = "inbound"
           remote_id = "uplink-priv"
-        },     
+        },
+        {
+          name      = "allow-inbound-avn-local-network"
+          direction = "inbound"
+          remote_id = "172.27.16.0/24"
+        },
+        {
+          name      = "allow-inbound-avn-x-region-network"
+          direction = "inbound"
+          remote_id = "172.27.17.0/24"
+        },      
         {
           name      = "allow-outbound-any"
           direction = "outbound"

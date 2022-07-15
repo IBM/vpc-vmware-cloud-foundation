@@ -123,6 +123,7 @@ resource "random_string" "nsxt_edge_password" {
 ##############################################################
 
 
+
 locals {
   nsx_t_mgr = {
     nsx_t_0 = {

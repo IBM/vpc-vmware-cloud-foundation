@@ -319,10 +319,10 @@ locals {
 
 locals {
   vcf_pools = {
-    vmot     = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address] : []
-    vsan     = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address] : []
-    tep      = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address] : []
-    edge_tep = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[*].address] : []
+    vmot     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
+    vsan     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
+    tep      = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
+    edge_tep = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[*].address : []
   }
 }
 
@@ -355,7 +355,6 @@ locals {
       }] : []
   }
 }
-
 
 
 

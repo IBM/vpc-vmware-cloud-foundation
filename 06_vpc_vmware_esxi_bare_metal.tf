@@ -55,6 +55,7 @@ module "zone_bare_metal_esxi" {
   vmw_key = ibm_is_ssh_key.host_ssh_key.id
   vmw_dns_root_domain = var.dns_root_domain
   vmw_instance_ssh_private_key = tls_private_key.host_ssh.private_key_pem
+  vmw_ntp_server = var.ntp_server
 
   vmw_tags = local.resource_tags.bms_esx
 
@@ -75,6 +76,9 @@ module "zone_bare_metal_esxi" {
 locals {
  cluster_list = [ for cluster_key, cluster_value in var.zone_clusters: cluster_key ]
 }
+
+
+
 
 #/*
 locals {

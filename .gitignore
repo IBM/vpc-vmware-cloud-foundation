@@ -43,3 +43,6 @@ SSH_KEYS/*
 .DS_Store
 
 
+# Testing
+TEMPLATE/*
+90_*
