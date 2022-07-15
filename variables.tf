@@ -300,15 +300,20 @@ variable "security_group_rules" {
             remote_id = "mgmt"
           },
           {
-            name      = "allow-inbound-10-8"
+            name      = "allow-inbound-10-0-0-8"
             direction = "inbound"
             remote    = "10.0.0.0/8"
           },
           {
-            name      = "allow-inbound-t0-uplink"
+            name      = "allow-inbound-172-16-0-0-12"
             direction = "inbound"
-            remote_id = "uplink-priv"
+            remote    = "172.16.0.0/12"
           },
+          {
+            name      = "allow-inbound-192-168-0-0-16"
+            direction = "inbound"
+            remote    = "192.168.0.0/8"
+          },          
           {
             name      = "allow-outbound-any"
             direction = "outbound"

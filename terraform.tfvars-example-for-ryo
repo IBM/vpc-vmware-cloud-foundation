@@ -63,8 +63,8 @@ number_of_bastion_hosts = 1
 
 # Networking
 
-vpc_zone_prefix = "10.100.0.0/22" # infrastucture subnets
-vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
+vpc_zone_prefix = "10.100.0.0/22"                # infrastucture subnets
+vpc_zone_prefix_t0_uplinks = "192.168.10.0/24"   # edge and tier 0 gateway subnets
 
 mgmt_vlan_id = 100
 vmot_vlan_id = 200
@@ -94,15 +94,10 @@ security_group_rules = {
           remote_id = "mgmt"
         },
         {
-          name      = "allow-inbound-10-8"
+          name      = "allow-inbound-10-0-0-0-8"
           direction = "inbound"
           remote    = "10.0.0.0/8"
-        },
-        {
-          name      = "allow-inbound-t0-uplink"
-          direction = "inbound"
-          remote_id = "uplink-priv"
-        },     
+        },   
         {
           name      = "allow-outbound-any"
           direction = "outbound"
