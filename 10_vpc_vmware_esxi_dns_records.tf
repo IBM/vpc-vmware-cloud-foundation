@@ -65,8 +65,8 @@ module "zone_dns_ptrs_for_hosts" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_bare_metal_esxi,
-    module.zone_dns_records_for_hosts
+    module.zone_dns_records_for_hosts,
+    module.zone_bare_metal_esxi
   ]
 }
 
@@ -159,8 +159,8 @@ module "zone_dns_ptr_for_nsxt_mgr" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_nxt_t,
-    module.zone_dns_record_for_nsxt_mgr
+    module.zone_dns_record_for_nsxt_mgr,
+    module.zone_nxt_t
   ]
 }
 
@@ -200,8 +200,8 @@ module "zone_dns_ptr_for_nsxt_mgr_vip" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_nxt_t,
-    module.zone_dns_record_for_nsxt_mgr_vip
+    module.zone_dns_record_for_nsxt_mgr_vip,
+    module.zone_nxt_t
   ]
 }
 
@@ -249,8 +249,8 @@ module "zone_dns_ptr_for_nsxt_edge" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_nxt_t,
-    module.zone_dns_record_for_nsxt_edge
+    module.zone_dns_record_for_nsxt_edge,
+    module.zone_nxt_t
   ]
 }
 
@@ -297,7 +297,8 @@ module "zone_dns_ptr_for_cloud_builder" {
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
     ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder,
-    module.zone_dns_record_for_cloud_builder
+    module.zone_dns_record_for_cloud_builder,
+    module.zone_nxt_t
   ]
 }
 
@@ -343,7 +344,8 @@ module "zone_dns_ptr_for_sddc_manager" {
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
     ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager,
-    module.zone_dns_record_for_sddc_manager
+    module.zone_dns_record_for_sddc_manager,
+    module.zone_nxt_t
   ]
 }
 
@@ -385,7 +387,8 @@ module "zone_dns_ptr_for_avn_appliances" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_dns_record_for_avn_appliances
+    module.zone_dns_record_for_avn_appliances,
+    module.zone_nxt_t
   ]
 }
 
