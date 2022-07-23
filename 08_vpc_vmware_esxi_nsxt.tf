@@ -175,7 +175,7 @@ locals {
       password = random_string.nsxt_edge_password.result
       username = "admin"
       mgmt = {
-        fqdn = "edge-1.${var.dns_root_domain}"
+        fqdn = "edge-0.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address
         prefix_length = local.subnets.inst_mgmt.prefix_length
         default_gateway = local.subnets.inst_mgmt.default_gateway
@@ -195,7 +195,7 @@ locals {
       password = random_string.nsxt_edge_password.result
       username = "admin"
       mgmt = {
-        fqdn = "edge-2.${var.dns_root_domain}"
+        fqdn = "edge-1.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address
         prefix_length = local.subnets.inst_mgmt.prefix_length
         default_gateway = local.subnets.inst_mgmt.default_gateway

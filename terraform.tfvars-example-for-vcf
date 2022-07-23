@@ -25,7 +25,7 @@ resource_prefix = "vcf"
 
 # DNS
 
-dns_root_domain = "vcf-test-1.ibmcloud.local"
+dns_root_domain = "vcf-fra-test-1.ibmcloud.local"
 
 dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
 
@@ -38,8 +38,10 @@ vcf_avn_dns_records = {
 
 # IBM CLoud Region and VPC Zone
 
-ibmcloud_vpc_region = "us-south"
-vpc_zone = "us-south-1"
+# ibmcloud_vpc_region = "us-south"
+# vpc_zone = "us-south-1"
+ibmcloud_vpc_region = "eu-de"
+vpc_zone = "eu-de-1"
 
 
 # Hosts and clusters
