@@ -38,7 +38,7 @@ module "zone_vcenter" {
 resource "random_string" "vcenter_password" {
   length           = 16
   special          = true
-  number           = true
+  numeric          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
