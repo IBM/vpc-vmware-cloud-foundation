@@ -99,7 +99,7 @@ resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip
 resource "random_string" "nsxt_mgr_password" {
   length           = 16
   special          = true
-  number          = true
+  numeric          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
@@ -110,7 +110,7 @@ resource "random_string" "nsxt_mgr_password" {
 resource "random_string" "nsxt_edge_password" {
   length           = 16
   special          = true
-  number          = true
+  numeric          = true
   min_special      = 1
   min_lower        = 2
   min_numeric      = 2
