@@ -607,7 +607,7 @@ Each entry in the above list will use the created Bare Metal Server VLAN interfa
 In VCF deployment option, you can optionally define additional DNS entries (for example VCF assets running on the AVN overlay networks) 
 
 ```hcl
-variable "vcf_avn_dns_records" {
+variable "dns_records}" {
   description = "DNS records for VCF AVN"
   default = {
     lcm = {
@@ -674,12 +674,21 @@ tags = ["env:test"]
 resource_prefix = "vmw"
 
 
-# DNS root domain
+# DNS
 
 dns_root_domain = "vmw-test-1.ibmcloud.local"
 
+dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
 
-# IBM CLoud Region and VPC Zone
+dns_records = {
+     vrslcm = {
+       name = "xint-vrslcm01"
+       ip_address = "172.27.17.20"
+     },
+   }
+
+
+# IBM Cloud Region and VPC Zone
 
 ibmcloud_vpc_region = "us-south"
 vpc_zone = "us-south-1"
@@ -877,12 +886,21 @@ tags = ["env:test"]
 resource_prefix = "vcf"
 
 
-# DNS root domain
+# DNS
 
-dns_root_domain = "vcf-test-1.ibmcloud.local"
+dns_root_domain = "vcf-fra-test-1.ibmcloud.local"
+
+dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
+
+dns_records = {
+     vrslcm = {
+       name = "xint-vrslcm01"
+       ip_address = "172.27.17.20"
+     },
+   }
 
 
-# IBM CLoud Region and VPC Zone
+# IBM Cloud Region and VPC Zone
 
 ibmcloud_vpc_region = "us-south"
 vpc_zone = "us-south-1"
@@ -910,12 +928,6 @@ vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
 vcf_avn_local_network_prefix = "172.27.16.0/24" # avn overlay local subnet
 vcf_avn_x_region_network_prefix = "172.27.17.0/24" # avn overlay x-region subnet
 
-vcf_avn_dns_records = {
-     lcm = {
-       name = "xint-vrslcm01"
-       ip_address = "172.27.17.20"
-     },
-   }
 
 mgmt_vlan_id = 1611
 vmot_vlan_id = 1612
