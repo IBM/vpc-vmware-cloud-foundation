@@ -101,7 +101,7 @@ nsx_t_overlay_networks = {
     vcf_avn_x_region_network = {
       name = "avn-x-region-network"
       destination = "172.27.17.0/24"      
-    }
+    },
   }
 
 # Note. update the security group rules below to allow the required traffic. 
