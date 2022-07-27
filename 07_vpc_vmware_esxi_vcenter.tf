@@ -59,7 +59,7 @@ locals {
     default_gateway = local.subnets.inst_mgmt.default_gateway
     vlan_id = var.mgmt_vlan_id
     vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
-    username = "administrator@${var.dns_root_domain}"
+    username = "administrator@vsphere.local"
     password = random_string.vcenter_password.result
   }
 }
