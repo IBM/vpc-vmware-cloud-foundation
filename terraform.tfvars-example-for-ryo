@@ -11,15 +11,16 @@ deploy_bastion = true
 
 resource_group_name = ""
 
+
+# Resource prefix for naming assets
+
+resource_prefix = "vcf"
+
 # Tags
 # all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
 
 tags = ["env:test"]
 
-
-# Resource prefix for naming assets
-
-resource_prefix = "vmw"
 
 
 # DNS
@@ -34,6 +35,11 @@ dns_records = {
        ip_address = "172.27.17.20"
      },
    }
+
+
+# NTP
+
+ntp_server = "161.26.0.6"   # IBM Cloud NTP server 
 
 
 
@@ -56,6 +62,7 @@ zone_clusters = {
         },
    }
 
+esxi_image="esxi-7-byol"
 
 # Bastion host
 

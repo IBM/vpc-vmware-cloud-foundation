@@ -47,13 +47,25 @@ output "dns_servers" {
 }
 
 
+##############################################################
+#  Output NTP server
+##############################################################
+
+
+output "ntp_server" {
+  value = var.ntp_server
+}
+
+
+
+
 
 
 ##############################################################
 #  Output cluster hosts
 ##############################################################
 
-output "cluster_host_map_out" {
+output "cluster_hosts" {
   value = local.cluster_host_map
 }
 

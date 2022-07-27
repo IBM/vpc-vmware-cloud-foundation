@@ -44,6 +44,6 @@ SSH_KEYS/*
 
 
 # Testing
-TEMPLATE/*
+#TEMPLATE/*
 OUTPUT/*
-90_*
+#90_*
