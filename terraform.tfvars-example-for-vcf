@@ -63,7 +63,9 @@ zone_clusters = {
          },
    }
 
-esxi_image="esxi-7-byol"
+esxi_image="esxi-7-byol" # BYOL ESXi lisence
+# esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
+# esxi_image_name = ""   # Use a specific ESXI version to override the latest (use image name). 
 
 # Bastion host
 
