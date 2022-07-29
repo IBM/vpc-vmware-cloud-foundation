@@ -54,14 +54,35 @@ vpc_zone = "eu-de-1"
 
 # Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
 
+# Consolidated single cluster deployment example
+
 zone_clusters = {
       cluster_0 = { 
-         name = "converged"
+         name = "consolidated"
          vmw_host_profile = "bx2d-metal-96x384"
          host_count = 4   # Min. 4 hosts for VCF
          vpc_file_shares = [ ] 
          },
    }
+
+# Consolidated multi cluster deployment example
+
+/*
+zone_clusters = {
+      cluster_0 = { 
+         name = "consolidated"
+         vmw_host_profile = "bx2d-metal-96x384"
+         host_count = 4  # Min. 4 hosts for VCF 
+         vpc_file_shares = [ ] 
+         },
+      cluster_1 = { 
+         name = "workload"
+         vmw_host_profile = "mx2d-metal-96x768"
+         host_count = 1  # Min. 4 hosts for VSAN 
+         vpc_file_shares = [ ] 
+         },
+   }
+*/
 
 esxi_image="esxi-7-byol" # BYOL ESXi lisence
 # esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
