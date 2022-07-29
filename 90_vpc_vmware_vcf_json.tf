@@ -58,7 +58,9 @@ data "template_file" "vcf_bringup_json" {
       vcf_cluster_name = var.vcf_cluster_name
       vcf_dc_name = var.vcf_dc_name
 
-      vcf_password = var.vcf_password
+      sddc_manager_password = var.vcf_password == "" ? random_string.sddc_manager_password.result : var.vcf_password
+      vcenter_password = var.vcf_password == "" ? random_string.vcenter_password.result : var.vcf_password
+      nsx_password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
 
       dns_domain = var.dns_root_domain
       dns_server_1 = var.dns_servers[0]

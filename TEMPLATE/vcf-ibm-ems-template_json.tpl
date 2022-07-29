@@ -4,7 +4,7 @@
   "sddcManagerSpec": {
     "secondUserCredentials": {
       "username": "vcf",
-      "password": "${vcf_password}"
+      "password": "${sddc_manager_password}"
     },
     "ipAddress": "${sddc_manager_ip}",
     "netmask": "${sddc_manager_mask}",
@@ -12,9 +12,9 @@
     "licenseKey": "${sddc_manager_license}",
     "rootUserCredentials": {
       "username": "root",
-      "password": "${vcf_password}"
+      "password": "${sddc_manager_password}"
     },
-    "localUserPassword": "${vcf_password}",
+    "localUserPassword": "${sddc_manager_password}",
     "vcenterId": "vcenter-1"
   },
   "sddcId": "${vcf_mgmt_domain}",
@@ -90,9 +90,9 @@
           "ip": "${nsx_t_2_ip}"
       }
     ],
-    "rootNsxtManagerPassword": "${vcf_password}",
-    "nsxtAdminPassword": "${vcf_password}",
-    "nsxtAuditPassword": "${vcf_password}",
+    "rootNsxtManagerPassword": "${nsx_password}",
+    "nsxtAdminPassword": "${nsx_password}",
+    "nsxtAuditPassword": "${nsx_password}",
     "rootLoginEnabledForNsxtManager": "true",
     "sshEnabledForNsxtManager": "true",
     "overLayTransportZone": {
@@ -253,7 +253,7 @@
     {
       "pscId": "psc-1",
       "vcenterId": "vcenter-1",
-      "adminUserSsoPassword": "${vcf_password}",
+      "adminUserSsoPassword": "${vcenter_password}",
       "pscSsoSpec": {
         "ssoDomain": "vsphere.local"
       }
@@ -266,7 +266,7 @@
       "licenseFile": "${vcenter_license}",
       "vmSize": "small",
       "storageSize": "",
-      "rootVcenterPassword": "${vcf_password}"
+      "rootVcenterPassword": "${vcenter_password}"
   },
   "hostSpecs": [
     {

@@ -106,6 +106,30 @@ nsx_t_overlay_networks = {
     },
   }
 
+
+### VCF deployment variables
+
+# Define a common password (optional) for all VCF elements for initial deployment, change after deployment.
+# Password Policy: Each password has its own password policy typically a minimum number of characters in length 
+# and atleast one uppercase, lowercase, number and special character (e.g: @!#$%?^). 
+# Unsupported: Ambiguous Characters (e.g: { } [ ] ( ) / \' " ` *~ , ; : .< >)
+
+vcf_password = ""   # If you leave this empty (default setting), a random password will be generated for you for each . 
+
+vcf_mgmt_domain_name = "m01" 
+vcf_cluster_name = "cl01" 
+vcf_dc_name = "dc01" 
+
+### VCF license variables
+
+sddc_manager_license = "add-your-license-here"
+nsx_t_license = "add-your-license-here"  
+vsan_license = "add-your-license-here"  
+vcenter_license = "add-your-license-here"  
+esx_license = "add-your-license-here"  
+
+
+
 # Note. update the security group rules below to allow the required traffic. 
 
 # Network security
