@@ -184,10 +184,10 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? "use-vcf-pool" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address 
+        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? "none" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id 
+        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }
@@ -204,10 +204,10 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? "use-vcf-pool" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address
+        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length 
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? "none" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id
+        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }
