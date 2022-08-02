@@ -113,10 +113,14 @@ variable "vpc_t0_public_ips" {
 
   
 variable "esxi_image" {
-  description = "Base ESXI image name, terraform will find the latest available image id"
+  description = "Base ESXI image name, terraform will find the latest available image id."
   default = "esxi-7-byol"
 }
 
+variable "esxi_image_name" {
+  description = "Use a specific ESXI image version to use for the hosts to override the latest by name."
+  default = ""
+}
 
 # Networks
 

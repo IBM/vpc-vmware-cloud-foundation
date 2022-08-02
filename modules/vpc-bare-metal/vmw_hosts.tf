@@ -56,6 +56,7 @@ data "template_file" "userdata" {
     dns_server_2 = var.vmw_enable_vcf_mode ? var.vmw_dns_servers[1] : var.vmw_dns_servers[1]
     ntp_server = var.vmw_ntp_server
   }
+
 }
 
 
@@ -130,6 +131,10 @@ resource "ibm_is_bare_metal_server" "esx_host" {
       create = "30m"
       update = "30m"
       delete = "30m"
+    }
+
+    lifecycle {
+      ignore_changes = [user_data]
     }
 }
 

@@ -95,8 +95,17 @@ resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip
 
 # Note use random_password instead...this is for testing only.
 
+# Password for the root user of the appliance operating system
+# Must contain only lower ASCII characters without spaces.
+# Must be at least 8 characters, but no more than 20 characters in length
+# Must contain at least one uppercase letter
+# Must contain at least one lowercase letter
+# Must contain at least one number
+# Must contain at least one special character, 
+# for example @!#$%?^
 
-resource "random_string" "nsxt_mgr_password" {
+
+resource "random_string" "nsxt_password" {
   length           = 16
   special          = true
   numeric          = true
@@ -104,19 +113,10 @@ resource "random_string" "nsxt_mgr_password" {
   min_lower        = 2
   min_numeric      = 2
   min_upper        = 2
-  override_special = "_/@<>"
+  override_special = "@!#$%?"
 }
 
-resource "random_string" "nsxt_edge_password" {
-  length           = 16
-  special          = true
-  numeric          = true
-  min_special      = 1
-  min_lower        = 2
-  min_numeric      = 2
-  min_upper        = 2
-  override_special = "_/!<>"
-}
+
 
 ##############################################################
 # Define output maps and output
@@ -133,7 +133,7 @@ locals {
       default_gateway = local.subnets.inst_mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].id
       username = "admin"
-      password = random_string.nsxt_mgr_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       vlan_id = var.mgmt_vlan_id
     }
     nsx_t_1 = {
@@ -143,7 +143,7 @@ locals {
       default_gateway = local.subnets.inst_mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].id
       username = "admin"
-      password = random_string.nsxt_mgr_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       vlan_id = var.mgmt_vlan_id
     }
     nsx_t_2 = {
@@ -153,7 +153,7 @@ locals {
       default_gateway = local.subnets.inst_mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].id
       username = "admin"
-      password = random_string.nsxt_mgr_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       vlan_id = var.mgmt_vlan_id
     }
     nsx_t_vip = {
@@ -163,7 +163,7 @@ locals {
       default_gateway = local.subnets.inst_mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.id
       username = "admin"
-      password = random_string.nsxt_mgr_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       vlan_id = var.mgmt_vlan_id
     }
   }
@@ -172,7 +172,7 @@ locals {
 locals {
   nsx_t_edge = {
     edge_0 = {
-      password = random_string.nsxt_edge_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       username = "admin"
       mgmt = {
         fqdn = "edge-0.${var.dns_root_domain}"
@@ -184,15 +184,15 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? "use-vcf-pool" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address 
+        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? "none" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id 
+        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }
     edge_1 = {
-      password = random_string.nsxt_edge_password.result
+      password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       username = "admin"
       mgmt = {
         fqdn = "edge-1.${var.dns_root_domain}"
@@ -204,10 +204,10 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? "use-vcf-pool" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address
+        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length 
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? "none" : module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id
+        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }

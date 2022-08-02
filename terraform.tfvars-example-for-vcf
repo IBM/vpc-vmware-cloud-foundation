@@ -12,15 +12,15 @@ deploy_bastion = true
 resource_group_name = ""
 
 
+# Resource prefix for naming assets
+
+resource_prefix = "vcf"
+
 # Tags
 # all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
 
 tags = ["env:test"]
 
-
-# Resource prefix for naming assets
-
-resource_prefix = "vcf"
 
 
 # DNS
@@ -36,6 +36,12 @@ dns_records = {
      },
    }
 
+
+# NTP
+
+ntp_server = "161.26.0.6"   # IBM Cloud NTP server 
+
+
 # IBM Cloud Region and VPC Zone
 
 # ibmcloud_vpc_region = "us-south"
@@ -48,15 +54,39 @@ vpc_zone = "eu-de-1"
 
 # Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
 
+# Consolidated single cluster deployment example
+
 zone_clusters = {
       cluster_0 = { 
-         name = "converged"
+         name = "consolidated"
          vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4 
+         host_count = 4   # Min. 4 hosts for VCF
          vpc_file_shares = [ ] 
          },
    }
 
+# Consolidated multi cluster deployment example
+
+/*
+zone_clusters = {
+      cluster_0 = { 
+         name = "consolidated"
+         vmw_host_profile = "bx2d-metal-96x384"
+         host_count = 4  # Min. 4 hosts for VCF 
+         vpc_file_shares = [ ] 
+         },
+      cluster_1 = { 
+         name = "workload"
+         vmw_host_profile = "mx2d-metal-96x768"
+         host_count = 1  # Min. 4 hosts for VSAN 
+         vpc_file_shares = [ ] 
+         },
+   }
+*/
+
+esxi_image="esxi-7-byol" # BYOL ESXi lisence
+# esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
+# esxi_image_name = ""   # Use a specific ESXI version to override the latest (use image name). 
 
 # Bastion host
 
@@ -64,6 +94,9 @@ number_of_bastion_hosts = 1
 
 
 # Networking
+
+vcf_host_pool_size = 8   # Creates VLAN interfaces for a pool for N hosts total (1 x vmot, 1 x vsan, 2 x tep)
+vcf_edge_pool_size = 2   # Creates VLAN interfaces for a pool for N edges total (1 x mgmt, 2 x tep)
 
 vpc_zone_prefix = "10.100.0.0/22"                # infrastucture subnets
 vpc_zone_prefix_t0_uplinks = "192.168.10.0/24"   # edge and tier 0 gateway subnets
@@ -76,9 +109,6 @@ tep_vlan_id = 1614
 edge_uplink_public_vlan_id = 2711
 edge_uplink_private_vlan_id = 2712
 edge_tep_vlan_id = 2713
-
-vcf_host_pool_size = 8   # Creates VLAN interfaces for a pool for N hosts total = N x (1 x vmot, 1 x vsan, 2 x tep)
-vcf_edge_pool_size = 2   # Creates VLAN interfaces for a pool for N edges total = N x (2 x tep)
 
 vpc_t0_public_ips = 1
 
@@ -94,8 +124,32 @@ nsx_t_overlay_networks = {
     vcf_avn_x_region_network = {
       name = "avn-x-region-network"
       destination = "172.27.17.0/24"      
-    }
+    },
   }
+
+
+### VCF deployment variables
+
+# Define a common password (optional) for all VCF elements for initial deployment, change after deployment.
+# Password Policy: Each password has its own password policy typically a minimum number of characters in length 
+# and atleast one uppercase, lowercase, number and special character (e.g: @!#$%?^). 
+# Unsupported: Ambiguous Characters (e.g: { } [ ] ( ) / \' " ` *~ , ; : .< >)
+
+vcf_password = ""   # If you leave this empty (default setting), a random password will be generated for you for each . 
+
+vcf_mgmt_domain_name = "m01" 
+vcf_cluster_name = "cl01" 
+vcf_dc_name = "dc01" 
+
+### VCF license variables
+
+sddc_manager_license = "add-your-license-here"
+nsx_t_license = "add-your-license-here"  
+vsan_license = "add-your-license-here"  
+vcenter_license = "add-your-license-here"  
+esx_license = "add-your-license-here"  
+
+
 
 # Note. update the security group rules below to allow the required traffic. 
 

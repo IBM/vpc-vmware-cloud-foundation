@@ -1,7 +1,52 @@
 
 ##############################################################
-# These are deployed specially for VCF
+# Deployed specially for VCF deployments
 ##############################################################
+
+
+##############################################################
+# Create random password for cloud_builder and sddc_manager
+##############################################################
+
+# Note use random_password instead...this is for testing only.
+
+# Password for the root user of the appliance operating system
+# Must contain only lower ASCII characters without spaces.
+# Must be at least 8 characters, but no more than 20 characters in length
+# Must contain at least one uppercase letter
+# Must contain at least one lowercase letter
+# Must contain at least one number
+# Must contain at least one special character, 
+# for example @!#$%?^
+
+
+resource "random_string" "cloud_builder_password" {
+  length           = 16
+  special          = true
+  numeric          = true
+  min_special      = 1
+  min_lower        = 2
+  min_numeric      = 2
+  min_upper        = 2
+  override_special = "@!#$%?"
+}
+
+
+resource "random_string" "sddc_manager_password" {
+  length           = 16
+  special          = true
+  numeric          = true
+  min_special      = 1
+  min_lower        = 2
+  min_numeric      = 2
+  min_upper        = 2
+  override_special = "@!#$%?"
+}
+
+
+
+
+
 
 ##############################################################
 # Count number IPs required
@@ -302,7 +347,7 @@ locals {
       vlan_id = var.mgmt_vlan_id
       vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
       username = "admin"
-      password = random_string.vcenter_password.result
+      password = var.vcf_password == "" ? random_string.cloud_builder_password.result : var.vcf_password
     },
     sddc_manager = {
       fqdn = "sddc-manager.${var.dns_root_domain}"
@@ -312,7 +357,7 @@ locals {
       vlan_id = var.mgmt_vlan_id
       vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
       username = "admin"
-      password = random_string.vcenter_password.result
+      password = var.vcf_password == "" ? random_string.sddc_manager_password.result : var.vcf_password
     },
   }
 }
@@ -322,7 +367,7 @@ locals {
     vmot     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
     vsan     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
     tep      = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
-    edge_tep = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[*].address : []
+    #edge_tep = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[*].address : []
   }
 }
 

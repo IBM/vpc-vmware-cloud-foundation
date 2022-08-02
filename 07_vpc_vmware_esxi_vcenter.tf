@@ -31,8 +31,8 @@ module "zone_vcenter" {
 # Must contain at least one uppercase letter
 # Must contain at least one lowercase letter
 # Must contain at least one number
-# Must contain at least one special character, for
-# example, a dollar sign ($), hash key (#), at sign (@), period (.), or exclamation mark (!)
+# Must contain at least one special character, 
+# for example @!#$%?^
 
 
 resource "random_string" "vcenter_password" {
@@ -43,8 +43,9 @@ resource "random_string" "vcenter_password" {
   min_lower        = 2
   min_numeric      = 2
   min_upper        = 2
-  override_special = "$#@.!"
+  override_special = "@!#$%?"
 }
+
 
 
 ##############################################################
@@ -59,8 +60,8 @@ locals {
     default_gateway = local.subnets.inst_mgmt.default_gateway
     vlan_id = var.mgmt_vlan_id
     vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
-    username = "administrator@${var.dns_root_domain}"
-    password = random_string.vcenter_password.result
+    username = "administrator@vsphere.local"
+    password = var.vcf_password == "" ? random_string.vcenter_password.result : var.vcf_password
   }
 }
 

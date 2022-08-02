@@ -4,6 +4,8 @@
 # OS Provided
 ##############################################################
 
+
+
 data "ibm_is_images"  "os_images" {
     visibility = "public"
 }
@@ -16,8 +18,9 @@ locals {
 }
 
 data "ibm_is_image" "vmw_esx_image" {
-  name = local.os_images_filtered_esxi[0].name
+  name = var.esxi_image_name == "" ? local.os_images_filtered_esxi[0].name : var.esxi_image_name
 }
+
 
 ##############################################################
 # Order BMSs for Clusters in Zone
