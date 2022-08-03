@@ -134,7 +134,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
     }
 
     lifecycle {
-      ignore_changes = [user_data]
+      ignore_changes = [user_data,image]
     }
 }
 
