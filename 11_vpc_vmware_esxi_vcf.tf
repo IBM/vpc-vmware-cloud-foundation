@@ -156,7 +156,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "cloud_builder
     
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
     
-    subnet = local.subnets.inst_mgmt.subnet_id
+    subnet = local.subnets.mgmt.subnet_id
     vlan = var.mgmt_vlan_id
     
     name   = "vlan-nic-cloud-builder"
@@ -180,7 +180,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager"
     
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
     
-    subnet = local.subnets.inst_mgmt.subnet_id
+    subnet = local.subnets.mgmt.subnet_id
     vlan = var.mgmt_vlan_id
     
     name   = "vlan-nic-sddc-manager"
@@ -342,20 +342,20 @@ locals {
     cloud_builder = {
       fqdn = "cloud-builder.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       vlan_id = var.mgmt_vlan_id
-      vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
+      vpc_subnet_id = local.subnets.mgmt.subnet_id
       username = "admin"
       password = var.vcf_password == "" ? random_string.cloud_builder_password.result : var.vcf_password
     },
     sddc_manager = {
       fqdn = "sddc-manager.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       vlan_id = var.mgmt_vlan_id
-      vpc_subnet_id = local.subnets.inst_mgmt.subnet_id
+      vpc_subnet_id = local.subnets.mgmt.subnet_id
       username = "admin"
       password = var.vcf_password == "" ? random_string.sddc_manager_password.result : var.vcf_password
     },

@@ -25,7 +25,7 @@ data "template_file" "vcf_bringup_json" {
       ntp_server = var.ntp_server
 
       sddc_manager_ip = local.vcf.sddc_manager.ip_address
-      sddc_manager_mask = cidrnetmask(local.subnets.inst_mgmt.cidr)
+      sddc_manager_mask = cidrnetmask(local.subnets.mgmt.cidr)
 
       sddc_manager_license = var.sddc_manager_license
       nsx_t_license = var.nsx_t_license
@@ -40,8 +40,8 @@ data "template_file" "vcf_bringup_json" {
       nsx_t_2_ip = local.nsx_t_mgr.nsx_t_2.ip_address
       nsx_t_vip = local.nsx_t_mgr.nsx_t_vip.ip_address
 
-      network_mgmt_cidr = local.subnets.inst_mgmt.cidr
-      network_mgmt_gateway = local.subnets.inst_mgmt.default_gateway
+      network_mgmt_cidr = local.subnets.mgmt.cidr
+      network_mgmt_gateway = local.subnets.mgmt.default_gateway
 
       network_vmot_cidr = local.subnets.vmot.cidr
       network_vmot_gateway = local.subnets.vmot.default_gateway

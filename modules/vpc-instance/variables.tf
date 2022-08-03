@@ -48,7 +48,7 @@ variable "vmw_instance_ssh_private_key" {
 variable "vmw_instance_resources_prefix" {
   
 }
-variable "vmw_instance_vmw_subnet_inst_mgmt_id" {
+variable "vmw_instance_vmw_subnet_mgmt_id" {
   
 }
 variable "vmw_instance_vmw_sg_mgmt" {

@@ -33,7 +33,7 @@ variable "vmw_resource_group_id" {
 
 
 
-variable "vmw_inst_mgmt_subnet_id" {
+variable "vmw_mgmt_subnet_id" {
   
 }
 

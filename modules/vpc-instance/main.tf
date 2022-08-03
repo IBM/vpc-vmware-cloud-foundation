@@ -13,7 +13,7 @@ resource "ibm_is_instance" "instances" {
   resource_group = var.vmw_instance_resource_group_id
 
   primary_network_interface {
-    subnet = var.vmw_instance_vmw_subnet_inst_mgmt_id
+    subnet = var.vmw_instance_vmw_subnet_mgmt_id
   #  security_groups = [ var.vmw_instance_vmw_sg_mgmt ]
   }
 #   dynamic primary_network_interface {
@@ -92,7 +92,7 @@ resource "ibm_is_floating_ip" "bastion_floatingip" {
 # }
 
 # data "ibm_is_subnet" "vcenter_subnet" {
-#   identifier = module.vpc_zone_networks.vpc_subnet_zone_inst_mgmt_id
+#   identifier = module.vpc_zone_networks.vpc_subnet_zone_mgmt_id
 # }
 
 data "template_file" "vcenter_json" {

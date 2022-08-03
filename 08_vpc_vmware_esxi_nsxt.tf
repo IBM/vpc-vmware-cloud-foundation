@@ -10,7 +10,7 @@ module "zone_nxt_t" {
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
-  vmw_inst_mgmt_subnet_id         = local.subnets.inst_mgmt.subnet_id
+  vmw_mgmt_subnet_id         = local.subnets.mgmt.subnet_id
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id                = var.mgmt_vlan_id
@@ -34,7 +34,7 @@ module "zone_nxt_t_edge" {
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
   vmw_priv_subnet_id              = local.nsxt_edge_subnets.private.subnet_id
   vmw_pub_subnet_id               = local.nsxt_edge_subnets.public.subnet_id
-  vmw_inst_mgmt_subnet_id         = local.subnets.inst_mgmt.subnet_id
+  vmw_mgmt_subnet_id         = local.subnets.mgmt.subnet_id
   vmw_tep_subnet_id               = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.subnet_id : local.subnets.tep.subnet_id
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
@@ -129,8 +129,8 @@ locals {
     nsx_t_0 = {
       fqdn = "nsx-t-0.${var.dns_root_domain}"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].primary_ip[0].address
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].id
       username = "admin"
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
@@ -139,8 +139,8 @@ locals {
     nsx_t_1 = {
       fqdn = "nsx-t-1.${var.dns_root_domain}"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].primary_ip[0].address
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].id
       username = "admin"
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
@@ -149,8 +149,8 @@ locals {
     nsx_t_2 = {
       fqdn = "nsx-t-2.${var.dns_root_domain}"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].primary_ip[0].address
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].id
       username = "admin"
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
@@ -159,8 +159,8 @@ locals {
     nsx_t_vip = {
       fqdn = "nsx-t-vip.${var.dns_root_domain}"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.primary_ip[0].address
-      prefix_length = local.subnets.inst_mgmt.prefix_length
-      default_gateway = local.subnets.inst_mgmt.default_gateway
+      prefix_length = local.subnets.mgmt.prefix_length
+      default_gateway = local.subnets.mgmt.default_gateway
       id = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.id
       username = "admin"
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
@@ -177,8 +177,8 @@ locals {
       mgmt = {
         fqdn = "edge-0.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address
-        prefix_length = local.subnets.inst_mgmt.prefix_length
-        default_gateway = local.subnets.inst_mgmt.default_gateway
+        prefix_length = local.subnets.mgmt.prefix_length
+        default_gateway = local.subnets.mgmt.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].id
         vlan_id = var.mgmt_vlan_id
       }
@@ -197,8 +197,8 @@ locals {
       mgmt = {
         fqdn = "edge-1.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address
-        prefix_length = local.subnets.inst_mgmt.prefix_length
-        default_gateway = local.subnets.inst_mgmt.default_gateway
+        prefix_length = local.subnets.mgmt.prefix_length
+        default_gateway = local.subnets.mgmt.default_gateway
         id = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].id
         vlan_id = var.mgmt_vlan_id
       }

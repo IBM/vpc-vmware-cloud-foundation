@@ -36,11 +36,12 @@ module "zone_bare_metal_esxi" {
   vmw_vpc_zone = var.vpc_zone
   vmw_esx_image = data.ibm_is_image.vmw_esx_image.id
   vmw_host_profile = each.value.vmw_host_profile
+  #vmw_resources_prefix = local.resources_prefix
   vmw_resources_prefix = var.resource_prefix ## need to add random here
   vmw_cluster_prefix = each.value.name
   vmw_dns_servers = var.dns_servers
   vmw_host_subnet = local.subnets.hosts.subnet_id
-  vmw_mgmt_subnet = local.subnets.inst_mgmt.subnet_id
+  vmw_mgmt_subnet = local.subnets.mgmt.subnet_id
   vmw_vmot_subnet = local.subnets.vmot.subnet_id
   vmw_vsan_subnet = local.subnets.vsan.subnet_id
   vmw_tep_subnet = local.subnets.tep.subnet_id
@@ -98,9 +99,9 @@ locals {
              "mgmt" : {
                 "ip_address" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_mgmt_interface_ip_address[host],
                 "vlan_nic_id" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_mgmt_interface_id[host],
-                "cidr" : var.enable_vcf_mode ? local.subnets.inst_mgmt.cidr : local.subnets.hosts.cidr,
-                "prefix_length" : var.enable_vcf_mode ? local.subnets.inst_mgmt.prefix_length : local.subnets.hosts.prefix_length ,
-                "default_gateway" : var.enable_vcf_mode ? local.subnets.inst_mgmt.default_gateway : local.subnets.hosts.default_gateway,
+                "cidr" : var.enable_vcf_mode ? local.subnets.mgmt.cidr : local.subnets.hosts.cidr,
+                "prefix_length" : var.enable_vcf_mode ? local.subnets.mgmt.prefix_length : local.subnets.hosts.prefix_length ,
+                "default_gateway" : var.enable_vcf_mode ? local.subnets.mgmt.default_gateway : local.subnets.hosts.default_gateway,
                 "vlan_id" : var.enable_vcf_mode ? var.mgmt_vlan_id : 0
               },
               "vmot" : {
