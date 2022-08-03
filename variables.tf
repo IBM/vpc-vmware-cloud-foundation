@@ -10,6 +10,7 @@ variable "ibmcloud_api_key" {
 
 variable "resource_group_name" {
   description = "Name of the resource group to deploy the assets. If left empty, then a resource group will be created for you."
+  #default = ""
 }
 
 ### Tag
@@ -570,3 +571,50 @@ variable "number_of_bastion_hosts" {
   description = "Number of bastion hosts to deploy."
   default = 1
 }
+
+
+
+##############################################################
+# VCF deployment variables
+##############################################################
+
+### VCF deployment variables
+
+variable "vcf_password" {
+  default = ""
+}
+
+variable "vcf_mgmt_domain_name" {
+  default = "m01" 
+}
+
+variable "vcf_cluster_name" {
+  default = "cl01" 
+}
+
+variable "vcf_dc_name" {
+  default = "dc01" 
+}
+
+### VCF license variables
+
+variable "sddc_manager_license" {
+  default = ""
+}
+
+variable "nsx_t_license" {
+  default = ""  
+}
+
+variable "vsan_license" {
+  default = ""  
+}
+
+variable "vcenter_license" {
+  default = ""  
+}
+
+variable "esx_license" {
+  default = ""  
+}
+

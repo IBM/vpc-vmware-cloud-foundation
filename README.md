@@ -622,6 +622,24 @@ The above example map would create the following A-record and the related PTR-re
 * vRealize Suite Lifecycle Manager : `xint-vrslcm01`
 
 
+## VCF bring-up json
+
+The terraform creates a json file for initial bringup. This file can be passed to VCF Cloud Builder.
+
+Template file location:
+```
+TEMPLATE/vcf-ibm-ems-template_json.tpl
+```
+
+Output file location:
+```
+OUTPUT/vcf-<resource_prefix>-ibm-ems-bringup.json
+```
+
+Json file content is also output on a output called `vcf_bringup_json`. 
+
+Note. Each IBM Cloud bare metal server for VPC has a random password provided by IBM Cloud and are encrypted with the provided SSH key. The passwords are decrypted by the terraform and passed to created json file   
+
 ## Logical Template Flow
 
 The terraform file names have been named to indicate the logical order of the resource creation and to group resource types into a single file, this has been done for convenience only.
@@ -638,8 +656,9 @@ The terraform file names have been named to indicate the logical order of the re
 08_vpc_vmware_esxi_nsxt.tf
 10_vpc_vmware_esxi_dns_records.tf
 11_vpc_vmware_esxi_vcf.tf
-12_vpc_vmware_vsi_windows.tf
+12_vpc_vmware_bastion_hosts.tf
 13_vpc_vmware_routes.tf
+90_vpc_vmware_vcf_json.tf
 99_vpc_vmware_output.tf
 ```
 

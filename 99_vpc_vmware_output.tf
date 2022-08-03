@@ -160,6 +160,17 @@ output "vcf_vlan_nics" {
 }
 
 
+##############################################################
+# Output bringup json
+##############################################################
+
+
+output "vcf_bringup_json" {
+  value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
+  sensitive = true
+} 
+
+
 
 ##############################################################
 # Output Windows server
@@ -191,3 +202,6 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
   value = local.vpc_tgw_dl_ingress_routes_per_zone
   description = "Deployed VPC ingress route table (readonly data) per zone."
 }
+
+
+

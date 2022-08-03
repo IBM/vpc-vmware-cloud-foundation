@@ -1,47 +1,3 @@
-##############################################################
-# New variables
-##############################################################
-
-### VCF deployment variables
-
-variable "vcf_password" {
-  default = ""
-}
-
-variable "vcf_mgmt_domain_name" {
-  default = "m01" 
-}
-
-variable "vcf_cluster_name" {
-  default = "cl01" 
-}
-
-variable "vcf_dc_name" {
-  default = "dc01" 
-}
-
-### VCF license variables
-
-variable "sddc_manager_license" {
-  default = ""
-}
-
-variable "nsx_t_license" {
-  default = ""  
-}
-
-variable "vsan_license" {
-  default = ""  
-}
-
-variable "vcenter_license" {
-  default = ""  
-}
-
-variable "esx_license" {
-  default = ""  
-}
-
 
 
 ##############################################################
@@ -139,16 +95,6 @@ resource "local_file" "write_vcf_bringup_json" {
   file_permission = 0600
 }
 
-
-##############################################################
-# Output bringup json
-##############################################################
-
-
-output "vcf_bringup_json" {
-  value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
-  sensitive = true
-} 
 
 
 
