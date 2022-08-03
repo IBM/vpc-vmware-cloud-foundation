@@ -45,7 +45,7 @@ module "zone_dns_records_for_hosts" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_bare_metal_esxi
+    module.zone_bare_metal_esxi,
   ]
 }
 

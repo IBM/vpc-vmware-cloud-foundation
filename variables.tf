@@ -447,11 +447,11 @@ variable "vpc" {
                   vpc_zone_subnet_size = 3
                   public_gateways = ["subnet-public-gateway"]
                   subnets = {
-                    host-mgmt = {
+                    host = {
                         cidr_offset = 0
                         ip_version = "ipv4"
                     },
-                    inst-mgmt = {
+                    mgmt = {
                         cidr_offset = 1
                         ip_version = "ipv4"
                         public_gateway = "subnet-public-gateway"
@@ -502,11 +502,11 @@ variable "vpc_vcf" {
                   vpc_zone_subnet_size = 3
                   public_gateways = ["subnet-public-gateway"]
                   subnets = {
-                    host-mgmt = {
+                    host = {
                         cidr_offset = 0
                         ip_version = "ipv4"
                     },
-                    inst-mgmt = {
+                    mgmt = {
                         cidr_offset = 1
                         ip_version = "ipv4"
                         public_gateway = "subnet-public-gateway"

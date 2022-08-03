@@ -5,7 +5,7 @@
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "vcenter" {
     bare_metal_server = var.vmw_vcenter_esx_host_id
-    subnet = var.vmw_inst_mgmt_subnet
+    subnet = var.vmw_mgmt_subnet
     name   = "vlan-nic-vcenter"
     security_groups = [var.vmw_sg_mgmt]
     allow_ip_spoofing = false

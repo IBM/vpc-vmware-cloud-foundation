@@ -104,21 +104,21 @@ module "security_group_rules" {
 locals {
   subnets = {
     hosts = {
-      name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].name
-      subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].id
-      cidr = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].ipv4_cidr_block,1)
-      pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host-mgmt"].public_gateway == null ? false : true
+      name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].name
+      subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].id
+      cidr = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block
+      prefix_length = split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block)[1]
+      default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block,1)
+      pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].public_gateway == null ? false : true
       vlan_id =  var.host_vlan_id
     },
-    inst_mgmt = {
-      name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].name
-      subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].id
-      cidr = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].ipv4_cidr_block,1)
-      pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-inst-mgmt"].public_gateway == null ? false : true
+    mgmt = {
+      name = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].name
+      subnet_id = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].id
+      cidr = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block
+      prefix_length = split("/", module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block)[1]
+      default_gateway = cidrhost(module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block,1)
+      pgw = module.vpc-subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].public_gateway == null ? false : true
       vlan_id = var.mgmt_vlan_id
     },
     vmot = {

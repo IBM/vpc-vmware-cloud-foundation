@@ -71,7 +71,7 @@ resource "ibm_is_instance" "bastion" {
 
   primary_network_interface {
     name = "eth0"
-    subnet = local.subnets["inst_mgmt"]["subnet_id"]
+    subnet = local.subnets["mgmt"]["subnet_id"]
     security_groups = [ibm_is_security_group.sg["bastion"].id, ibm_is_security_group.sg["mgmt"].id]
   }
  
