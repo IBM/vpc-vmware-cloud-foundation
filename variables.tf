@@ -18,12 +18,13 @@ variable "resource_group_name" {
 
 ### Tag
 
-/*
+
 variable "tags" {
   description = "Tag to define environment"
   default = ["vcf"]
+  type = list(string)
 }
-*/
+
 
 ### Resource prefix for each item
 
