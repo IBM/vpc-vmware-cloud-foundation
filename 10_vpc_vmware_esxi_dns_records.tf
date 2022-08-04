@@ -356,7 +356,7 @@ module "zone_dns_ptr_for_sddc_manager" {
 
 module "zone_dns_record_for_avn_appliances" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.dns_records : {} : {}
+  for_each =  var.deploy_dns ? var.dns_records : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
@@ -374,7 +374,7 @@ module "zone_dns_record_for_avn_appliances" {
 
 module "zone_dns_ptr_for_avn_appliances" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.enable_vcf_mode ? var.dns_records : {} : {}
+  for_each =  var.deploy_dns ? var.dns_records : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
