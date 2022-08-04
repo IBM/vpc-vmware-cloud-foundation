@@ -205,3 +205,13 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 
+
+##############################################################
+# Testing
+##############################################################
+
+
+output "cos_bucket_test_key" {
+  value = var.cos_bucket_test_key
+}
+

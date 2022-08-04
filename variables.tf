@@ -575,46 +575,63 @@ variable "number_of_bastion_hosts" {
 
 
 ##############################################################
-# VCF deployment variables
+# VCF variables
 ##############################################################
 
 ### VCF deployment variables
 
 variable "vcf_password" {
+  description = "Define a common password for all elements. Optional, leave empty to get random passwords."
   default = ""
 }
 
 variable "vcf_mgmt_domain_name" {
+  description = "VCF management domain name."
   default = "m01" 
 }
 
 variable "vcf_cluster_name" {
+  description = "VCF cluster name."
   default = "cl01" 
 }
 
 variable "vcf_dc_name" {
+  description = "VCF data center name."
   default = "dc01" 
 }
 
 ### VCF license variables
 
 variable "sddc_manager_license" {
+  description = "VMware SDDC manager license."
   default = ""
 }
 
 variable "nsx_t_license" {
+  description = "VMware NSX-T manager license."
   default = ""  
 }
 
 variable "vsan_license" {
+  description = "VMware VSAN manager license."
   default = ""  
 }
 
 variable "vcenter_license" {
+  description = "VMware vCenter manager license."
   default = ""  
 }
 
 variable "esx_license" {
+  description = "VMware ESX manager license."
   default = ""  
 }
 
+
+##############################################################
+# Testing
+##############################################################
+
+variable "cos_bucket_test_key" {
+  default = ""  
+}
