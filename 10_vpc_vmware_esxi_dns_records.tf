@@ -429,7 +429,3 @@ locals {
     ]
   }  
 }
-
-output "dns_records_to_create" {
-  value = var.enable_vcf_mode ? concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other) : concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.other)
-}

@@ -25,7 +25,7 @@ output "resource_group_id" {
   description = "Resource group ID used for deployed assets."
 
 }
-   
+
 
 ##############################################################
 #  Output zone VPC subnets
@@ -51,6 +51,16 @@ output "dns_root_domain" {
 output "dns_servers" {
   value = var.dns_servers
   description = "Used DNS server IP addresses."
+}
+
+##############################################################
+#  Output DNS records
+##############################################################
+
+
+output "dns_records_to_create" {
+  value = var.enable_vcf_mode ? concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other) : concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.other)
+  description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
 }
 
 
@@ -125,6 +135,7 @@ output "zone_nsx_t_edge" {
 
 output "zone_subnets_edge" {
   value = local.nsxt_edge_subnets
+  description = "Deployed subnet infromation for edge nodes."
 }
 
 output "nsx_t_t0" {
@@ -168,6 +179,7 @@ output "vcf_vlan_nics" {
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
   sensitive = true
+  description = "VCF bringup json file."
 } 
 
 

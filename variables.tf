@@ -17,7 +17,8 @@ variable "resource_group_name" {
 
 variable "tags" {
   description = "Tag to define environment"
-  default = []
+  default = ["vcf"]
+  type = list
 }
 
 ### Resource prefix for each item
