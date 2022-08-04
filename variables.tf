@@ -23,7 +23,7 @@ variable "tags" {
 ### Resource prefix for each item
 
 variable "resource_prefix" {
-  description = "Resource Group Prefix to create in the IBM Cloud account."
+  description = "Resource name prefix to create in the IBM Cloud account."
   default = "vmw"
 }
 
