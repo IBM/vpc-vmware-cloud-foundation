@@ -70,6 +70,11 @@ esxi_image="esxi-7-byol" # BYOL ESXi lisence
 
 number_of_bastion_hosts = 1
 
+number_of_bastion_hosts_linux = 1
+
+vsi_profile_bastion_linux = "bx2-2x8"
+vsi_image_os_linux = "centos-7-amd64"
+
 # Networking
 
 vpc_zone_prefix = "10.100.0.0/22"                # infrastucture subnets

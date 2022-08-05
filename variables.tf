@@ -597,18 +597,17 @@ variable "vpc_vcf" {
 }
 
 
-### Windows AD/DNS server
-
-variable "vsi_profile_bastion" {
-  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
-  default     = "bx2-2x8"
-  type = string
-}
-
+### Windows bastion server
 
 variable "vsi_image_architecture" {
   description = "CPU architecture for VSI deployment"
   default = "amd64"
+  type = string
+}
+
+variable "vsi_profile_bastion" {
+  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
+  default     = "bx2-2x8"
   type = string
 }
 
@@ -623,6 +622,30 @@ variable "number_of_bastion_hosts" {
   default = 1
   type = number
 }
+
+
+variable "vsi_profile_bastion_linux" {
+  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
+  default     = "bx2-2x8"
+  type = string
+}
+
+variable "vsi_image_os_linux" {
+  description = "OS for VSI deployment"
+  default = "centos-7-amd64"
+  type = string
+}
+
+variable "number_of_bastion_hosts_linux" {
+  description = "Number of bastion hosts to deploy."
+  default = 0
+  type = number
+}
+
+
+
+
+
 
 
 
