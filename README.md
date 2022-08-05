@@ -606,15 +606,14 @@ Each entry in the above list will use the created Bare Metal Server VLAN interfa
 In VCF deployment option, you can optionally define additional DNS entries (for example VCF assets running on the AVN overlay networks) 
 
 ```hcl
-variable "dns_records}" {
-  description = "DNS records for VCF AVN"
-  default = {
-    lcm = {
+variable "dns_records" {
+  description = "DNS records to create."
+  default = [
+    {
       name = "xint-vrslcm01"
       ip_address = "172.27.17.20"
-    }
-  }
-}
+    },
+  ]
 ```
 
 The above example map would create the following A-record and the related PTR-record for the specified IP address:

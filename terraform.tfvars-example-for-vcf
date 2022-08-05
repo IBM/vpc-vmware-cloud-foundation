@@ -29,12 +29,12 @@ dns_root_domain = "vcf-fra-test-1.ibmcloud.local"
 
 dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
 
-dns_records = {
-     vrslcm = {
-       name = "xint-vrslcm01"        # Note add your AVN server names here
-       ip_address = "172.27.17.20"   # Note add your AVN servers IPs here 
-     },
-   }
+dns_records = [
+    {
+      name = "xint-vrslcm01"
+      ip_address = "172.27.17.20"
+    },
+  ]
 
 
 # NTP

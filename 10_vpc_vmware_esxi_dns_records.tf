@@ -353,10 +353,19 @@ module "zone_dns_ptr_for_sddc_manager" {
 # Create DNS records for AVN appliances
 ##############################################################
 
+locals {
+  additional_dns_records = {
+    for v in var.dns_records : v.name => {
+      name = v.name
+      ip_address = v.name
+    }
+  }
+}
 
-module "zone_dns_record_for_avn_appliances" {
+
+module "zone_dns_records" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.dns_records : {}
+  for_each =  var.deploy_dns ? local.additional_dns_records : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
@@ -372,9 +381,9 @@ module "zone_dns_record_for_avn_appliances" {
   ]
 }
 
-module "zone_dns_ptr_for_avn_appliances" {
+module "zone_dns_ptrs" {
   source = "./modules/vpc-dns-record"
-  for_each =  var.deploy_dns ? var.dns_records : {}
+  for_each =  var.deploy_dns ? local.additional_dns_records : {}
 
   vmw_dns_instance_guid = ibm_resource_instance.dns_services_instance[0].guid
   vmw_dns_zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
@@ -387,7 +396,7 @@ module "zone_dns_ptr_for_avn_appliances" {
   depends_on = [
     ibm_resource_instance.dns_services_instance,
     ibm_dns_zone.dns_services_zone,
-    module.zone_dns_record_for_avn_appliances,
+    module.zone_dns_records,
     module.zone_nxt_t
   ]
 }
@@ -422,7 +431,7 @@ locals {
       { name = "sddc-manager", "ip_address" = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"},    
     ],
     other = [ 
-      for record in var.dns_records : {
+      for record in local.additional_dns_records : {
         "name=" = record.name
         "ip_address" = record.ip_address
       }

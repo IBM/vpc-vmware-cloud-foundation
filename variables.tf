@@ -78,18 +78,24 @@ variable "dns_root_domain" {
 variable "dns_servers" {
   description = "DNS servers."
   default = ["161.26.0.7", "161.26.0.8"]
+  type = list(string)
 }
 
 
 variable "dns_records" {
   description = "DNS records to create."
-  default = {
-    xint-vrslcm = {
+  default = [
+    {
       name = "xint-vrslcm01"
       ip_address = "172.27.17.20"
     },
-  }
+  ]
+  type = list(object({
+    name = string
+    ip_address = string
+  }))
 }
+
 
 
 ### NTP
