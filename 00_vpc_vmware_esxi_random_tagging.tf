@@ -20,7 +20,7 @@ locals {
 # Recource tagging
 ##############################################################
 
-/*
+
 locals {
   resource_tags = {
     ssh_key             = concat(["vmware:${local.resources_prefix}"], var.tags)
@@ -35,8 +35,9 @@ locals {
     floating_ip_bastion = concat(["vmware:${local.resources_prefix}"], var.tags, ["bastion"])
   }
 }
-*/
 
+
+/*
 locals {
   resource_tags = {
     ssh_key             = concat(["vmware:${local.resources_prefix}"])
@@ -51,4 +52,4 @@ locals {
     floating_ip_bastion = concat(["vmware:${local.resources_prefix}"], ["bastion"])
   }
 }
-
+*/

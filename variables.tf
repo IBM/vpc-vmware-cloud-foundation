@@ -3,6 +3,7 @@
 
 variable "ibmcloud_api_key" {
   description = "Enter your IBM Cloud API Key"
+  type = string
 }
 
 
@@ -10,23 +11,27 @@ variable "ibmcloud_api_key" {
 
 variable "resource_group_name" {
   description = "Name of the resource group to deploy the assets. If left empty, then a resource group will be created for you."
-  #default = ""
+  default = ""
+  type = string
+
 }
 
 ### Tag
 
-/*
+
 variable "tags" {
   description = "Tag to define environment"
   default = ["vcf"]
+  type = list(string)
 }
-*/
+
 
 ### Resource prefix for each item
 
 variable "resource_prefix" {
   description = "Resource name prefix to create in the IBM Cloud account."
   default = "vmw"
+  type = string
 }
 
 
@@ -35,26 +40,31 @@ variable "resource_prefix" {
 variable "deploy_iam" {
   description = "Boolean to enable IAM deployment."
   default = true
+  type = bool
 }
 
 variable "deploy_fileshare" {
   description = "Boolean to enable fileshare deployment. Alternatively customize the cluster map."
   default = false
+  type = bool
 }
 
 variable "deploy_dns" {
   description = "Boolean to enable DNS service deployment."
   default = true
+  type = bool
 }
 
 variable "enable_vcf_mode" {
   description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
   default = false
+  type = bool
 }
 
 variable "deploy_bastion" {
   description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
   default = false
+  type = bool
 }
 
 ### DNS root domain
@@ -62,6 +72,7 @@ variable "deploy_bastion" {
 variable "dns_root_domain" {
   description = "Root Domain of Private DNS used with the Virtual Server"
   default = "vmw-terraform.ibmcloud.local"
+  type = string
 }
 
 variable "dns_servers" {
@@ -86,6 +97,7 @@ variable "dns_records" {
 variable "ntp_server" {
   description = "IBM Cloud DNS server"
   default = "161.26.0.6"
+  type = string
 }
 
 ### IBM Cloud Region variables
@@ -93,11 +105,13 @@ variable "ntp_server" {
 variable "ibmcloud_vpc_region" {
   description = "Enter the target Region of IBM Cloud"
   default = "eu-de"
+  type = string
 }
 
 variable "vpc_zone" {
   description = "VPC Zone"
   default     = "eu-de-1"
+  type = string
 }
 
 
@@ -105,6 +119,7 @@ variable "vpc_zone" {
 variable "vpc_name" {
   description = "Name of the VPC to create."
   default     = "vpc"
+  type = string
 }
 
 
@@ -118,11 +133,13 @@ variable "vpc_t0_public_ips" {
 variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id."
   default = "esxi-7-byol"
+  type = string
 }
 
 variable "esxi_image_name" {
   description = "Use a specific ESXI image version to use for the hosts to override the latest by name."
   default = ""
+  type = string
 }
 
 # Networks
@@ -130,21 +147,25 @@ variable "esxi_image_name" {
 variable "vpc_zone_prefix" {
   description = "This is the address prefix for VMware components for each zone. /22 is recommended for appx. 120 hosts, /23 for appx. 60 hosts etc."
   default  = "10.100.0.0/22"
+  type = string
 }
 
 variable "vpc_zone_prefix_t0_uplinks" {
   description = "This is the NSX-T uplink address prefix for each zone."
   default  = "192.168.10.0/24"
+  type = string
 }
 
 variable "vcf_host_pool_size" {
   description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
   default = 10  
+  type = number
 }
 
 variable "vcf_edge_pool_size" {
   description = "Size of the edge network pool to reserve VPC subnet IPs # of edge nodes."
   default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
+  type = number
 }
 
 
@@ -167,30 +188,35 @@ variable "nsx_t_overlay_networks" {
 variable "host_vlan_id" {
   description = "VLAN ID for host network"
   default     = 0 
+  type = number
 }
 
 variable "mgmt_vlan_id" {
   description = "VLAN ID for management network"
   # default     = 100 ## IBM Cloud ref arch
   default     = 1611 ## VCF default
+  type = number
 }
 
 variable "vmot_vlan_id" {
   description = "VLAN ID for vMotion network"
   # default     = 200
   default     = 1612 ## VCF default
+  type = number
 }
 
 variable "vsan_vlan_id" {
   description = "VLAN ID for vSAN network"
   # default     = 300
   default     = 1613 ## VCF default
+  type = number
 }
 
 variable "tep_vlan_id" {
   description = "VLAN ID for TEP network"
   # default     = 400
   default     = 1614 ## VCF default
+  type = number
 }
 
 
@@ -198,17 +224,20 @@ variable "edge_uplink_public_vlan_id" {
   description = "VLAN ID for T0 public uplink network"
   # default     = 700
   default     = 2711 ## VCF default
+  type = number
 }
 
 variable "edge_uplink_private_vlan_id" {
   description = "VLAN ID for T0 private uplink network"
   # default     = 710
   default     = 2712 ## VCF default
+  type = number
 }
 
 variable "edge_tep_vlan_id" {
   description = "VLAN ID for TEP network"
   default     = 2713 ## VCF default
+  type = number
 }
 
 
@@ -296,11 +325,21 @@ variable "security_group_rules" {
 
 
 variable "security_group_rules" {
-
     description = "Security groups and rules rules to create"
-    #type        = map
+
+    type = object({
+      mgmt = list(object({name=string, direction=string})),
+      vmot = list(object({name=string, direction=string})),
+      vsan = list(object({name=string, direction=string})),
+      tep = list(object({name=string, direction=string})),
+      uplink-pub = list(object({name=string, direction=string})),
+      uplink-priv = list(object({name=string, direction=string})),
+      bastion = list(object({name=string, direction=string})),
+    })
+
+
     default = {
-        "mgmt" = [
+        mgmt = [
           {
             name      = "allow-all-mgmt"
             direction = "inbound"
@@ -327,7 +366,7 @@ variable "security_group_rules" {
             remote    = "0.0.0.0/0"
           }
         ],
-        "vmot" = [
+        vmot = [
           {
             name      = "allow-icmp-mgmt"
             direction = "inbound"
@@ -347,7 +386,7 @@ variable "security_group_rules" {
             remote_id = "vmot"
           }
         ],
-        "vsan" = [
+        vsan = [
           {
             name      = "allow-icmp-mgmt"
             direction = "inbound"
@@ -367,7 +406,7 @@ variable "security_group_rules" {
             remote_id = "vsan"
           }
         ],
-        "tep" = [
+        tep = [
           {
             name      = "allow-icmp-mgmt"
             direction = "inbound"
@@ -387,7 +426,7 @@ variable "security_group_rules" {
             remote_id = "tep"
           }
         ],
-        "uplink-pub" = [
+        uplink-pub = [
           {
             name      = "allow-inbound-any"
             direction = "inbound"
@@ -402,7 +441,7 @@ variable "security_group_rules" {
             remote    = "0.0.0.0/0"
           }
         ],
-        "uplink-priv" = [
+        uplink-priv = [
           {
             name      = "allow-inbound-any"
             direction = "inbound"
@@ -414,7 +453,7 @@ variable "security_group_rules" {
             remote    = "0.0.0.0/0"
           }
         ],
-        "bastion" = [
+        bastion = [
           {
             name      = "allow-inbound-rdp"
             direction = "inbound"
@@ -556,22 +595,26 @@ variable "vpc_vcf" {
 variable "vsi_profile_bastion" {
   description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
   default     = "bx2-2x8"
+  type = string
 }
 
 
 variable "vsi_image_architecture" {
   description = "CPU architecture for VSI deployment"
   default = "amd64"
+  type = string
 }
 
 variable "vsi_image_os" {
   description = "OS for VSI deployment"
   default = "windows-2019-amd64"
+  type = string
 }
 
 variable "number_of_bastion_hosts" {
   description = "Number of bastion hosts to deploy."
   default = 1
+  type = number
 }
 
 
@@ -585,21 +628,25 @@ variable "number_of_bastion_hosts" {
 variable "vcf_password" {
   description = "Define a common password for all elements. Optional, leave empty to get random passwords."
   default = ""
+  type = string
 }
 
 variable "vcf_mgmt_domain_name" {
   description = "VCF management domain name."
-  default = "m01" 
+  default = "m01"
+  type = string
 }
 
 variable "vcf_cluster_name" {
   description = "VCF cluster name."
   default = "cl01" 
+  type = string
 }
 
 variable "vcf_dc_name" {
   description = "VCF data center name."
   default = "dc01" 
+  type = string
 }
 
 ### VCF license variables
@@ -607,26 +654,31 @@ variable "vcf_dc_name" {
 variable "sddc_manager_license" {
   description = "VMware SDDC manager license."
   default = ""
+  type = string
 }
 
 variable "nsx_t_license" {
   description = "VMware NSX-T manager license."
   default = ""  
+  type = string
 }
 
 variable "vsan_license" {
   description = "VMware VSAN manager license."
   default = ""  
+  type = string
 }
 
 variable "vcenter_license" {
   description = "VMware vCenter manager license."
   default = ""  
+  type = string
 }
 
 variable "esx_license" {
   description = "VMware ESX manager license."
   default = ""  
+  type = string
 }
 
 
@@ -636,4 +688,5 @@ variable "esx_license" {
 
 variable "cos_bucket_test_key" {
   default = ""  
+  type = string
 }

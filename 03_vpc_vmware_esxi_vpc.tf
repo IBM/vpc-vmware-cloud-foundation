@@ -45,6 +45,30 @@ module "vpc-subnets" {
 # Create Security Groups
 ##############################################################
 
+locals {
+  security_groups = {
+    for k, v in var.security_group_rules : k => {
+      name = k
+    }
+  }
+}
+
+resource "ibm_is_security_group" "sg" {
+
+  for_each       = local.security_groups
+  name           = "${local.resources_prefix}-${each.key}-sg"
+  vpc            = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+  resource_group = data.ibm_resource_group.resource_group_vmw.id
+
+    depends_on =  [
+      module.vpc-subnets
+    ]
+
+  tags = local.resource_tags.security_group
+}
+
+
+/*
 resource "ibm_is_security_group" "sg" {
 
   for_each = var.security_group_rules
@@ -58,6 +82,7 @@ resource "ibm_is_security_group" "sg" {
 
   tags = local.resource_tags.security_group
 }
+*/
 
 ##############################################################
 # Create Security Group Rules
