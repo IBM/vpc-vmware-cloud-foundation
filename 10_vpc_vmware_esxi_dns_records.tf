@@ -357,7 +357,7 @@ locals {
   additional_dns_records = {
     for v in var.dns_records : v.name => {
       name = v.name
-      ip_address = v.name
+      ip_address = v.ip_address
     }
   }
 }
