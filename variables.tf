@@ -133,6 +133,7 @@ variable "vpc_name" {
 variable "vpc_t0_public_ips" {
   description = "Number of public / floating IPs for T0."
   default     = 0 
+  type = number
 }
 
   
