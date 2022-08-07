@@ -22,7 +22,7 @@ output "vmw_nsx_t_edge_mgmt_ip" {
 ##############################################################
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "nsx_t_edge_tep" {
-    count = 2
+    count = var.vmw_enable_vcf_mode ? 4 : 2
     bare_metal_server = var.vmw_vcenter_esx_host_id
     subnet = var.vmw_tep_subnet_id
     name   = "vlan-nic-tep-${var.vmw_edge_name}-${count.index}"

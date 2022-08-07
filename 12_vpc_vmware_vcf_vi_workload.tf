@@ -37,7 +37,8 @@ module "zone_vcenter_vi_workload" {
 locals {
   zone_clusters_vi_vcenters_values = {
     for k, v in var.zone_clusters : v.name => {
-      fqdn = "vcenter-${v.name}.${var.dns_root_domain}"
+      host_name = "${v.name}-vcenter"
+      fqdn = "${v.name}-vcenter.${var.dns_root_domain}"
       ip_address = module.zone_vcenter_vi_workload[k].vmw_vcenter_ip
       prefix_length = local.subnets.mgmt.prefix_length
       default_gateway = local.subnets.mgmt.default_gateway
@@ -92,6 +93,7 @@ locals {
   zone_clusters_vi_nsx_t_managers_values = {
     for k, v in var.zone_clusters : v.name => {
       nsx_t_0 = {
+        host_name = "${v.name}-nsx-t-0"
         fqdn = "${v.name}-nsx-t-0.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_vi_workload[k].vmw_nsx_t_manager_ip[0].primary_ip[0].address
         prefix_length = local.subnets.mgmt.prefix_length
@@ -100,8 +102,9 @@ locals {
         username = "admin"
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         vlan_id = var.mgmt_vlan_id
-      }
+      },
       nsx_t_1 = {
+        host_name = "${v.name}-nsx-t-1"
         fqdn = "${v.name}-nsx-t-1.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_vi_workload[k].vmw_nsx_t_manager_ip[1].primary_ip[0].address
         prefix_length = local.subnets.mgmt.prefix_length
@@ -110,8 +113,9 @@ locals {
         username = "admin"
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         vlan_id = var.mgmt_vlan_id
-      }
+      },
       nsx_t_2 = {
+        host_name = "${v.name}-nsx-t-2"
         fqdn = "${v.name}-nsx-t-2.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_vi_workload[k].vmw_nsx_t_manager_ip[2].primary_ip[0].address
         prefix_length = local.subnets.mgmt.prefix_length
@@ -120,8 +124,9 @@ locals {
         username = "admin"
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         vlan_id = var.mgmt_vlan_id
-      }
+      },
       nsx_t_vip = {
+        host_name = "${v.name}-nsx-t-vip"
         fqdn = "${v.name}-nsx-t-vip.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_vi_workload[k].vmw_nsx_t_manager_ip_vip.primary_ip[0].address
         prefix_length = local.subnets.mgmt.prefix_length
@@ -131,7 +136,7 @@ locals {
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         vlan_id = var.mgmt_vlan_id
       }
-    } if v.name != "mgmt" && v.nsx_t_managers == true
+    } if v.name !=  "mgmt" && v.nsx_t_managers == true
   }
 }
 
@@ -149,6 +154,8 @@ locals {
 module "zone_nxt_t_edge_vi_workload" {
   source                          = "./modules/vpc-nsx-t-edge"
   for_each                        = local.zone_clusters_vi_nsx_t_edges
+
+  vmw_enable_vcf_mode             = var.enable_vcf_mode
 
   vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
@@ -192,8 +199,9 @@ locals {
       edge_0 = {
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         username = "admin"
+        host_name = "${v.name}-edge-0"
         mgmt = {
-          fqdn = "${v.name}edge-0.${var.dns_root_domain}"
+          fqdn = "${v.name}-edge-0.${var.dns_root_domain}"
           ip_address = module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address
           prefix_length = local.subnets.mgmt.prefix_length
           default_gateway = local.subnets.mgmt.default_gateway
@@ -202,18 +210,19 @@ locals {
         }
         tep = {
           fqdn = ""
-          ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].address] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
+          ip_address = var.enable_vcf_mode ? [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address, module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
           prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length
           default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-          id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].id] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].id]
+          id = var.enable_vcf_mode ? [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].id, module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].id] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[0].id]
           vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
         }
-      }
+      },
       edge_1 = {
         password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
         username = "admin"
+        host_name = "${v.name}-edge-1"
         mgmt = {
-          fqdn = "${v.name}edge-1.${var.dns_root_domain}"
+          fqdn = "${v.name}-edge-1.${var.dns_root_domain}"
           ip_address = module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address
           prefix_length = local.subnets.mgmt.prefix_length
           default_gateway = local.subnets.mgmt.default_gateway
@@ -222,19 +231,16 @@ locals {
         }
         tep = {
           fqdn = ""
-          ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].address] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
+          ip_address = var.enable_vcf_mode ? [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[2].primary_ip[0].address, module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[3].primary_ip[0].address] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
           prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length 
           default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-          id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].id] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].id]
+          id = var.enable_vcf_mode ? [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[2].id, module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[3].id] : [module.zone_nxt_t_edge_vi_workload[k].vmw_nsx_t_edge_tep_ip[1].id]
           vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
         }
       }
-    } if v.name != "mgmt" && v.nsx_t_edges == true
+    } if v.name !=  "mgmt" && v.nsx_t_edges == true
   }
 }
-
-
-
 
 
 locals {
@@ -296,12 +302,43 @@ locals {
           vlan_id = var.edge_uplink_public_vlan_id
         }
       }
-    } if v.name != "mgmt" && v.nsx_t_edges == true
+    } if v.name !=  "mgmt" && v.nsx_t_edges == true
+  }
+}
+
+
+##############################################################
+#  DNS records for VI Workload Domain Appliances 
+##############################################################
+
+
+locals {
+  zone_clusters_vi_dns_records = {
+    for clusterk, clusterv in var.zone_clusters : clusterv.name => [
+      concat(
+        [for k, v in local.zone_clusters_vi_vcenters_values : { name = v.host_name, ip_address = v.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_0.host_name, ip_address = v.nsx_t_0.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_1.host_name, ip_address = v.nsx_t_1.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_2.host_name, ip_address = v.nsx_t_2.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_vip.host_name, ip_address = v.nsx_t_vip.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_0.host_name, ip_address = v.edge_0.mgmt.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_1.host_name, ip_address = v.edge_1.mgmt.ip_address} if k == clusterv.name],
+      )
+    ] if clusterv.name !=  "mgmt"
   }
 }
 
 
 
+
+
+
+
+##############################################################
+##############################################################
+#  Outputs
+##############################################################
+##############################################################
 
 
 

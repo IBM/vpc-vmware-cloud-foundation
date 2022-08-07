@@ -57,7 +57,7 @@ locals {
       for cluster_name in keys(var.zone_clusters): 
           var.zone_clusters[cluster_name].host_count
       ]))
-  edges_total = var.vcf_edge_pool_size # hardcoded to var.vcf_edge_pool_size nodes
+  #edges_total = var.vcf_edge_pool_size # hardcoded to var.vcf_edge_pool_size nodes
 }
 
 
@@ -133,6 +133,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_tep_pool" {
 }
 
 
+/*
 resource "ibm_is_subnet_reserved_ip" "zone_vcf_edge_tep_pool" {
     count = var.enable_vcf_mode ? var.vcf_edge_pool_size * 2 : 0 # Note two TEPs per edge nodes in VCF
     subnet = local.nsxt_edge_subnets.edge_tep.subnet_id
@@ -145,7 +146,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_edge_tep_pool" {
       module.vpc-subnets,
     ]
 }
-
+*/
 
 ##############################################################
 # Create VLAN NIC for Cloud Builder
@@ -303,7 +304,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 # Note...VLAN nics provisioned to allow floating - can be used 
 # in a VCF pool and configured in any edge
 
-
+/*
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge_teps" {
     count = var.enable_vcf_mode ? var.vcf_edge_pool_size * 2 : 0  # Note two TEPs per edge nodes in VCF
@@ -329,6 +330,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge
     ] 
 }
 
+*/
 
 
 
@@ -340,6 +342,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_edge
 locals {
   vcf = {
     cloud_builder = {
+      host_name = "cloud-builder"
       fqdn = "cloud-builder.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"
       prefix_length = local.subnets.mgmt.prefix_length
@@ -350,6 +353,7 @@ locals {
       password = var.vcf_password == "" ? random_string.cloud_builder_password.result : var.vcf_password
     },
     sddc_manager = {
+      host_name = "sddc-manager"
       fqdn = "sddc-manager.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"
       prefix_length = local.subnets.mgmt.prefix_length
@@ -392,12 +396,12 @@ locals {
         vlan_nic_id = vnic.id
         vlan_nic_name = vnic.name
       }] : []
-    edge_tep = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_edge_teps : {
-        ip_address = vnic.primary_ip[0].address
-        reserved_ip = vnic.primary_ip[0].reserved_ip
-        vlan_nic_id = vnic.id
-        vlan_nic_name = vnic.name
-      }] : []
+    #edge_tep = var.enable_vcf_mode ? [for vnic in ibm_is_bare_metal_server_network_interface_allow_float.zone_vcf_edge_teps : {
+    #    ip_address = vnic.primary_ip[0].address
+    #    reserved_ip = vnic.primary_ip[0].reserved_ip
+    #    vlan_nic_id = vnic.id
+    #    vlan_nic_name = vnic.name
+    #  }] : []
   }
 }
 

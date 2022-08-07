@@ -92,7 +92,7 @@ locals {
          "name": "${cluster_name}",
          "hosts": [
            for host in range(length(module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[*])): {
-             "host" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[host],
+             "host_name" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[host],
              "username" : "root",
              "password" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_initialization[host].user_accounts[0].password,
              "id" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_id[host],

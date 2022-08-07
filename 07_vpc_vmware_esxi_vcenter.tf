@@ -58,6 +58,7 @@ resource "random_string" "vcenter_password" {
 locals {
   vcenter = {
     fqdn = "vcenter.${var.dns_root_domain}"
+    host_name = "vcenter"
     ip_address = module.zone_vcenter.vmw_vcenter_ip
     prefix_length = local.subnets.mgmt.prefix_length
     default_gateway = local.subnets.mgmt.default_gateway

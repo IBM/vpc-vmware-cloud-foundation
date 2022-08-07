@@ -1,4 +1,7 @@
 
+variable "vmw_enable_vcf_mode" {
+  
+}
 
 
 variable "vmw_vpc" {

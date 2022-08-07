@@ -57,12 +57,18 @@ output "dns_servers" {
 #  Output DNS records
 ##############################################################
 
-
+/*
 output "dns_records_to_create" {
-  value = var.enable_vcf_mode ? concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other) : concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.other)
+  value = concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other)
   description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
 }
+*/
 
+
+output "dns_records_new" {
+  value = local.dns_records
+  description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
+}
 
 ##############################################################
 #  Output NTP server

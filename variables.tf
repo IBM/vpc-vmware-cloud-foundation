@@ -167,14 +167,22 @@ variable "vcf_host_pool_size" {
   description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
   default = 10  
   type = number
+
+  validation {
+    condition = (
+        var.vcf_host_pool_size >= 8
+    )
+    error_message = "Reserve enough growth for future growth for the solution. This is required for VCF network pool creation. " 
+  }
 }
 
+/* to be deleted - not needed
 variable "vcf_edge_pool_size" {
   description = "Size of the edge network pool to reserve VPC subnet IPs # of edge nodes."
   default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
   type = number
 }
-
+*/
 
 variable "nsx_t_overlay_networks" {
   description = "NSX-T overlay network prefixes to create VPC routes"
@@ -256,6 +264,37 @@ variable "edge_tep_vlan_id" {
 variable "zone_clusters" {
   description = "Clusters in VPC"
   type        = map
+
+  validation {
+    condition = (
+      anytrue([for k,v in var.zone_clusters : contains(["cluster_0"],k)])
+    )
+    error_message = "First cluster key must be 'cluster_0'." 
+  }
+
+  validation {
+    condition = (
+        var.zone_clusters["cluster_0"].host_count >= 4
+    )
+    error_message = "The number of hosts must be greater than 4." 
+  }
+
+  validation {
+    condition = (
+        var.zone_clusters["cluster_0"].vcenter == true &&
+        var.zone_clusters["cluster_0"].nsx_t_managers == true &&
+        var.zone_clusters["cluster_0"].nsx_t_edges == true
+    )
+    error_message = "VMware VCF management components must be deployed on the initial cluster." 
+  }
+
+  validation {
+    condition = (
+        var.zone_clusters["cluster_0"].name == "mgmt"
+    )
+    error_message = "The first cluster must be named 'mgmt'." 
+  }
+
   default     = {
     cluster_0 = {
       name = "mgmt"

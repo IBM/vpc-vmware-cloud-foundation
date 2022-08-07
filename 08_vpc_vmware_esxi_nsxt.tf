@@ -31,6 +31,8 @@ module "zone_nxt_t" {
 
 module "zone_nxt_t_edge" {
   source                          = "./modules/vpc-nsx-t-edge"
+
+  vmw_enable_vcf_mode             = var.enable_vcf_mode
   vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
@@ -135,6 +137,7 @@ locals {
   nsx_t_mgr = {
     nsx_t_0 = {
       fqdn = "nsx-t-0.${var.dns_root_domain}"
+      host_name = "nsx-t-0"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].primary_ip[0].address
       prefix_length = local.subnets.mgmt.prefix_length
       default_gateway = local.subnets.mgmt.default_gateway
@@ -145,6 +148,7 @@ locals {
     }
     nsx_t_1 = {
       fqdn = "nsx-t-1.${var.dns_root_domain}"
+      host_name = "nsx-t-1"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].primary_ip[0].address
       prefix_length = local.subnets.mgmt.prefix_length
       default_gateway = local.subnets.mgmt.default_gateway
@@ -155,6 +159,7 @@ locals {
     }
     nsx_t_2 = {
       fqdn = "nsx-t-2.${var.dns_root_domain}"
+      host_name = "nsx-t-2"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].primary_ip[0].address
       prefix_length = local.subnets.mgmt.prefix_length
       default_gateway = local.subnets.mgmt.default_gateway
@@ -165,6 +170,7 @@ locals {
     }
     nsx_t_vip = {
       fqdn = "nsx-t-vip.${var.dns_root_domain}"
+      host_name = "nsx-t-vip"
       ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.primary_ip[0].address
       prefix_length = local.subnets.mgmt.prefix_length
       default_gateway = local.subnets.mgmt.default_gateway
@@ -181,6 +187,7 @@ locals {
     edge_0 = {
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       username = "admin"
+      host_name = "edge-0"
       mgmt = {
         fqdn = "edge-0.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address
@@ -191,16 +198,19 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
+        #ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
+        ip_address = var.enable_vcf_mode ? [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address, module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].primary_ip[0].address] 
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id]
+        #id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[0].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[1].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id]
+        id = var.enable_vcf_mode ? [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id, module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[0].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }
     edge_1 = {
       password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
       username = "admin"
+      host_name = "edge-1"
       mgmt = {
         fqdn = "edge-1.${var.dns_root_domain}"
         ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address
@@ -211,10 +221,12 @@ locals {
       }
       tep = {
         fqdn = ""
-        ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
+        #ip_address = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].address, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address]
+        ip_address = var.enable_vcf_mode ? [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[2].primary_ip[0].address, module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[3].primary_ip[0].address] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].primary_ip[0].address] 
         prefix_length = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.prefix_length : local.subnets.tep.prefix_length 
         default_gateway = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.default_gateway : local.subnets.tep.default_gateway
-        id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id]
+        #id = var.enable_vcf_mode ? [ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[2].id, ibm_is_subnet_reserved_ip.zone_vcf_edge_tep_pool[3].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id]
+        id = var.enable_vcf_mode ? [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[2].id, module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[3].id] : [module.zone_nxt_t_edge.vmw_nsx_t_edge_tep_ip[1].id]
         vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
       }
     }
