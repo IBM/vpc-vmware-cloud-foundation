@@ -10,7 +10,7 @@ module "zone_nxt_t" {
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
-  vmw_mgmt_subnet_id         = local.subnets.mgmt.subnet_id
+  vmw_mgmt_subnet_id              = local.subnets.mgmt.subnet_id
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id                = var.mgmt_vlan_id
@@ -34,7 +34,7 @@ module "zone_nxt_t_edge" {
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
   vmw_priv_subnet_id              = local.nsxt_edge_subnets.private.subnet_id
   vmw_pub_subnet_id               = local.nsxt_edge_subnets.public.subnet_id
-  vmw_mgmt_subnet_id         = local.subnets.mgmt.subnet_id
+  vmw_mgmt_subnet_id              = local.subnets.mgmt.subnet_id
   vmw_tep_subnet_id               = var.enable_vcf_mode ? local.nsxt_edge_subnets.edge_tep.subnet_id : local.subnets.tep.subnet_id
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
