@@ -6,6 +6,7 @@
 
 module "zone_nxt_t" {
   source                          = "./modules/vpc-nsx-t"
+
   vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
@@ -14,6 +15,9 @@ module "zone_nxt_t" {
   vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id                = var.mgmt_vlan_id
+
+  vmw_nsx_t_name                  = "nsx-t"
+
   depends_on = [
       module.vpc-subnets,
       module.zone_bare_metal_esxi["cluster_0"],
@@ -27,7 +31,6 @@ module "zone_nxt_t" {
 
 module "zone_nxt_t_edge" {
   source                          = "./modules/vpc-nsx-t-edge"
-  vmw_enable_vcf_mode             = var.enable_vcf_mode
   vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
@@ -45,6 +48,10 @@ module "zone_nxt_t_edge" {
   vmw_tep_vlan_id                 = var.enable_vcf_mode ? var.edge_tep_vlan_id : var.tep_vlan_id
   vmw_edge_uplink_public_vlan_id  = var.edge_uplink_public_vlan_id
   vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id
+
+  vmw_edge_name                   = "edge"
+  vmw_t0_name                     = "t0"
+
   depends_on = [
       module.vpc-subnets,
       module.zone_bare_metal_esxi["cluster_0"],

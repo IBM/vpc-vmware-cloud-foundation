@@ -12,6 +12,9 @@ module "zone_vcenter" {
   vmw_vcenter_esx_host_id = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   vmw_sg_mgmt = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id = var.mgmt_vlan_id
+
+  vmw_vcenter_name = "vcenter"
+
   depends_on = [
     module.vpc-subnets,
     ibm_is_security_group.sg,

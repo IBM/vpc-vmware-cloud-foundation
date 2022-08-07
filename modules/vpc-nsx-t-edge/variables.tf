@@ -1,8 +1,5 @@
 
 
-variable "vmw_enable_vcf_mode" {
-  
-}
 
 variable "vmw_vpc" {
   
@@ -50,10 +47,6 @@ variable "vmw_vcenter_esx_host_id" {
 }
 
 
-
-
-
-
 variable "vmw_sg_mgmt" {
   
 }
@@ -90,3 +83,10 @@ variable "vmw_edge_uplink_private_vlan_id" {
 
 }
 
+variable "vmw_edge_name" {
+  
+}
+
+variable "vmw_t0_name" {
+  
+}
