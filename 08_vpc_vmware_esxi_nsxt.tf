@@ -67,8 +67,10 @@ module "zone_nxt_t_edge" {
 
 
 
+
 resource "ibm_is_floating_ip" "floating_ip" {
-  count             = var.vpc_t0_public_ips
+  #count             = var.vpc_t0_public_ips
+  count             = var.zone_clusters.cluster_0.public_ips
   name              = "${local.resources_prefix}-vlan-nic-t0-uplink-public-floating-ip-${count.index}"
   zone              = var.vpc_zone
 
@@ -83,7 +85,8 @@ resource "ibm_is_floating_ip" "floating_ip" {
 }
 
 resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip_floating_ip" {
-  count             = var.vpc_t0_public_ips
+  #count             = var.vpc_t0_public_ips
+  count             = var.zone_clusters.cluster_0.public_ips
   bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
   network_interface = module.zone_nxt_t_edge.t0_uplink_public_vip.id
   floating_ip       = ibm_is_floating_ip.floating_ip[count.index].id

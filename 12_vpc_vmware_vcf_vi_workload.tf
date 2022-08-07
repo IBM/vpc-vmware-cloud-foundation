@@ -151,6 +151,7 @@ locals {
   }
 }
 
+
 module "zone_nxt_t_edge_vi_workload" {
   source                          = "./modules/vpc-nsx-t-edge"
   for_each                        = local.zone_clusters_vi_nsx_t_edges
@@ -185,6 +186,72 @@ module "zone_nxt_t_edge_vi_workload" {
       ibm_is_security_group.sg,
     ]
 }
+
+
+
+
+
+##############################################################
+# Create Floating Public IPs to public VIP
+##############################################################
+
+
+
+locals {
+  zone_clusters_vi_vi_nsx_t_t0_flips_list = flatten ([
+    for k, v in var.zone_clusters : [
+      for i,ip_v in range(v.public_ips) : {
+        name = "${v.name}-t0-uplink-public-floating-ip-${ip_v}"
+        cluster_name = v.name
+        cluster_key = k
+        }
+    ] if v.name != "mgmt" && v.nsx_t_edges == true
+  ])
+  zone_clusters_vi_vi_nsx_t_t0_flips_map = {
+    for v in local.zone_clusters_vi_vi_nsx_t_t0_flips_list : v.name => v
+  }
+}
+
+
+
+resource "ibm_is_floating_ip" "floating_ip_vi_workload" {
+  for_each          = local.zone_clusters_vi_vi_nsx_t_t0_flips_map
+  name              = "${local.resources_prefix}-vlan-nic-${each.value.name}"
+  zone              = var.vpc_zone
+
+  tags = local.resource_tags.floating_ip_t0
+
+  depends_on = [
+      module.vpc-subnets,
+      module.zone_bare_metal_esxi,
+      ibm_is_security_group.sg,
+      module.zone_nxt_t_edge_vi_workload
+    ]
+}
+
+
+
+resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip_floating_ip_vi_workload" {
+  for_each          = local.zone_clusters_vi_vi_nsx_t_t0_flips_map
+  bare_metal_server = module.zone_bare_metal_esxi[each.value.cluster_key].ibm_is_bare_metal_server_id[0]
+  network_interface = module.zone_nxt_t_edge_vi_workload[each.value.cluster_key].t0_uplink_public_vip.id
+  floating_ip       = ibm_is_floating_ip.floating_ip_vi_workload[each.key].id
+  depends_on = [
+    module.vpc-subnets,
+    module.zone_bare_metal_esxi,
+    ibm_is_security_group.sg,
+    module.zone_nxt_t_edge,
+    ibm_is_floating_ip.floating_ip_vi_workload
+  ]
+}
+
+/*
+
+resource.ibm_is_bare_metal_server_network_interface_floating_ip.t0_public_vip_floating_ip_vi_workload[*].
+
+
+*/
+
 
 
 ##############################################################
@@ -298,13 +365,17 @@ locals {
           ip_address = module.zone_nxt_t_edge_vi_workload[k].t0_uplink_public_vip.primary_ip[0].address
           prefix_length = local.nsxt_edge_subnets.public.prefix_length
           default_gateway = local.nsxt_edge_subnets.public.default_gateway
-          public_ips = var.vpc_t0_public_ips == 0 ? [] : ibm_is_bare_metal_server_network_interface_floating_ip.t0_public_vip_floating_ip[*].address
+          #public_ips = var.vpc_t0_public_ips == 0 ? [] : ibm_is_bare_metal_server_network_interface_floating_ip.t0_public_vip_floating_ip[*].address
+          public_ips = var.zone_clusters[k].public_ips == 0 ? [] : [for k,v in local.zone_clusters_vi_vi_nsx_t_t0_flips_map : ibm_is_bare_metal_server_network_interface_floating_ip.t0_public_vip_floating_ip_vi_workload[k].address]
           vlan_id = var.edge_uplink_public_vlan_id
         }
       }
     } if v.name !=  "mgmt" && v.nsx_t_edges == true
   }
 }
+
+
+
 
 
 ##############################################################
@@ -314,17 +385,17 @@ locals {
 
 locals {
   zone_clusters_vi_dns_records = {
-    for clusterk, clusterv in var.zone_clusters : clusterv.name => [
+    for cluster_k, cluster_v in var.zone_clusters : cluster_v.name => [
       concat(
-        [for k, v in local.zone_clusters_vi_vcenters_values : { name = v.host_name, ip_address = v.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_0.host_name, ip_address = v.nsx_t_0.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_1.host_name, ip_address = v.nsx_t_1.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_2.host_name, ip_address = v.nsx_t_2.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_vip.host_name, ip_address = v.nsx_t_vip.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_0.host_name, ip_address = v.edge_0.mgmt.ip_address} if k == clusterv.name],
-        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_1.host_name, ip_address = v.edge_1.mgmt.ip_address} if k == clusterv.name],
+        [for k, v in local.zone_clusters_vi_vcenters_values : { name = v.host_name, ip_address = v.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_0.host_name, ip_address = v.nsx_t_0.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_1.host_name, ip_address = v.nsx_t_1.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_2.host_name, ip_address = v.nsx_t_2.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_managers_values : { name = v.nsx_t_vip.host_name, ip_address = v.nsx_t_vip.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_0.host_name, ip_address = v.edge_0.mgmt.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_vi_nsx_t_edges_values : { name = v.edge_1.host_name, ip_address = v.edge_1.mgmt.ip_address} if k == cluster_v.name],
       )
-    ] if clusterv.name !=  "mgmt"
+    ] if cluster_v.name !=  "mgmt"
   }
 }
 
