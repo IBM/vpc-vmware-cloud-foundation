@@ -129,13 +129,13 @@ variable "vpc_name" {
 }
 
 
-
+/*to be deleted
 variable "vpc_t0_public_ips" {
   description = "Number of public / floating IPs for T0."
   default     = 0 
   type = number
 }
-
+*/
   
 variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id."
