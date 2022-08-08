@@ -184,6 +184,8 @@ variable "vcf_edge_pool_size" {
 }
 */
 
+
+/*
 variable "nsx_t_overlay_networks" {
   description = "NSX-T overlay network prefixes to create VPC routes"
   type = map
@@ -194,7 +196,7 @@ variable "nsx_t_overlay_networks" {
     },
   }
 }
-
+*/
 
 
 

@@ -36,6 +36,12 @@ output "zone_subnets" {
   description = "Created VPC subnets."
 }
 
+output "zone_subnets_edge" {
+  value = local.nsxt_edge_subnets
+  description = "Created VPC subnets for edge nodes."
+}
+
+
 
 ##############################################################
 #  Output DNS root domain
@@ -122,7 +128,7 @@ output "vcenter" {
 ##############################################################
 
 
-output "workload_nsx_t_managers" {
+output "nsx_t_managers" {
   value = local.zone_clusters_nsx_t_managers_values
 }
 
@@ -138,11 +144,6 @@ output "zone_nsx_t_mgr" {
 ##############################################################
 #  Output NSX-T edge and T0
 ##############################################################
-
-output "zone_subnets_edge" {
-  value = local.nsxt_edge_subnets
-  description = "Deployed subnet infromation for edge nodes."
-}
 
 
 output "nsx_t_edges" {
