@@ -1,7 +1,7 @@
 # Services deployment options
 
-deploy_dns = false
-deploy_iam = false
+deploy_dns = true
+deploy_iam = true
 enable_vcf_mode = true
 deploy_bastion = true
 
