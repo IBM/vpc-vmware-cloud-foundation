@@ -57,31 +57,56 @@ vpc_zone = "eu-de-1"
 # Consolidated single cluster deployment example
 
 zone_clusters = {
-      cluster_0 = { 
-         name = "consolidated"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4   # Min. 4 hosts for VCF
-         vpc_file_shares = [ ] 
-         },
-   }
+    cluster_0 = {
+      name = "mgmt"            # value must "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 4
+      vcenter = true           # value must "true" for the first cluster
+      nsx_t_managers = true    # value must "true" for the first cluster
+      nsx_t_edges = true       # value must "true" for the first cluster
+      public_ips = 2           # not used yet on mgmt cluster
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []
+    },
+  }
+
 
 # Consolidated multi cluster deployment example
 
 /*
 zone_clusters = {
-      cluster_0 = { 
-         name = "consolidated"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4  # Min. 4 hosts for VCF 
-         vpc_file_shares = [ ] 
-         },
-      cluster_1 = { 
-         name = "workload"
-         vmw_host_profile = "mx2d-metal-96x768"
-         host_count = 1  # Min. 4 hosts for VSAN 
-         vpc_file_shares = [ ] 
-         },
-   }
+    cluster_0 = {
+      name = "mgmt"            # value must "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 4
+      vcenter = true           # value must "true" for the first cluster
+      nsx_t_managers = true    # value must "true" for the first cluster
+      nsx_t_edges = true       # value must "true" for the first cluster
+      public_ips = 2           # not used yet on mgmt cluster
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []
+    },
+    cluster_1 = {
+      name = "wl-1"          
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 1
+      vcenter = false           
+      nsx_t_managers = false    
+      nsx_t_edges = false      
+      public_ips = 0
+      overlay_networks = []
+      vpc_file_shares = []
+    },
+  }
+
 */
 
 esxi_image="esxi-7-byol" # BYOL ESXi lisence
@@ -115,20 +140,6 @@ edge_tep_vlan_id = 2713
 
 vpc_t0_public_ips = 1
 
-nsx_t_overlay_networks = {
-    customer_overlay_1 = {
-      name = "customer-overlay"
-      destination = "172.16.0.0/16" 
-    },
-    vcf_avn_local_network = {
-      name = "vcf-avn-local-network"
-      destination = "172.27.16.0/24"      
-    },
-    vcf_avn_x_region_network = {
-      name = "avn-x-region-network"
-      destination = "172.27.17.0/24"      
-    },
-  }
 
 
 ### VCF deployment variables

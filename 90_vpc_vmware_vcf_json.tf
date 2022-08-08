@@ -33,30 +33,40 @@ data "template_file" "vcf_bringup_json" {
       vcenter_license = var.vcenter_license
       esx_license = var.esx_license
 
-      vcenter_ip = local.vcenter.ip_address
+      #vcenter_ip = local.vcenter.ip_address
+      vcenter_ip = local.zone_clusters_vcenters_values["mgmt"].ip_address
+      vcenter_name = local.zone_clusters_vcenters_values["mgmt"].host_name
 
-      nsx_t_0_ip = local.nsx_t_mgr.nsx_t_0.ip_address
-      nsx_t_1_ip = local.nsx_t_mgr.nsx_t_1.ip_address
-      nsx_t_2_ip = local.nsx_t_mgr.nsx_t_2.ip_address
-      nsx_t_vip = local.nsx_t_mgr.nsx_t_vip.ip_address
+      nsx_t_0_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_0.host_name
+      nsx_t_1_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_1.host_name
+      nsx_t_2_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_2.host_name
+      nsx_t_vip_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_vip.host_name
+      #nsx_t_0_ip = local.nsx_t_mgr.nsx_t_0.ip_address
+      #nsx_t_1_ip = local.nsx_t_mgr.nsx_t_1.ip_address
+      #nsx_t_2_ip = local.nsx_t_mgr.nsx_t_2.ip_address
+      #nsx_t_vip = local.nsx_t_mgr.nsx_t_vip.ip_address
+      nsx_t_0_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_0.ip_address
+      nsx_t_1_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_1.ip_address
+      nsx_t_2_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_2.ip_address
+      nsx_t_vip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_vip.ip_address
 
       network_mgmt_cidr = local.subnets.mgmt.cidr
       network_mgmt_gateway = local.subnets.mgmt.default_gateway
 
       network_vmot_cidr = local.subnets.vmot.cidr
       network_vmot_gateway = local.subnets.vmot.default_gateway
-      network_vmot_start = local.vcf_pools.vmot[0]
-      network_vmot_end = local.vcf_pools.vmot[length(local.vcf_pools.vmot)-1]
+      network_vmot_start = local.vcf_pools.vmot.start_ip
+      network_vmot_end = local.vcf_pools.vmot.end_ip
 
       network_vsan_cidr = local.subnets.vsan.cidr
       network_vsan_gateway = local.subnets.vsan.default_gateway
-      network_vsan_start = local.vcf_pools.vsan[0]
-      network_vsan_end = local.vcf_pools.vsan[length(local.vcf_pools.vsan)-1]
+      network_vsan_start = local.vcf_pools.vsan.start_ip
+      network_vsan_end = local.vcf_pools.vsan.end_ip
 
       network_tep_cidr = local.subnets.tep.cidr
       network_tep_gateway = local.subnets.tep.default_gateway
-      network_tep_start = local.vcf_pools.tep[0]
-      network_tep_end = local.vcf_pools.tep[length(local.vcf_pools.tep)-1]
+      network_tep_start = local.vcf_pools.tep.start_ip
+      network_tep_end = local.vcf_pools.tep.end_ip
 
       vlan_mgmt = var.mgmt_vlan_id
       vlan_vmot = var.vmot_vlan_id

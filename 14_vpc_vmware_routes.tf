@@ -1,4 +1,6 @@
 
+
+
 ##############################################################
 # Create VPC ingress routing table to NSX-T overlay networks
 ##############################################################
@@ -13,8 +15,35 @@ resource "ibm_is_vpc_routing_table" "nsxt_overlay_route_table_ingress" {
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge
+      module.zone_nxt_t_edges
     ] 
+}
+
+
+
+
+##############################################################
+# Create list of routes to create to NSX-T overlay networks
+##############################################################
+
+
+locals {
+  zone_clusters_routes_list = flatten([
+    for k, v in var.zone_clusters : [
+      for route_v in v.overlay_networks :  {
+        name = "${v.name}-${route_v.name}"
+        destination = route_v.destination
+        cluster_name = v.name
+      }
+    ] if v.nsx_t_edges == true
+  ])
+  zone_clusters_routes_map = {
+    for v in local.zone_clusters_routes_list : v.name => {
+      name = v.name
+      destination = v.destination
+      cluster_key = v.cluster_name
+    } 
+  }
 }
 
 
@@ -24,7 +53,7 @@ resource "ibm_is_vpc_routing_table" "nsxt_overlay_route_table_ingress" {
 
 
 resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-1"
 
@@ -34,16 +63,16 @@ resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
+      module.zone_nxt_t_edges
     ] 
 }
 
 resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-2"
 
@@ -53,16 +82,16 @@ resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
+      module.zone_nxt_t_edges
     ] 
 }
 
 resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-3"
 
@@ -72,11 +101,11 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
+      module.zone_nxt_t_edges
     ] 
 }
 
@@ -90,7 +119,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
 # this is a workaround before the capability is available.
 
 resource "ibm_is_vpc_address_prefix" "nsx_t_overlay_prefix" {
-    for_each    = var.nsx_t_overlay_networks
+    for_each    = local.zone_clusters_routes_map
     name = "prefix-nsx-t-${each.value.name}-${var.vpc_zone}"
 
     vpc  = module.vpc-subnets[var.vpc_name].vmware_vpc.id
@@ -100,13 +129,12 @@ resource "ibm_is_vpc_address_prefix" "nsx_t_overlay_prefix" {
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge
     ] 
 }
 
 
 resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes_ingress" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-1"
 
@@ -116,18 +144,18 @@ resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes_ingress" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
       ibm_is_vpc_address_prefix.nsx_t_overlay_prefix,
-      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress
+      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress,
+      module.zone_nxt_t_edges
     ] 
 }
 
 resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes_ingress" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-2"
 
@@ -137,18 +165,18 @@ resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes_ingress" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
       ibm_is_vpc_address_prefix.nsx_t_overlay_prefix,
-      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress
+      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress,
+      module.zone_nxt_t_edges
     ] 
 }
 
 resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes_ingress" {
-    for_each      = var.nsx_t_overlay_networks
+    for_each      = local.zone_clusters_routes_map
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-3"
 
@@ -158,97 +186,15 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes_ingress" {
 
     destination   = each.value.destination
     action        = "deliver"
-    next_hop      = local.nsx_t_t0.ha-vip.private_uplink.ip_address
+    next_hop      = local.zone_clusters_nsx_t_t0_values[each.value.cluster_key].ha-vip.private_uplink.ip_address
 
     depends_on  = [
       module.vpc-subnets,
-      module.zone_nxt_t_edge,
       ibm_is_vpc_address_prefix.nsx_t_overlay_prefix,
-      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress
+      ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress,
+      module.zone_nxt_t_edges
     ] 
 }
 
 
-
-
-##############################################################
-# Get all VPC routes to display
-##############################################################
-
-
-data "ibm_is_vpc_routing_table_routes" "routes_default_egress" {
-    vpc           = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    routing_table = module.vpc-subnets[var.vpc_name].vmware_vpc.default_routing_table
-
-    depends_on  = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge,
-      ibm_is_vpc_routing_table_route.zone_1_nsxt_overlay_routes,
-      ibm_is_vpc_routing_table_route.zone_2_nsxt_overlay_routes,
-      ibm_is_vpc_routing_table_route.zone_3_nsxt_overlay_routes
-    ] 
-}
-
-# Create a list of all routes
-
-locals {
-  vpc_routes_default_egress = [
-    for route in data.ibm_is_vpc_routing_table_routes.routes_default_egress.routes : {
-      "name" : route.name,
-      "destination" : route.destination,
-      "nexthop" : route.nexthop,
-      "zone" : route.zone,
-    }
-  ]
-}
-
-
-# Create a view per zone
-
-locals {
-  vpc_egress_routes_per_zone = {
-    "${var.ibmcloud_vpc_region}-1" = toset([for each in local.vpc_routes_default_egress : each if each.zone == "${var.ibmcloud_vpc_region}-1"])
-    "${var.ibmcloud_vpc_region}-2" = toset([for each in local.vpc_routes_default_egress : each if each.zone == "${var.ibmcloud_vpc_region}-2"])
-    "${var.ibmcloud_vpc_region}-3" = toset([for each in local.vpc_routes_default_egress : each if each.zone == "${var.ibmcloud_vpc_region}-3"])
-  }
-}
-
-
-
-data "ibm_is_vpc_routing_table_routes" "routes_tgw_dl_ingress" {
-    vpc           = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
-
-    depends_on  = [
-      module.vpc-subnets,
-      module.zone_nxt_t_edge,
-      ibm_is_vpc_routing_table_route.zone_1_nsxt_overlay_routes_ingress,
-      ibm_is_vpc_routing_table_route.zone_2_nsxt_overlay_routes_ingress,
-      ibm_is_vpc_routing_table_route.zone_3_nsxt_overlay_routes_ingress
-    ] 
-}
-
-# Create a list of all routes
-
-locals {
-  vpc_routes_tgw_dl_ingress = [
-    for route in data.ibm_is_vpc_routing_table_routes.routes_default_egress.routes : {
-      "name" : route.name,
-      "destination" : route.destination,
-      "nexthop" : route.nexthop,
-      "zone" : route.zone,
-    }
-  ]
-}
-
-# Create a view per zone
-
-
-locals {
-  vpc_tgw_dl_ingress_routes_per_zone = {
-    "${var.ibmcloud_vpc_region}-1" = toset([for each in local.vpc_routes_tgw_dl_ingress : each if each.zone == "${var.ibmcloud_vpc_region}-1"])
-    "${var.ibmcloud_vpc_region}-2" = toset([for each in local.vpc_routes_tgw_dl_ingress : each if each.zone == "${var.ibmcloud_vpc_region}-2"])
-    "${var.ibmcloud_vpc_region}-3" = toset([for each in local.vpc_routes_tgw_dl_ingress : each if each.zone == "${var.ibmcloud_vpc_region}-3"])
-  }
-}
 

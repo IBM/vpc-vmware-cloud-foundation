@@ -9,6 +9,27 @@
 # and converted to a new map create DNS records. 
 
 
+
+
+
+locals {
+  zone_clusters_dns_records = {
+    for cluster_k, cluster_v in var.zone_clusters : cluster_v.name => [
+      concat(
+        [for k, v in local.zone_clusters_vcenters_values : { name = v.host_name, ip_address = v.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_managers_values : { name = v.nsx_t_0.host_name, ip_address = v.nsx_t_0.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_managers_values : { name = v.nsx_t_1.host_name, ip_address = v.nsx_t_1.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_managers_values : { name = v.nsx_t_2.host_name, ip_address = v.nsx_t_2.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_managers_values : { name = v.nsx_t_vip.host_name, ip_address = v.nsx_t_vip.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_edges_values : { name = v.edge_0.host_name, ip_address = v.edge_0.mgmt.ip_address} if k == cluster_v.name],
+        [for k, v in local.zone_clusters_nsx_t_edges_values : { name = v.edge_1.host_name, ip_address = v.edge_1.mgmt.ip_address} if k == cluster_v.name],
+      )
+    ] 
+  }
+}
+
+
+
 locals {
   dns_records_mgmt = {
     hosts = flatten ([
@@ -19,31 +40,16 @@ locals {
           }
         ]
       ]),
-    mgmt = [  
-      { name = local.vcenter.host_name, ip_address = module.zone_vcenter.vmw_vcenter_ip },
-      { name = local.nsx_t_mgr.nsx_t_0.host_name, ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[0].primary_ip[0].address },
-      { name = local.nsx_t_mgr.nsx_t_1.host_name, ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[1].primary_ip[0].address },
-      { name = local.nsx_t_mgr.nsx_t_2.host_name, ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip[2].primary_ip[0].address },
-      { name = local.nsx_t_mgr.nsx_t_vip.host_name, ip_address = module.zone_nxt_t.vmw_nsx_t_manager_ip_vip.primary_ip[0].address },
-      { name = local.nsx_t_edge.edge_0.host_name, ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[0].primary_ip[0].address },
-      { name = local.nsx_t_edge.edge_1.host_name, ip_address = module.zone_nxt_t_edge.vmw_nsx_t_edge_mgmt_ip[1].primary_ip[0].address },
-    ],
     vcf = [
       { name = local.vcf.cloud_builder.host_name, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"},
       { name = local.vcf.sddc_manager.host_name, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"},    
     ],
     other = var.dns_records
-    #other = [ 
-    #  for record in local.additional_dns_records : {
-    #    name = record.name
-    #    ip_address = record.ip_address
-    #  }
-    #],
   }  
 }
 
 locals {
-  dns_records = merge(local.dns_records_mgmt, local.zone_clusters_vi_dns_records)
+  dns_records = merge(local.dns_records_mgmt, local.zone_clusters_dns_records)
 }
 
 locals {
@@ -53,6 +59,10 @@ locals {
   }
 }
 
+
+##############################################################
+#  Create DNS records for management appliances 
+##############################################################
 
 
 module "zone_dns_a_records" {
@@ -94,7 +104,7 @@ module "zone_dns_ptrs" {
 
 
 
-## to be deleted >>>
+## OLD to be deleted >>>
 
 /*
 

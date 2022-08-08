@@ -54,13 +54,21 @@ vpc_zone = "us-south-1"
 # Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
 
 zone_clusters = {
-      cluster_0 = { 
-        name = "converged"
-        vmw_host_profile = "bx2d-metal-96x384"
-        host_count = 4 
-        vpc_file_shares = [ ] 
-        },
-   }
+    cluster_0 = {
+      name = "mgmt"            # value must "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 4
+      vcenter = true           # value must "true" for the first cluster
+      nsx_t_managers = true    # value must "true" for the first cluster
+      nsx_t_edges = true       # value must "true" for the first cluster
+      public_ips = 2           # not used yet on mgmt cluster
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+        ]
+      vpc_file_shares = []
+    },
+  }
+
 
 esxi_image="esxi-7-byol" # BYOL ESXi lisence
 # esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
@@ -89,13 +97,6 @@ edge_uplink_public_vlan_id	= 700
 edge_uplink_private_vlan_id = 710
 
 vpc_t0_public_ips = 1
-
-nsx_t_overlay_networks = {
-    customer_overlay_1 = {
-      name = "customer-overlay"
-      destination = "172.16.0.0/16"
-    },
-  }
 
 
 # Network security

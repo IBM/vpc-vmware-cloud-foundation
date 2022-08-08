@@ -297,9 +297,18 @@ variable "zone_clusters" {
 
   default     = {
     cluster_0 = {
-      name = "mgmt"
+      name = "mgmt"            # Value must "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 1
+      host_count = 4           # Minimum 4 for VCF
+      vcenter = true           # Value must "true" for the first cluster
+      nsx_t_managers = true    # Value must "true" for the first cluster
+      nsx_t_edges = true       # Value must "true" for the first cluster
+      public_ips = 2           
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
       vpc_file_shares = [
         {
           name = "cluster0_share1" 
@@ -308,10 +317,9 @@ variable "zone_clusters" {
           target = "cluster0_share1_target"
         }
       ]
-    }
+    },
   }
 }
-
 
 
 

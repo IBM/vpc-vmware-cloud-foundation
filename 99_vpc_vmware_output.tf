@@ -57,15 +57,8 @@ output "dns_servers" {
 #  Output DNS records
 ##############################################################
 
-/*
-output "dns_records_to_create" {
-  value = concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other)
-  description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
-}
-*/
 
-
-output "dns_records_new" {
+output "dns_records" {
   value = local.dns_records
   description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
 }
@@ -112,37 +105,66 @@ output "cluster_host_map_out_json" {
 #  Output vcenter
 ##############################################################
 
+output "vcenters" {
+  value = local.zone_clusters_vcenters_values
+}
+
+/*
+
 output "vcenter" {
   value = local.vcenter
   description = "Deployed DNS and VLAN network interface information for vCenter Server virtual appliance(es)."
 }
-
+*/
 
 ##############################################################
-#  Output NSX-T
+#  Output NSX-T managers
 ##############################################################
 
+
+output "workload_nsx_t_managers" {
+  value = local.zone_clusters_nsx_t_managers_values
+}
+
+/*
 
 output "zone_nsx_t_mgr" {
   value = local.nsx_t_mgr
   description = "Deployed DNS and VLAN network interface information for NSX-T Manager virtual appliance(es)."
 }
 
-
+*/
 
 ##############################################################
 #  Output NSX-T edge and T0
 ##############################################################
+
+output "zone_subnets_edge" {
+  value = local.nsxt_edge_subnets
+  description = "Deployed subnet infromation for edge nodes."
+}
+
+
+output "nsx_t_edges" {
+  value = local.zone_clusters_nsx_t_edges_values
+  description = "Deployed DNS and VLAN network interface information for NSX-T Edge virtual appliance(es)."
+}
+
+
+output "nsx_t_t0s" {
+  value = local.zone_clusters_nsx_t_t0_values
+  description = "Deployed VLAN network interface information for NSX-T Tier-0 gateway uplinks."
+}
+
+
+/*
 
 output "zone_nsx_t_edge" {
   value = local.nsx_t_edge
   description = "Deployed DNS and VLAN network interface information for NSX-T Edge virtual appliance(es)."
 }
 
-output "zone_subnets_edge" {
-  value = local.nsxt_edge_subnets
-  description = "Deployed subnet infromation for edge nodes."
-}
+
 
 output "nsx_t_t0" {
   value = local.nsx_t_t0
@@ -154,6 +176,7 @@ output "t0_public_ips" {
   description = "Deployed public IPs for NSX-T Tier-0 gateway public uplink."
 }
 
+*/
 
 ##############################################################
 # Output VCF 
@@ -182,11 +205,13 @@ output "vcf_vlan_nics" {
 ##############################################################
 
 
+
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
   sensitive = true
   description = "VCF bringup json file."
 } 
+
 
 
 
@@ -223,7 +248,6 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 
-
 ##############################################################
 # Testing
 ##############################################################
@@ -233,4 +257,8 @@ output "cos_bucket_test_key" {
   value = var.cos_bucket_test_key
   sensitive = true
 }
+
+
+
+
 
