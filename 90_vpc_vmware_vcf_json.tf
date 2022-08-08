@@ -33,18 +33,14 @@ data "template_file" "vcf_bringup_json" {
       vcenter_license = var.vcenter_license
       esx_license = var.esx_license
 
-      #vcenter_ip = local.vcenter.ip_address
-      vcenter_ip = local.zone_clusters_vcenters_values["mgmt"].ip_address
-      vcenter_name = local.zone_clusters_vcenters_values["mgmt"].host_name
 
-      nsx_t_0_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_0.host_name
-      nsx_t_1_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_1.host_name
-      nsx_t_2_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_2.host_name
-      nsx_t_vip_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_vip.host_name
-      #nsx_t_0_ip = local.nsx_t_mgr.nsx_t_0.ip_address
-      #nsx_t_1_ip = local.nsx_t_mgr.nsx_t_1.ip_address
-      #nsx_t_2_ip = local.nsx_t_mgr.nsx_t_2.ip_address
-      #nsx_t_vip = local.nsx_t_mgr.nsx_t_vip.ip_address
+      vcenter_name = local.zone_clusters_vcenters_values["mgmt"].hostname
+       vcenter_ip = local.zone_clusters_vcenters_values["mgmt"].ip_address
+
+      nsx_t_0_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_0.hostname
+      nsx_t_1_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_1.hostname
+      nsx_t_2_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_2.hostname
+      nsx_t_vip_name = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_vip.hostname
       nsx_t_0_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_0.ip_address
       nsx_t_1_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_1.ip_address
       nsx_t_2_ip = local.zone_clusters_nsx_t_managers_values["mgmt"].nsx_t_2.ip_address
@@ -75,36 +71,20 @@ data "template_file" "vcf_bringup_json" {
 
       host_000_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].mgmt.ip_address
       host_000_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].password
-      host_000_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].host_name
+      host_000_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].hostname
 
       host_001_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].mgmt.ip_address
       host_001_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].password
-      host_001_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].host_name
+      host_001_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].hostname
 
       host_002_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].mgmt.ip_address
       host_002_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].password
-      host_002_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].host_name
+      host_002_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].hostname
 
       host_003_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].mgmt.ip_address
       host_003_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].password
-      host_003_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].host_name
-/*      
-      host_000_ip = local.cluster_host_map.clusters[0].hosts[0].mgmt.ip_address
-      host_000_password = local.cluster_host_map.clusters[0].hosts[0].password
-      host_000_hostname = local.cluster_host_map.clusters[0].hosts[0].host_name
+      host_003_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].hostname
 
-      host_001_ip = local.cluster_host_map.clusters[0].hosts[1].mgmt.ip_address
-      host_001_password = local.cluster_host_map.clusters[0].hosts[1].password
-      host_001_hostname = local.cluster_host_map.clusters[0].hosts[1].host_name
-
-      host_002_ip = local.cluster_host_map.clusters[0].hosts[2].mgmt.ip_address
-      host_002_password = local.cluster_host_map.clusters[0].hosts[2].password
-      host_002_hostname = local.cluster_host_map.clusters[0].hosts[2].host_name
-
-      host_003_ip = local.cluster_host_map.clusters[0].hosts[3].mgmt.ip_address
-      host_003_password = local.cluster_host_map.clusters[0].hosts[3].password
-      host_003_hostname = local.cluster_host_map.clusters[0].hosts[3].host_name
-*/
   }
 
 }

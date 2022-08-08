@@ -154,20 +154,6 @@ resource "ibm_is_floating_ip" "bastion_linux_floating_ip" {
 # Define Bastion output maps
 ##############################################################
 
-/*
-locals {
-  bastion_hosts = [
-    for bastion_host in range(var.number_of_bastion_hosts) : {
-      name = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].name : "0.0.0.0"
-      private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-      public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
-      username = "Administrator"
-      password = var.deploy_bastion ? data.ibm_is_instance.bastion[bastion_host].password : ""
-    }
-  ]
-}
-*/
-
 
 locals {
   bastion_hosts = { 

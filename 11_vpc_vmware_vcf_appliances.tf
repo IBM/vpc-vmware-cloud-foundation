@@ -101,7 +101,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager"
 locals {
   vcf = {
     cloud_builder = {
-      host_name = "cloud-builder"
+      hostname = "cloud-builder"
       fqdn = "cloud-builder.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"
       prefix_length = local.subnets.mgmt.prefix_length
@@ -112,7 +112,7 @@ locals {
       password = var.vcf_password == "" ? random_string.cloud_builder_password.result : var.vcf_password
     },
     sddc_manager = {
-      host_name = "sddc-manager"
+      hostname = "sddc-manager"
       fqdn = "sddc-manager.${var.dns_root_domain}"
       ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"
       prefix_length = local.subnets.mgmt.prefix_length
