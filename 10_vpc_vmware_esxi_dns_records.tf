@@ -33,13 +33,22 @@ locals {
 locals {
   dns_records_mgmt = {
     hosts = flatten ([
-      for cluster in local.cluster_host_map.clusters[*]: [ 
-        for hosts in cluster.hosts[*] : {
-          name = hosts.host_name
-          ip_address = hosts.mgmt.ip_address
-          }
-        ]
-      ]),
+    for cluster in local.zone_clusters_hosts_values.clusters: [ 
+      for hosts in cluster.hosts : {
+        name = hosts.host_name
+        ip_address = hosts.mgmt.ip_address
+        }
+      ]
+    ]),
+    #hosts = flatten ([
+    #  for cluster in local.cluster_host_map.clusters[*]: [ 
+    #    for hosts in cluster.hosts[*] : {
+    #      name = hosts.host_name
+    #      ip_address = hosts.mgmt.ip_address
+    #      }
+    #    ]
+    #  ]),
+
     vcf = [
       { name = local.vcf.cloud_builder.host_name, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"},
       { name = local.vcf.sddc_manager.host_name, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"},    

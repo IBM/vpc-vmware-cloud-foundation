@@ -88,11 +88,19 @@ output "ntp_server" {
 #  Output cluster hosts
 ##############################################################
 
+
+output "cluster_hosts" {
+  value = local.zone_clusters_hosts_values
+  description = "Deployed VPC bare metal servers per cluster including created VLAN network interface information for VMkernel adapters."
+}
+
+
+/*
 output "cluster_hosts" {
   value = local.cluster_host_map
   description = "Deployed VPC bare metal servers per cluster including created VLAN network interface information for VMkernel adapters."
 }
-
+*/
 
 /*
 

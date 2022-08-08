@@ -29,6 +29,7 @@ data "ibm_is_image" "vmw_esx_image" {
 module "zone_bare_metal_esxi" {
   source = "./modules/vpc-bare-metal"
   for_each = var.zone_clusters
+
   vmw_enable_vcf_mode = var.enable_vcf_mode
   vmw_resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   vmw_host_count = each.value.host_count
@@ -77,22 +78,83 @@ module "zone_bare_metal_esxi" {
 # Define cluster host setups / details 
 ##############################################################
 
+
+locals {
+ cluster_list = [ for cluster_key, cluster_value in var.zone_clusters: { cluster_key=cluster_key, name=cluster_value.name} ]
+}
+
+
+
+locals {
+ zone_clusters_hosts_values = {
+   clusters = {
+     for k, v in local.cluster_list: v.name => {
+         name = "${v.name}",
+         hosts = [
+           for host in range(length(module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_hostname[*])): {
+             host_name = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_hostname[host],
+             fqdn = "${module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_hostname[host]}.${var.dns_root_domain}"
+             username = "root",
+             password = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_initialization[host].user_accounts[0].password,
+             id = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_id[host],
+             mgmt = {
+                ip_address = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_mgmt_interface_ip_address[host],
+                vlan_nic_id = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_mgmt_interface_id[host],
+                cidr = var.enable_vcf_mode ? local.subnets.mgmt.cidr : local.subnets.hosts.cidr,
+                prefix_length = var.enable_vcf_mode ? local.subnets.mgmt.prefix_length : local.subnets.hosts.prefix_length ,
+                default_gateway = var.enable_vcf_mode ? local.subnets.mgmt.default_gateway : local.subnets.hosts.default_gateway,
+                vlan_id = var.enable_vcf_mode ? var.mgmt_vlan_id : 0
+              },
+              vmot = {
+                ip_address = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_vmot_ip_address[host],
+                vlan_nic_id = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_vmot_id[host],
+                cidr = local.subnets.vmot.cidr,
+                prefix_length = local.subnets.vmot.prefix_length,
+                default_gateway = local.subnets.vmot.default_gateway,
+                vlan_id = var.vmot_vlan_id
+              },
+              vsan = {
+                ip_address = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_vsan_ip_address[host],
+                vlan_nic_id = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_vsan_id[host],
+                cidr = local.subnets.vsan.cidr,
+                prefix_length = local.subnets.vsan.prefix_length,
+                default_gateway = local.subnets.vsan.default_gateway,
+                vlan_id = var.vsan_vlan_id
+              },
+              tep = {
+                ip_address = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_tep_ip_address[host],
+                vlan_nic_id = module.zone_bare_metal_esxi[v.cluster_key].ibm_is_bare_metal_server_network_interface_tep_id[host],
+                cidr = local.subnets.tep.cidr,
+                prefix_length = local.subnets.tep.prefix_length,
+                default_gateway = local.subnets.tep.default_gateway,
+                vlan_id = var.tep_vlan_id
+              }
+            }
+         ]
+       }
+   }
+  }
+}
+
+
+#### >>> old
+
+/*
+
 locals {
  cluster_list = [ for cluster_key, cluster_value in var.zone_clusters: cluster_key ]
 }
 
 
 
-
-#/*
 locals {
  cluster_host_map = {
    "clusters": [
      for cluster_name in local.cluster_list: {
          "name": "${cluster_name}",
          "hosts": [
-           for host in range(length(module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[*])): {
-             "host_name" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_fqdn[host],
+           for host in range(length(module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_hostname[*])): {
+             "host_name" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_hostname[host],
              "username" : "root",
              "password" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_initialization[host].user_accounts[0].password,
              "id" : module.zone_bare_metal_esxi[cluster_name].ibm_is_bare_metal_server_id[host],
@@ -134,5 +196,6 @@ locals {
    ]
   }
 }
-#*/
+*/
+
 

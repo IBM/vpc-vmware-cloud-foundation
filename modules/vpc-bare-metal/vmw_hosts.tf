@@ -142,7 +142,7 @@ output "ibm_is_bare_metal_server_id" {
   value = ibm_is_bare_metal_server.esx_host[*].id
 }
 
-output "ibm_is_bare_metal_server_fqdn" {
+output "ibm_is_bare_metal_server_hostname" {
   value = ibm_is_bare_metal_server.esx_host[*].name
 }
 

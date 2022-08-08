@@ -73,6 +73,22 @@ data "template_file" "vcf_bringup_json" {
       vlan_vsan = var.vsan_vlan_id
       vlan_tep = var.tep_vlan_id
 
+      host_000_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].mgmt.ip_address
+      host_000_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].password
+      host_000_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[0].host_name
+
+      host_001_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].mgmt.ip_address
+      host_001_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].password
+      host_001_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[1].host_name
+
+      host_002_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].mgmt.ip_address
+      host_002_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].password
+      host_002_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[2].host_name
+
+      host_003_ip = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].mgmt.ip_address
+      host_003_password = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].password
+      host_003_hostname = local.zone_clusters_hosts_values.clusters["mgmt"].hosts[3].host_name
+/*      
       host_000_ip = local.cluster_host_map.clusters[0].hosts[0].mgmt.ip_address
       host_000_password = local.cluster_host_map.clusters[0].hosts[0].password
       host_000_hostname = local.cluster_host_map.clusters[0].hosts[0].host_name
@@ -88,6 +104,7 @@ data "template_file" "vcf_bringup_json" {
       host_003_ip = local.cluster_host_map.clusters[0].hosts[3].mgmt.ip_address
       host_003_password = local.cluster_host_map.clusters[0].hosts[3].password
       host_003_hostname = local.cluster_host_map.clusters[0].hosts[3].host_name
+*/
   }
 
 }
