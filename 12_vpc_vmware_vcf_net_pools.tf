@@ -40,11 +40,11 @@ resource "null_resource" "check_host_pool" {
 
 resource "ibm_is_subnet_reserved_ip" "zone_vcf_vmot_pool" {
     count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0 # Note one IP per host needed in VCF
-    subnet = local.subnets.vmot.subnet_id
+    subnet = local.subnets_map.infrastructure.vmot.subnet_id
     name   = "pool-vcf-vmot-${format("%03s", count.index)}"
     auto_delete = false
 
-    address = cidrhost(local.subnets.vmot.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet 
+    address = cidrhost(local.subnets_map.infrastructure.vmot.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet 
 
     depends_on = [
       module.vpc_subnets,
@@ -53,11 +53,11 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_vmot_pool" {
 
 resource "ibm_is_subnet_reserved_ip" "zone_vcf_vsan_pool" {
     count = var.enable_vcf_mode ? var.vcf_host_pool_size : 0 # Note one IP per host needed in VCF
-    subnet = local.subnets.vsan.subnet_id
+    subnet = local.subnets_map.infrastructure.vsan.subnet_id
     name   = "pool-vcf-vsan-${format("%03s", count.index)}"
     auto_delete = false
 
-    address = cidrhost(local.subnets.vsan.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
+    address = cidrhost(local.subnets_map.infrastructure.vsan.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
 
     depends_on = [
       module.vpc_subnets,
@@ -66,11 +66,11 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_vsan_pool" {
 
 resource "ibm_is_subnet_reserved_ip" "zone_vcf_tep_pool" {
     count = var.enable_vcf_mode ? var.vcf_host_pool_size * 2 : 0 # Note two TEPs per host in VCF
-    subnet = local.subnets.tep.subnet_id
+    subnet = local.subnets_map.infrastructure.tep.subnet_id
     name   = "pool-vcf-tep-${format("%03s", count.index)}"
     auto_delete = false
 
-    address = cidrhost(local.subnets.tep.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
+    address = cidrhost(local.subnets_map.infrastructure.tep.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
 
     depends_on = [
       module.vpc_subnets,
@@ -94,7 +94,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
-    subnet = local.subnets.vmot.subnet_id
+    subnet = local.subnets_map.infrastructure.vmot.subnet_id
     vlan = var.vmot_vlan_id
 
     name   = "vlan-nic-vmot-pool-${format("%03s", count.index)}"
@@ -126,7 +126,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
-    subnet = local.subnets.vsan.subnet_id
+    subnet = local.subnets_map.infrastructure.vsan.subnet_id
     vlan = var.vsan_vlan_id
     
     name   = "vlan-nic-vsan-pool-${format("%03s", count.index)}"
@@ -159,7 +159,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 
     bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
 
-    subnet = local.subnets.tep.subnet_id
+    subnet = local.subnets_map.infrastructure.tep.subnet_id
     vlan = var.tep_vlan_id
     
     name   = "vlan-nic-tep-pool-${format("%03s", count.index)}"
@@ -226,25 +226,25 @@ locals {
       ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
       start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.vmot[0] : ""
       end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.vmot[length(local.vcf_pool_ip_lists.vmot)-1] : ""
-      cidr = local.subnets.vmot.cidr
-      prefix_length = local.subnets.vmot.prefix_length
-      default_gateway = local.subnets.vmot.default_gateway
+      cidr = local.subnets_map.infrastructure.vmot.cidr
+      prefix_length = local.subnets_map.infrastructure.vmot.prefix_length
+      default_gateway = local.subnets_map.infrastructure.vmot.default_gateway
     }
     vsan     = {
       ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
       start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.vsan[0] : ""
       end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.vsan[length(local.vcf_pool_ip_lists.vsan)-1] : ""
-      cidr = local.subnets.vsan.cidr
-      prefix_length = local.subnets.vsan.prefix_length
-      default_gateway = local.subnets.vsan.default_gateway
+      cidr = local.subnets_map.infrastructure.vsan.cidr
+      prefix_length = local.subnets_map.infrastructure.vsan.prefix_length
+      default_gateway = local.subnets_map.infrastructure.vsan.default_gateway
     }
     tep      = {
       ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
       start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.tep[0] : ""
       end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.tep[length(local.vcf_pool_ip_lists.tep)-1] : ""
-      cidr = local.subnets.tep.cidr
-      prefix_length = local.subnets.tep.prefix_length
-      default_gateway = local.subnets.tep.default_gateway
+      cidr = local.subnets_map.infrastructure.tep.cidr
+      prefix_length = local.subnets_map.infrastructure.tep.prefix_length
+      default_gateway = local.subnets_map.infrastructure.tep.default_gateway
     }
   }
 }

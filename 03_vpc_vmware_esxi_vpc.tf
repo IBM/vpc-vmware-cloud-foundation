@@ -1,7 +1,63 @@
+
+##############################################################
+# Define maps for VPC prefixes and use VLAN IDs 
+##############################################################
+
+
+locals {
+  vpc_prefix_map = {
+    infrastructure = var.vpc_zone_prefix
+    edges = var.vpc_zone_prefix_t0_uplinks
+  }
+}
+
+locals {
+  vlan_id_map = {
+    infrastructure = {
+      host = var.host_vlan_id
+      mgmt = var.mgmt_vlan_id
+      vmot = var.mgmt_vlan_id
+      vsan = var.mgmt_vlan_id
+      tep = var.mgmt_vlan_id
+      tep2 = var.mgmt_vlan_id
+    },
+    edges = {
+      t0-priv = var.edge_uplink_private_vlan_id
+      t0-pub = var.edge_uplink_public_vlan_id
+      edge-tep = var.edge_tep_vlan_id
+      edge-tep2 = var.edge_tep_vlan_id
+    },
+  }    
+}
+
 ##############################################################
 # Create VPC and Subnets
 ##############################################################
 
+
+
+
+locals {
+  vpc_subnets_test = {for k, v in var.vpc : var.vpc_name => {
+      zones = {
+        "${var.vpc_zone}" = {      
+          for domain_k, domain_v in v.zones.vpc_zone : domain_k => {
+            vpc_zone_prefix = local.vpc_prefix_map[domain_k]
+            vpc_zone_subnet_size = v.zones.vpc_zone[domain_k].vpc_zone_subnet_size
+            public_gateways = lookup(v.zones.vpc_zone[domain_k], "public_gateways", [])
+            subnets = v.zones.vpc_zone[domain_k].subnets
+          } 
+        }
+      }
+    }
+  }
+}
+
+
+
+##### old
+
+/*
 locals {
   vpc_subnets = {for k, v in var.enable_vcf_mode ? var.vpc_vcf : var.vpc : var.vpc_name => {
       zones = {
@@ -23,7 +79,7 @@ locals {
     }
   }
 }
-
+*/
 
 resource "ibm_is_vpc" "vmware_vpc" {
   name = "${local.resources_prefix}-${var.vpc_name}"
@@ -33,7 +89,8 @@ resource "ibm_is_vpc" "vmware_vpc" {
 
 module "vpc_subnets" {
   source = "./modules/vpc-subnets"
-  for_each = local.vpc_subnets
+  #for_each = local.vpc_subnets
+  for_each = local.vpc_subnets_test
 
   vpc_id = ibm_is_vpc.vmware_vpc.id
   vpc_name = each.key
@@ -77,22 +134,6 @@ resource "ibm_is_security_group" "sg" {
 }
 
 
-/*
-resource "ibm_is_security_group" "sg" {
-
-  for_each = var.security_group_rules
-  name           = "${local.resources_prefix}-${each.key}-sg"
-  vpc            =  ibm_is_vpc.vmware_vpc.id
-  resource_group = data.ibm_resource_group.resource_group_vmw.id
-
-    depends_on =  [
-      module.vpc_subnets
-    ]
-
-  tags = local.resource_tags.security_group
-}
-*/
-
 ##############################################################
 # Create Security Group Rules
 ##############################################################
@@ -134,6 +175,29 @@ module "security_group_rules" {
 
 
 # This calculates the prefix length and gateway IP for each subnet.
+
+
+
+locals {
+  subnets_map = {
+    for k,v in var.vpc.vpc.zones.vpc_zone : k => {
+      for subnet_k, subnet_v in v.subnets : subnet_k => {
+        name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].name
+        subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].id
+        cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block
+        prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block)[1]
+        default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block,1)
+        pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].public_gateway == null ? false : true
+        vlan_id = local.vlan_id_map[k][subnet_k]
+      }
+    }
+  }
+}
+
+
+/*
+
+
 
 locals {
   subnets = {
@@ -217,80 +281,5 @@ locals {
   }
 }
 
-#######
-
-
-#### testing area 
-
-
-locals {
-  vlan_id_map = {
-    infrastructure = {
-      host = var.host_vlan_id
-      mgmt = var.mgmt_vlan_id
-      vmot = var.mgmt_vlan_id
-      vsan = var.mgmt_vlan_id
-      tep = var.mgmt_vlan_id
-    }
-    edges = {
-      t0-priv = var.edge_uplink_private_vlan_id
-      t0-pub = var.edge_uplink_public_vlan_id
-      edge-tep = var.edge_tep_vlan_id
-    }
-  }
-}
-
-
-
-
-locals {
-  subnet_auto = {
-    for k,v in var.vpc_vcf.vpc.zones.vpc_zone : k => {
-      for subnet_k, subnet_v in v.subnets : subnet_k => {
-        name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].name
-        subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].id
-        cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block
-        prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block)[1]
-        default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].ipv4_cidr_block,1)
-        pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].public_gateway == null ? false : true
-        vlan_id = local.vlan_id_map[k][subnet_k]
-        key =  k
-        sub_key = subnet_k
-      }
-    }
-  }
-}
-
-/*
-      vpc = {
-        zones = {
-            vpc_zone = {
-              infrastructure = {
-                  vpc_zone_subnet_size = 3
-                  public_gateways = ["subnet-public-gateway"]
-                  subnets = {
-                    host = {
-                        cidr_offset = 0
-                        ip_version = "ipv4"
-                    },
-                    mgmt = {
-                        cidr_offset = 1
-                        ip_version = "ipv4"
-                        public_gateway = "subnet-public-gateway"
-                    },
-                    vmot = {
-                        cidr_offset = 2
-                        ip_version = "ipv4"
-                    },
-                    vsan = {
-                        cidr_offset = 3
-                        ip_version = "ipv4"
-                    },
-                    tep = {
-                        cidr_offset = 4
-                        ip_version = "ipv4"
-                    }
-                }
-              },
-
 */
+

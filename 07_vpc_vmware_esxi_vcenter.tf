@@ -48,7 +48,7 @@ module "zone_vcenter" {
   for_each                    = local.zone_clusters_vcenters
 
   vmw_resource_group_id       = data.ibm_resource_group.resource_group_vmw.id
-  vmw_mgmt_subnet             = local.subnets.mgmt.subnet_id
+  vmw_mgmt_subnet             = local.subnets_map.infrastructure.mgmt.subnet_id
   vmw_vcenter_esx_host_id     = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]  # Note deploy vcenters on mgmt cluster.
   vmw_sg_mgmt                 = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id            = var.mgmt_vlan_id
@@ -72,10 +72,10 @@ locals {
       hostname = "${v.name}-vcenter"
       fqdn = "${v.name}-vcenter.${var.dns_root_domain}"
       ip_address = module.zone_vcenter[k].vmw_vcenter_ip
-      prefix_length = local.subnets.mgmt.prefix_length
-      default_gateway = local.subnets.mgmt.default_gateway
+      prefix_length = local.subnets_map.infrastructure.mgmt.prefix_length
+      default_gateway = local.subnets_map.infrastructure.mgmt.default_gateway
       vlan_id = var.mgmt_vlan_id
-      vpc_subnet_id = local.subnets.mgmt.subnet_id
+      vpc_subnet_id = local.subnets_map.infrastructure.mgmt.subnet_id
       username = "administrator@vsphere.local"
       password = var.vcf_password == "" ? random_string.vcenter_password.result : var.vcf_password
     } if v.vcenter == true

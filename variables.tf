@@ -564,6 +564,10 @@ variable "vpc" {
                     tep = {
                         cidr_offset = 4
                         ip_version = "ipv4"
+                    },
+                    tep2 = {
+                        cidr_offset = 5
+                        ip_version = "ipv4"
                     }
                 }
               },
@@ -577,7 +581,15 @@ variable "vpc" {
                     t0-pub = {
                         cidr_offset = 1
                         ip_version = "ipv4"
-                    }
+                    },
+                    edge-tep = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"                      
+                    },
+                    edge-tep2 = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"                      
+                    },                    
                   }
               }
             }
@@ -586,6 +598,7 @@ variable "vpc" {
     }
 }
 
+/*
 ### This defines VPC structure for VCF deployment
 
 variable "vpc_vcf" {
@@ -645,6 +658,7 @@ variable "vpc_vcf" {
     }
 }
 
+*/
 
 ### Windows bastion server
 

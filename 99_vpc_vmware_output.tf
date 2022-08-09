@@ -32,15 +32,16 @@ output "resource_group_id" {
 ##############################################################
 
 output "zone_subnets" {
-  value = local.subnets
+  value = local.subnets_map
   description = "Created VPC subnets."
 }
 
+/*
 output "zone_subnets_edge" {
   value = local.nsxt_edge_subnets
   description = "Created VPC subnets for edge nodes."
 }
-
+*/
 
 
 ##############################################################
