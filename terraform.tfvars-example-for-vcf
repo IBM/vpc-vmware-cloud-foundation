@@ -1,7 +1,7 @@
 # Services deployment options
 
-deploy_dns = false
-deploy_iam = false
+deploy_dns = true
+deploy_iam = true
 enable_vcf_mode = true
 deploy_bastion = true
 
@@ -138,7 +138,7 @@ edge_uplink_public_vlan_id = 2711
 edge_uplink_private_vlan_id = 2712
 edge_tep_vlan_id = 2713
 
-vpc_t0_public_ips = 1
+
 
 
 
