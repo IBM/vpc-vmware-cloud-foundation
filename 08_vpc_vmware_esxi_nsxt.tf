@@ -42,7 +42,7 @@ module "zone_nxt_t_mgrs" {
   source                          = "./modules/vpc-nsx-t"
   for_each                        = local.zone_clusters_vcenters
 
-  vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+  vmw_vpc                         =  ibm_is_vpc.vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
@@ -54,7 +54,7 @@ module "zone_nxt_t_mgrs" {
   vmw_nsx_t_name                  = "${each.value.name}-nsx-t"
 
   depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       module.zone_bare_metal_esxi,
       ibm_is_security_group.sg,
     ]
@@ -136,7 +136,7 @@ module "zone_nxt_t_edges" {
 
   vmw_enable_vcf_mode             = var.enable_vcf_mode
 
-  vmw_vpc                         = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+  vmw_vpc                         =  ibm_is_vpc.vmware_vpc.id
   vmw_vpc_zone                    = var.vpc_zone
   vmw_resources_prefix            = local.resources_prefix
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
@@ -159,7 +159,7 @@ module "zone_nxt_t_edges" {
   vmw_t0_name                     = "${each.value.name}-t0"
 
   depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       module.zone_bare_metal_esxi,
       ibm_is_security_group.sg,
     ]
@@ -324,7 +324,7 @@ resource "ibm_is_floating_ip" "floating_ip_nsx_t" {
   tags = local.resource_tags.floating_ip_t0
 
   depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       module.zone_bare_metal_esxi,
       ibm_is_security_group.sg,
       module.zone_nxt_t_edges
@@ -339,7 +339,7 @@ resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip
   network_interface = module.zone_nxt_t_edges[each.value.cluster_key].t0_uplink_public_vip.id
   floating_ip       = ibm_is_floating_ip.floating_ip_nsx_t[each.key].id
   depends_on = [
-    module.vpc-subnets,
+    module.vpc_subnets,
     module.zone_bare_metal_esxi,
     ibm_is_security_group.sg,
     module.zone_nxt_t_edges,

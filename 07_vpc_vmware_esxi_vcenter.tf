@@ -56,7 +56,7 @@ module "zone_vcenter" {
   vmw_vcenter_name            = "${each.value.name}-vcenter"
 
   depends_on = [
-    module.vpc-subnets,
+    module.vpc_subnets,
     ibm_is_security_group.sg,
     module.zone_bare_metal_esxi
   ]

@@ -26,14 +26,23 @@ data "ibm_is_image" "vmw_esx_image" {
 # Order BMSs for Clusters in Zone
 ##############################################################
 
+
+locals {
+  zone_clusters2 = {
+    for k, v in var.zone_clusters : v.name => v
+  }
+}
+
+
 module "zone_bare_metal_esxi" {
   source = "./modules/vpc-bare-metal"
   for_each = var.zone_clusters
+  #for_each = local.zone_clusters2
 
   vmw_enable_vcf_mode = var.enable_vcf_mode
   vmw_resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   vmw_host_count = each.value.host_count
-  vmw_vpc = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+  vmw_vpc =  ibm_is_vpc.vmware_vpc.id
   vmw_vpc_zone = var.vpc_zone
   vmw_esx_image = data.ibm_is_image.vmw_esx_image.id
   vmw_host_profile = each.value.vmw_host_profile
@@ -65,7 +74,7 @@ module "zone_bare_metal_esxi" {
   vmw_tags = local.resource_tags.bms_esx
 
   depends_on = [
-    module.vpc-subnets,
+    module.vpc_subnets,
     ibm_is_security_group.sg,
   ]
 }

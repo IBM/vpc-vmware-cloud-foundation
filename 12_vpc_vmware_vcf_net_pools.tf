@@ -47,7 +47,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_vmot_pool" {
     address = cidrhost(local.subnets.vmot.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet 
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
     ]
 }
 
@@ -60,7 +60,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_vsan_pool" {
     address = cidrhost(local.subnets.vsan.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
     ]
 }
 
@@ -73,7 +73,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_tep_pool" {
     address = cidrhost(local.subnets.tep.cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
     ]
 }
 
@@ -106,7 +106,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     }
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi["cluster_0"],
       ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool
@@ -138,7 +138,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     }
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi["cluster_0"],
       ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool
@@ -171,7 +171,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
     } 
 
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi["cluster_0"],
       ibm_is_subnet_reserved_ip.zone_vcf_tep_pool

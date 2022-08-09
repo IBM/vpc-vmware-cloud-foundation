@@ -1,3 +1,5 @@
+
+/*
 ##############################################################
 # Create VPC 
 ##############################################################
@@ -7,6 +9,7 @@ resource "ibm_is_vpc" "vmware_vpc" {
   resource_group = var.resource_group_id
   address_prefix_management = "manual"
 }
+*/
 
 ##############################################################
 # locals
@@ -38,10 +41,10 @@ resource "ibm_is_vpc_address_prefix" "vmware_vpc_address_prefix_zone" {
 
   name = "${var.resources_prefix}-${each.key}"
   zone = each.value.zone
-  vpc  = ibm_is_vpc.vmware_vpc.id
+  #vpc  = ibm_is_vpc.vmware_vpc.id
+  vpc  = var.vpc_id
   cidr = each.value.vpc_zone_prefix
   depends_on = [
-    ibm_is_vpc.vmware_vpc
   ]
 }
 
@@ -63,7 +66,8 @@ resource "ibm_is_public_gateway" "vpc_zone_subnet_public_gateway" {
 
   name = "${var.resources_prefix}-${var.vpc_name}-${each.value.public_gateway}"
   resource_group  = var.resource_group_id
-  vpc             = ibm_is_vpc.vmware_vpc.id
+  #vpc  = ibm_is_vpc.vmware_vpc.id
+  vpc  = var.vpc_id
   zone            = each.value.zone
 
   //User can configure timeouts
@@ -96,13 +100,13 @@ resource "ibm_is_subnet" "vpc_subnet_zone_subnet" {
 
   name            = join("-", [var.resources_prefix, var.vpc_name, each.value.zone, each.value.name])
   resource_group  = var.resource_group_id
-  vpc             = ibm_is_vpc.vmware_vpc.id
+  #vpc  = ibm_is_vpc.vmware_vpc.id
+  vpc  = var.vpc_id
   zone            = each.value.zone
   ipv4_cidr_block = each.value.ipv4_cidr_block
   public_gateway = each.value.public_gateway == "" ? null : ibm_is_public_gateway.vpc_zone_subnet_public_gateway["${each.value.zone}-${each.value.public_gateway}"].id
   
   depends_on = [
-    ibm_is_vpc.vmware_vpc,
     ibm_is_vpc_address_prefix.vmware_vpc_address_prefix_zone
   ]
 

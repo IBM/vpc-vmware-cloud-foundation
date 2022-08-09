@@ -62,7 +62,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "cloud_builder
     allow_ip_spoofing = false
     
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi["cluster_0"]
     ]
@@ -86,7 +86,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager"
     allow_ip_spoofing = false
     
     depends_on = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi["cluster_0"]
     ]

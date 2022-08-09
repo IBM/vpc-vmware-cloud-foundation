@@ -4,11 +4,11 @@
 
 
 data "ibm_is_vpc_routing_table_routes" "routes_default_egress" {
-    vpc           = module.vpc-subnets[var.vpc_name].vmware_vpc.id
-    routing_table = module.vpc-subnets[var.vpc_name].vmware_vpc.default_routing_table
+    vpc           =  ibm_is_vpc.vmware_vpc.id
+    routing_table =  ibm_is_vpc.vmware_vpc.default_routing_table
 
     depends_on  = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_vpc_routing_table_route.zone_1_nsxt_overlay_routes,
       ibm_is_vpc_routing_table_route.zone_2_nsxt_overlay_routes,
       ibm_is_vpc_routing_table_route.zone_3_nsxt_overlay_routes
@@ -42,11 +42,11 @@ locals {
 
 
 data "ibm_is_vpc_routing_table_routes" "routes_tgw_dl_ingress" {
-    vpc           = module.vpc-subnets[var.vpc_name].vmware_vpc.id
+    vpc           =  ibm_is_vpc.vmware_vpc.id
     routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
 
     depends_on  = [
-      module.vpc-subnets,
+      module.vpc_subnets,
       ibm_is_vpc_routing_table_route.zone_1_nsxt_overlay_routes,
       ibm_is_vpc_routing_table_route.zone_2_nsxt_overlay_routes,
       ibm_is_vpc_routing_table_route.zone_3_nsxt_overlay_routes
