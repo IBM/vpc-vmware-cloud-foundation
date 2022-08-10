@@ -218,10 +218,11 @@ output "vcf_vlan_nics" {
 
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
-  sensitive = true
+  #sensitive = true
   description = "VCF bringup json file."
 } 
 
+# Note to allow printout though IBM Cloud Schematics.
 
 
 
@@ -236,6 +237,7 @@ output "vpc_bastion_hosts" {
   description = "Access information for deployed bastion hosts."
 }
 
+# Note to allow printout though IBM Cloud Schematics.
 
 
 
@@ -268,11 +270,15 @@ output "ssh_private_key_host" {
   #sensitive = true
 }
 
+# Note to allow printout though IBM Cloud Schematics.
+
 
 output "ssh_private_key_bastion" {
   value = nonsensitive(tls_private_key.bastion_rsa.private_key_openssh)
   #sensitive = true
 }
+
+# Note to allow printout though IBM Cloud Schematics.
 
 
 ##############################################################

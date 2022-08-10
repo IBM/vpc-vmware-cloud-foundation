@@ -178,3 +178,5 @@ locals {
     ],
   }
 }
+
+# Note to allow printout though IBM Cloud Schematics, nonsensitive() function is used with local.bastion_hosts[].password.
