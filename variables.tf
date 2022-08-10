@@ -145,7 +145,7 @@ variable "esxi_image" {
 
 variable "esxi_image_name" {
   description = "Use a specific ESXI image version to use for the hosts to override the latest by name."
-  default = ""
+  default = "ibm-esxi-7-0u3d-19482537-byol-amd64-1"
   type = string
 }
 
