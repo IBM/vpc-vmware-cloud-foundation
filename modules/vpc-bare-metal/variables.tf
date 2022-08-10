@@ -133,3 +133,7 @@ variable "vmw_ntp_server" {
 variable "vmw_tags" {
   
 }
+
+variable "wmv_allow_vlan_list" {
+  
+}

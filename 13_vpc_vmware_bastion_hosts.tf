@@ -70,7 +70,7 @@ resource "ibm_is_instance" "bastion" {
     security_groups = [ibm_is_security_group.sg["bastion"].id, ibm_is_security_group.sg["mgmt"].id]
   }
  
-  vpc  =  ibm_is_vpc.vmware_vpc.id
+  vpc  = ibm_is_vpc.vmware_vpc.id
   zone = var.vpc_zone
   keys = [ibm_is_ssh_key.bastion_key[0].id]
   
@@ -102,7 +102,7 @@ resource "ibm_is_instance" "bastion_linux" {
     security_groups = [ibm_is_security_group.sg["bastion"].id, ibm_is_security_group.sg["mgmt"].id]
   }
  
-  vpc  =  ibm_is_vpc.vmware_vpc.id
+  vpc  = ibm_is_vpc.vmware_vpc.id
   zone = var.vpc_zone
   keys = [ibm_is_ssh_key.bastion_key[0].id]
   

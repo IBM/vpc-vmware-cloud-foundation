@@ -4,7 +4,7 @@
 
 
 data "ibm_is_vpc_routing_table_routes" "routes_default_egress" {
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table =  ibm_is_vpc.vmware_vpc.default_routing_table
 
     depends_on  = [
@@ -42,7 +42,7 @@ locals {
 
 
 data "ibm_is_vpc_routing_table_routes" "routes_tgw_dl_ingress" {
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
 
     depends_on  = [

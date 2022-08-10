@@ -955,7 +955,7 @@ edge_uplink_public_vlan_id	= 2711
 edge_uplink_private_vlan_id = 2712
 edge_tep_vlan_id = 2713
 
-vcf_host_pool_size = 10
+vcf_mgmt_host_pool_size = 10
 vcf_edge_pool_size = 2   # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
 
 vpc_t0_public_ips = 1

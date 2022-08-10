@@ -1,3 +1,14 @@
+##############################################################
+# Define VPC structure 
+##############################################################
+
+# Select the VPC strcture based on architecture. 
+
+locals {
+  vcf_vpc_structure = var.vcf_architecture == "standard" ? var.vpc_vcf_standard : var.vpc_vcf_consolidated
+  vpc_structure = var.enable_vcf_mode ? local.vcf_vpc_structure : var.vpc_ryo
+}
+
 
 ##############################################################
 # Define maps for VPC prefixes and use VLAN IDs 
@@ -16,29 +27,33 @@ locals {
     infrastructure = {
       host = var.host_vlan_id
       mgmt = var.mgmt_vlan_id
-      vmot = var.mgmt_vlan_id
-      vsan = var.mgmt_vlan_id
-      tep = var.mgmt_vlan_id
-      tep2 = var.mgmt_vlan_id
+      vmot = var.vmot_vlan_id
+      vsan = var.vsan_vlan_id
+      tep = var.tep_vlan_id
+      wl-mgmt = var.wl_mgmt_vlan_id
+      wl-vmot = var.wl_vmot_vlan_id
+      wl-vsan = var.wl_vsan_vlan_id
+      wl-tep = var.wl_tep_vlan_id
     },
     edges = {
       t0-priv = var.edge_uplink_private_vlan_id
       t0-pub = var.edge_uplink_public_vlan_id
       edge-tep = var.edge_tep_vlan_id
-      edge-tep2 = var.edge_tep_vlan_id
+      wl-t0-priv = var.wl_edge_uplink_private_vlan_id
+      wl-t0-pub = var.wl_edge_uplink_public_vlan_id
+      wl-edge-tep = var.wl_edge_tep_vlan_id
     },
   }    
 }
+
+
 
 ##############################################################
 # Create VPC and Subnets
 ##############################################################
 
-
-
-
 locals {
-  vpc_subnets_test = {for k, v in var.vpc : var.vpc_name => {
+  vpc_subnets_test = {for k, v in local.vpc_structure : var.vpc_name => {
       zones = {
         "${var.vpc_zone}" = {      
           for domain_k, domain_v in v.zones.vpc_zone : domain_k => {
@@ -123,7 +138,7 @@ resource "ibm_is_security_group" "sg" {
 
   for_each       = local.security_groups
   name           = "${local.resources_prefix}-${each.key}-sg"
-  vpc            =  ibm_is_vpc.vmware_vpc.id
+  vpc            = ibm_is_vpc.vmware_vpc.id
   resource_group = data.ibm_resource_group.resource_group_vmw.id
 
     depends_on =  [
@@ -180,7 +195,7 @@ module "security_group_rules" {
 
 locals {
   subnets_map = {
-    for k,v in var.vpc.vpc.zones.vpc_zone : k => {
+    for k,v in local.vpc_structure.vpc.zones.vpc_zone : k => {
       for subnet_k, subnet_v in v.subnets : subnet_k => {
         name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].name
         subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-${subnet_k}"].id

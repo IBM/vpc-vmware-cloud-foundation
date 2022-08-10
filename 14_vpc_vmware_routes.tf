@@ -8,7 +8,7 @@
 
 resource "ibm_is_vpc_routing_table" "nsxt_overlay_route_table_ingress" {
     name                          = "${local.resources_prefix}-nsx-t-ingress-routing-table"
-    vpc                           =  ibm_is_vpc.vmware_vpc.id
+    vpc                           = ibm_is_vpc.vmware_vpc.id
     route_direct_link_ingress     = true
     route_transit_gateway_ingress = true
     route_vpc_zone_ingress        = true
@@ -57,7 +57,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-1"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table =  ibm_is_vpc.vmware_vpc.default_routing_table
     zone          = "${var.ibmcloud_vpc_region}-1"
 
@@ -76,7 +76,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-2"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table =  ibm_is_vpc.vmware_vpc.default_routing_table
     zone          = "${var.ibmcloud_vpc_region}-2"
 
@@ -95,7 +95,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-3"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table =  ibm_is_vpc.vmware_vpc.default_routing_table
     zone          = "${var.ibmcloud_vpc_region}-3"
 
@@ -122,7 +122,7 @@ resource "ibm_is_vpc_address_prefix" "nsx_t_overlay_prefix" {
     for_each    = local.zone_clusters_routes_map
     name = "prefix-nsx-t-${each.value.name}-${var.vpc_zone}"
 
-    vpc  =  ibm_is_vpc.vmware_vpc.id
+    vpc  = ibm_is_vpc.vmware_vpc.id
     zone = var.vpc_zone # prefix is created only on the zone where VMware is deployed
 
     cidr = each.value.destination
@@ -138,7 +138,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_1_nsxt_overlay_routes_ingress" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-1"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
     zone          = "${var.ibmcloud_vpc_region}-1"
 
@@ -159,7 +159,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_2_nsxt_overlay_routes_ingress" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-2"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
     zone          = "${var.ibmcloud_vpc_region}-2"
 
@@ -180,7 +180,7 @@ resource "ibm_is_vpc_routing_table_route" "zone_3_nsxt_overlay_routes_ingress" {
 
     name          = "nsx-t-${each.value.name}-${var.ibmcloud_vpc_region}-3"
 
-    vpc           =  ibm_is_vpc.vmware_vpc.id
+    vpc           = ibm_is_vpc.vmware_vpc.id
     routing_table = ibm_is_vpc_routing_table.nsxt_overlay_route_table_ingress.routing_table
     zone          = "${var.ibmcloud_vpc_region}-3"
 

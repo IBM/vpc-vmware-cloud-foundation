@@ -36,7 +36,7 @@ module "zone_bare_metal_esxi" {
   vmw_enable_vcf_mode = var.enable_vcf_mode
   vmw_resource_group_id = data.ibm_resource_group.resource_group_vmw.id
   vmw_host_count = each.value.host_count
-  vmw_vpc =  ibm_is_vpc.vmware_vpc.id
+  vmw_vpc = ibm_is_vpc.vmware_vpc.id
   vmw_vpc_zone = var.vpc_zone
   vmw_esx_image = data.ibm_is_image.vmw_esx_image.id
   vmw_host_profile = each.value.vmw_host_profile
@@ -53,6 +53,7 @@ module "zone_bare_metal_esxi" {
   vmw_vmot_vlan_id = var.vmot_vlan_id
   vmw_vsan_vlan_id = var.vsan_vlan_id
   vmw_tep_vlan_id = var.tep_vlan_id
+  wmv_allow_vlan_list = each.value.domain == "mgmt" ? [var.wl_mgmt_vlan_id] : [] 
   vmw_edge_tep_vlan_id = var.edge_tep_vlan_id
   vmw_edge_uplink_public_vlan_id = var.edge_uplink_public_vlan_id
   vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id
