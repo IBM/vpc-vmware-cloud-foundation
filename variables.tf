@@ -795,6 +795,13 @@ variable "vpc_ryo" {
 
 ### Windows bastion server
 
+
+variable "user_provided_ssh_keys" {
+  description = "User provided 'ssh key names'. Must have been uploaded to the IBM ClLoud Region."
+  default = []
+  type = list
+}
+
 variable "vsi_image_architecture" {
   description = "CPU architecture for VSI deployment"
   default = "amd64"

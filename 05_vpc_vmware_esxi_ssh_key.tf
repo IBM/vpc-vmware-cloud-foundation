@@ -55,4 +55,8 @@ resource "ibm_is_ssh_key" "bastion_key" {
 }
 
 
+data "ibm_is_ssh_key" "user_provided_ssh_keys" {
+  for_each = toset(var.user_provided_ssh_keys) 
+  name = each.key
+}
 

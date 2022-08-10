@@ -104,7 +104,7 @@ resource "ibm_is_instance" "bastion_linux" {
  
   vpc  = ibm_is_vpc.vmware_vpc.id
   zone = var.vpc_zone
-  keys = [ibm_is_ssh_key.bastion_key[0].id]
+  keys = concat([ibm_is_ssh_key.bastion_key[0].id],[for k,v in data.ibm_is_ssh_key.user_provided_ssh_keys : v.id])
   
   tags = local.resource_tags.vsi_bastion
 
@@ -169,8 +169,8 @@ locals {
     linux = [
       for bastion_host in range(var.number_of_bastion_hosts_linux) : {
         name = var.deploy_bastion ? ibm_is_instance.bastion_linux[bastion_host].name : "none"
-        private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-        public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
+        private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion_linux[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+        public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_linux_floating_ip[bastion_host].address : "0.0.0.0"
         username = "root"
         password = "use SSH key"
       }
