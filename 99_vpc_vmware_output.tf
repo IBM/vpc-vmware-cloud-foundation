@@ -232,7 +232,7 @@ output "vcf_bringup_json" {
 
 output "vpc_bastion_hosts" {
   value = var.deploy_bastion ? local.bastion_hosts : {}
-  sensitive = true
+  #sensitive = true
   description = "Access information for deployed bastion hosts."
 }
 
@@ -264,14 +264,14 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 output "ssh_private_key_host" {
-  value = tls_private_key.host_ssh.private_key_openssh
-  sensitive = true
+  value = nonsensitive(tls_private_key.host_ssh.private_key_openssh)
+  #sensitive = true
 }
 
 
 output "ssh_private_key_bastion" {
-  value = tls_private_key.bastion_rsa.private_key_openssh
-  sensitive = true
+  value = nonsensitive(tls_private_key.bastion_rsa.private_key_openssh)
+  #sensitive = true
 }
 
 
