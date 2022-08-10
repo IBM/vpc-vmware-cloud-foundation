@@ -350,12 +350,12 @@ variable "zone_clusters" {
     error_message = "VMware VCF management components must be deployed on the initial cluster." 
   }
 
-  validation {
-    condition = (
-        var.zone_clusters["cluster_0"].name == "mgmt"
-    )
-    error_message = "The first cluster must be named 'mgmt'." 
-  }
+  #validation {
+  #  condition = (
+  #      var.zone_clusters["cluster_0"].name == "mgmt"
+  #  )
+  #  error_message = "The first cluster must be named 'mgmt'." 
+  #}
 
   default     = {
     cluster_0 = {
