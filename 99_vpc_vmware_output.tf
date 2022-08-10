@@ -233,7 +233,7 @@ output "vcf_bringup_json" {
 
 output "vpc_bastion_hosts" {
   value = var.deploy_bastion ? local.bastion_hosts : {}
-  #sensitive = true
+  sensitive = false
   description = "Access information for deployed bastion hosts."
 }
 
