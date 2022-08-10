@@ -172,7 +172,7 @@ variable "vcf_mgmt_host_pool_size" {
     condition = (
         var.vcf_mgmt_host_pool_size >= 8
     )
-    error_message = "Reserve enough growth for future growth for the solution. This is required for VCF network pool creation. " 
+    error_message = "Reserve enough growth for future growth for the solution. This is required for VCF network pool creation." 
   }
 }
 
