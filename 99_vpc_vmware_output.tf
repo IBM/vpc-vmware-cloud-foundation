@@ -259,6 +259,23 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 ##############################################################
+# Output private SSH keys for host and bastion
+##############################################################
+
+
+output "ssh_private_key_host" {
+  value = tls_private_key.host_ssh.private_key_openssh
+  sensitive = true
+}
+
+
+output "ssh_private_key_bastion" {
+  value = tls_private_key.bastion_rsa.private_key_openssh
+  sensitive = true
+}
+
+
+##############################################################
 # Testing
 ##############################################################
 

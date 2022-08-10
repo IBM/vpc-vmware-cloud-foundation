@@ -16,8 +16,6 @@ resource "local_file" "write_private_key" {
   file_permission = 0600
 }
 
-
-# Public SSH key used to connect to the servers
 resource "ibm_is_ssh_key" "host_ssh_key" {
 
   name       = "${local.resources_prefix}-host-ssh-key"
@@ -42,7 +40,6 @@ resource "tls_private_key" "bastion_rsa" {
   rsa_bits  = 4096
 }
 
-
 resource "local_file" "write_bastion_private_key" {
   content         = tls_private_key.bastion_rsa.private_key_pem
   filename        = "SSH_KEYS/${local.resources_prefix}-bastion_rsa"
@@ -56,4 +53,6 @@ resource "ibm_is_ssh_key" "bastion_key" {
 
   tags = local.resource_tags.ssh_key
 }
+
+
 
