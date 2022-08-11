@@ -47,3 +47,6 @@ SSH_KEYS/*
 #TEMPLATE/*
 OUTPUT/*
 #90_*
+schematics/*
+
+
