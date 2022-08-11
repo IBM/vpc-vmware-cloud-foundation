@@ -39,7 +39,7 @@ variable "resource_prefix" {
 
 variable "deploy_iam" {
   description = "Boolean to enable IAM deployment."
-  default = true
+  default = false
   type = bool
 }
 
@@ -57,13 +57,13 @@ variable "deploy_dns" {
 
 variable "enable_vcf_mode" {
   description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
-  default = false
+  default = true
   type = bool
 }
 
 variable "deploy_bastion" {
   description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
-  default = false
+  default = true
   type = bool
 }
 
@@ -71,7 +71,7 @@ variable "deploy_bastion" {
 
 variable "dns_root_domain" {
   description = "Root Domain of Private DNS used with the Virtual Server"
-  default = "vmw-terraform.ibmcloud.local"
+  default = "vcf-example.ibmcloud.local"
   type = string
 }
 
