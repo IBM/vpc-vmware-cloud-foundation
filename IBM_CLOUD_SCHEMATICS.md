@@ -45,9 +45,7 @@ ibmcloud schematics workspace get --id $SCHEMATICS_WORKSPACE_ID
 ```
 
 
-```bash
-ibmcloud schematics workspace get --id $SCHEMATICS_WORKSPACE_ID
-                   
+```bash                   
 ID              eu-de.workspace.vpc-vcf-example.c5276a56   
 Name            vpc-vcf-example   
 Description        
