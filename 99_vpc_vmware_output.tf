@@ -26,15 +26,21 @@ output "resource_group_id" {
 
 }
 
-
 ##############################################################
 #  Output zone VPC subnets
 ##############################################################
 
 output "zone_subnets" {
-  value = local.subnets
+  value = local.subnets_map
   description = "Created VPC subnets."
 }
+
+/*
+output "zone_subnets_edge" {
+  value = local.nsxt_edge_subnets
+  description = "Created VPC subnets for edge nodes."
+}
+*/
 
 
 ##############################################################
@@ -58,11 +64,10 @@ output "dns_servers" {
 ##############################################################
 
 
-output "dns_records_to_create" {
-  value = var.enable_vcf_mode ? concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.vcf, local.dns_records.other) : concat(local.dns_records.hosts, local.dns_records.mgmt, local.dns_records.other)
+output "dns_records" {
+  value = local.dns_records
   description = "List of DNS recerds to be created if you have selected not to deploy IBM Cloud DNS service."
 }
-
 
 ##############################################################
 #  Output NTP server
@@ -83,11 +88,19 @@ output "ntp_server" {
 #  Output cluster hosts
 ##############################################################
 
+
+output "cluster_hosts" {
+  value = local.zone_clusters_hosts_values
+  description = "Deployed VPC bare metal servers per cluster including created VLAN network interface information for VMkernel adapters."
+}
+
+
+/*
 output "cluster_hosts" {
   value = local.cluster_host_map
   description = "Deployed VPC bare metal servers per cluster including created VLAN network interface information for VMkernel adapters."
 }
-
+*/
 
 /*
 
@@ -106,37 +119,61 @@ output "cluster_host_map_out_json" {
 #  Output vcenter
 ##############################################################
 
+output "vcenters" {
+  value = local.zone_clusters_vcenters_values
+}
+
+/*
+
 output "vcenter" {
   value = local.vcenter
   description = "Deployed DNS and VLAN network interface information for vCenter Server virtual appliance(es)."
 }
-
+*/
 
 ##############################################################
-#  Output NSX-T
+#  Output NSX-T managers
 ##############################################################
 
+
+output "nsx_t_managers" {
+  value = local.zone_clusters_nsx_t_managers_values
+}
+
+/*
 
 output "zone_nsx_t_mgr" {
   value = local.nsx_t_mgr
   description = "Deployed DNS and VLAN network interface information for NSX-T Manager virtual appliance(es)."
 }
 
-
+*/
 
 ##############################################################
 #  Output NSX-T edge and T0
 ##############################################################
+
+
+output "nsx_t_edges" {
+  value = local.zone_clusters_nsx_t_edges_values
+  description = "Deployed DNS and VLAN network interface information for NSX-T Edge virtual appliance(es)."
+}
+
+
+output "nsx_t_t0s" {
+  value = local.zone_clusters_nsx_t_t0_values
+  description = "Deployed VLAN network interface information for NSX-T Tier-0 gateway uplinks."
+}
+
+
+/*
 
 output "zone_nsx_t_edge" {
   value = local.nsx_t_edge
   description = "Deployed DNS and VLAN network interface information for NSX-T Edge virtual appliance(es)."
 }
 
-output "zone_subnets_edge" {
-  value = local.nsxt_edge_subnets
-  description = "Deployed subnet infromation for edge nodes."
-}
+
 
 output "nsx_t_t0" {
   value = local.nsx_t_t0
@@ -148,6 +185,7 @@ output "t0_public_ips" {
   description = "Deployed public IPs for NSX-T Tier-0 gateway public uplink."
 }
 
+*/
 
 ##############################################################
 # Output VCF 
@@ -176,11 +214,14 @@ output "vcf_vlan_nics" {
 ##############################################################
 
 
+
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
-  sensitive = true
+  #sensitive = true
   description = "VCF bringup json file."
 } 
+
+# Note to allow printout though IBM Cloud Schematics.
 
 
 
@@ -190,11 +231,12 @@ output "vcf_bringup_json" {
 
 
 output "vpc_bastion_hosts" {
-  value = var.deploy_bastion ? local.bastion_hosts : []
-  sensitive = true
+  value = var.deploy_bastion ? local.bastion_hosts : {}
+  sensitive = false
   description = "Access information for deployed bastion hosts."
 }
 
+# Note to allow printout though IBM Cloud Schematics.
 
 
 
@@ -217,6 +259,26 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 
+##############################################################
+# Output private SSH keys for host and bastion
+##############################################################
+
+
+output "ssh_private_key_host" {
+  value = nonsensitive(tls_private_key.host_ssh.private_key_openssh)
+  #sensitive = true
+}
+
+# Note to allow printout though IBM Cloud Schematics.
+
+
+output "ssh_private_key_bastion" {
+  value = nonsensitive(tls_private_key.bastion_rsa.private_key_openssh)
+  #sensitive = true
+}
+
+# Note to allow printout though IBM Cloud Schematics.
+
 
 ##############################################################
 # Testing
@@ -227,4 +289,8 @@ output "cos_bucket_test_key" {
   value = var.cos_bucket_test_key
   sensitive = true
 }
+
+
+
+
 

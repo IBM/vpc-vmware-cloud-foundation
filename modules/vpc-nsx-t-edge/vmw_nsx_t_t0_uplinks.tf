@@ -12,7 +12,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_pri
     count = 2
     bare_metal_server = var.vmw_vcenter_esx_host_id
     subnet = var.vmw_priv_subnet_id
-    name   = "vlan-nic-t0-uplink-private-edge-${count.index}"
+    name   = "vlan-nic-${var.vmw_t0_name}-uplink-private-edge-${count.index}"
     security_groups = [var.vmw_sg_uplink_priv]
     allow_ip_spoofing = true
     enable_infrastructure_nat = true
@@ -22,7 +22,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_pri
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_private_vip" {
     bare_metal_server = var.vmw_vcenter_esx_host_id
     subnet = var.vmw_priv_subnet_id
-    name   = "vlan-nic-t0-uplink-private-vip"
+    name   = "vlan-nic-${var.vmw_t0_name}-uplink-private-vip"
     security_groups = [var.vmw_sg_uplink_priv]
     allow_ip_spoofing = true
     enable_infrastructure_nat = true
@@ -53,7 +53,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_pub
     count = 2
     bare_metal_server = var.vmw_vcenter_esx_host_id
     subnet = var.vmw_pub_subnet_id
-    name   = "vlan-nic-t0-uplink-public-edge-${count.index}"
+    name   = "vlan-nic-${var.vmw_t0_name}-uplink-public-edge-${count.index}"
     security_groups = [var.vmw_sg_uplink_pub]
     allow_ip_spoofing = false
     enable_infrastructure_nat = false
@@ -64,7 +64,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_pub
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "t0_uplink_public_vip" {
     bare_metal_server = var.vmw_vcenter_esx_host_id
     subnet = var.vmw_pub_subnet_id
-    name   = "vlan-nic-t0-uplink-public-vip"
+    name   = "vlan-nic-${var.vmw_t0_name}-uplink-public-vip"
     security_groups = [var.vmw_sg_uplink_pub]
     allow_ip_spoofing = false
     enable_infrastructure_nat = false

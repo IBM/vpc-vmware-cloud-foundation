@@ -65,11 +65,11 @@ resource "ibm_dns_permitted_network" "dns_services_permitted_network" {
 
   instance_id = ibm_resource_instance.dns_services_instance[0].guid
   zone_id = ibm_dns_zone.dns_services_zone[0].zone_id
-  vpc_crn = module.vpc-subnets[var.vpc_name].vmware_vpc.resource_crn
+  vpc_crn =  ibm_is_vpc.vmware_vpc.resource_crn
   type = "vpc"
   depends_on = [
     ibm_dns_zone.dns_services_zone,
-    module.vpc-subnets
+    module.vpc_subnets
   ]
 }
 

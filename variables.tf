@@ -39,7 +39,7 @@ variable "resource_prefix" {
 
 variable "deploy_iam" {
   description = "Boolean to enable IAM deployment."
-  default = true
+  default = false
   type = bool
 }
 
@@ -57,13 +57,13 @@ variable "deploy_dns" {
 
 variable "enable_vcf_mode" {
   description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
-  default = false
+  default = true
   type = bool
 }
 
 variable "deploy_bastion" {
   description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
-  default = false
+  default = true
   type = bool
 }
 
@@ -71,7 +71,7 @@ variable "deploy_bastion" {
 
 variable "dns_root_domain" {
   description = "Root Domain of Private DNS used with the Virtual Server"
-  default = "vmw-terraform.ibmcloud.local"
+  default = "vcf-example.ibmcloud.local"
   type = string
 }
 
@@ -129,13 +129,13 @@ variable "vpc_name" {
 }
 
 
-
+/*to be deleted
 variable "vpc_t0_public_ips" {
   description = "Number of public / floating IPs for T0."
   default     = 0 
   type = number
 }
-
+*/
   
 variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id."
@@ -145,7 +145,7 @@ variable "esxi_image" {
 
 variable "esxi_image_name" {
   description = "Use a specific ESXI image version to use for the hosts to override the latest by name."
-  default = ""
+  default = "ibm-esxi-7-0u3d-19482537-byol-amd64-1"
   type = string
 }
 
@@ -163,19 +163,38 @@ variable "vpc_zone_prefix_t0_uplinks" {
   type = string
 }
 
-variable "vcf_host_pool_size" {
+variable "vcf_mgmt_host_pool_size" {
   description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
   default = 10  
   type = number
+
+  validation {
+    condition = (
+        var.vcf_mgmt_host_pool_size >= 8
+    )
+    error_message = "Reserve enough growth for future growth for the solution. This is required for VCF network pool creation." 
+  }
 }
 
+
+variable "vcf_wl_host_pool_size" {
+  description = "Size of the host network pool to reserve VPC subnet IPs for # of hosts."
+  default = 10
+  type = number
+
+}
+
+
+/* to be deleted - not needed
 variable "vcf_edge_pool_size" {
   description = "Size of the edge network pool to reserve VPC subnet IPs # of edge nodes."
   default = 2  # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
   type = number
 }
+*/
 
 
+/*
 variable "nsx_t_overlay_networks" {
   description = "NSX-T overlay network prefixes to create VPC routes"
   type = map
@@ -186,7 +205,7 @@ variable "nsx_t_overlay_networks" {
     },
   }
 }
-
+*/
 
 
 
@@ -247,6 +266,57 @@ variable "edge_tep_vlan_id" {
   type = number
 }
 
+###
+
+variable "wl_mgmt_vlan_id" {
+  description = "VLAN ID for management network"
+  # default     = 100 ## IBM Cloud ref arch
+  default     = 1631 ## VCF default
+  type = number
+}
+
+variable "wl_vmot_vlan_id" {
+  description = "VLAN ID for vMotion network"
+  # default     = 200
+  default     = 1632 ## VCF default
+  type = number
+}
+
+variable "wl_vsan_vlan_id" {
+  description = "VLAN ID for vSAN network"
+  # default     = 300
+  default     = 1633 ## VCF default
+  type = number
+}
+
+variable "wl_tep_vlan_id" {
+  description = "VLAN ID for TEP network"
+  # default     = 400
+  default     = 1634 ## VCF default
+  type = number
+}
+
+variable "wl_edge_uplink_public_vlan_id" {
+  description = "VLAN ID for T0 public uplink network"
+  # default     = 700
+  default     = 2731 ## VCF default
+  type = number
+}
+
+variable "wl_edge_uplink_private_vlan_id" {
+  description = "VLAN ID for T0 private uplink network"
+  # default     = 710
+  default     = 2732 ## VCF default
+  type = number
+}
+
+variable "wl_edge_tep_vlan_id" {
+  description = "VLAN ID for TEP network"
+  default     = 2733 ## VCF default
+  type = number
+}
+
+
 
 
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 
@@ -256,23 +326,56 @@ variable "edge_tep_vlan_id" {
 variable "zone_clusters" {
   description = "Clusters in VPC"
   type        = map
+
+  validation {
+    condition = (
+      anytrue([for k,v in var.zone_clusters : contains(["cluster_0"],k)])
+    )
+    error_message = "First cluster key must be 'cluster_0'." 
+  }
+
+  validation {
+    condition = (
+        var.zone_clusters["cluster_0"].host_count >= 4
+    )
+    error_message = "The number of hosts must be greater than 4." 
+  }
+
+  validation {
+    condition = (
+        var.zone_clusters["cluster_0"].vcenter == true &&
+        var.zone_clusters["cluster_0"].nsx_t_managers == true &&
+        var.zone_clusters["cluster_0"].nsx_t_edges == true
+    )
+    error_message = "VMware VCF management components must be deployed on the initial cluster." 
+  }
+
+  #validation {
+  #  condition = (
+  #      var.zone_clusters["cluster_0"].name == "mgmt"
+  #  )
+  #  error_message = "The first cluster must be named 'mgmt'." 
+  #}
+
   default     = {
-    cluster_0 = {
-      name = "mgmt"
+    cluster_0 = {              # Value must "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"          # Value must "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 1
-      vpc_file_shares = [
-        {
-          name = "cluster0_share1" 
-          size = 500 
-          profile = "tier-3iops" 
-          target = "cluster0_share1_target"
-        }
-      ]
-    }
+      host_count = 4           # Define a host count for this cluster.
+      vcenter = true           # Value must "true" for the first cluster
+      nsx_t_managers = true    # Value must "true" for the first cluster
+      nsx_t_edges = true       # Value must "true" for the first cluster
+      public_ips = 2           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []     # Future use.
+    },
   }
 }
-
 
 
 
@@ -484,7 +587,7 @@ variable "security_group_rules" {
 
 ### This defines VPC structure for RYO deployment
 
-variable "vpc" {
+variable "vpc_vcf_consolidated" {
     description = "VPC Data Structure"
     type        = map
     default = {
@@ -492,62 +595,7 @@ variable "vpc" {
         zones = {
             vpc_zone = {
               infrastructure = {
-                  vpc_zone_subnet_size = 3
-                  public_gateways = ["subnet-public-gateway"]
-                  subnets = {
-                    host = {
-                        cidr_offset = 0
-                        ip_version = "ipv4"
-                    },
-                    mgmt = {
-                        cidr_offset = 1
-                        ip_version = "ipv4"
-                        public_gateway = "subnet-public-gateway"
-                    },
-                    vmot = {
-                        cidr_offset = 2
-                        ip_version = "ipv4"
-                    },
-                    vsan = {
-                        cidr_offset = 3
-                        ip_version = "ipv4"
-                    },
-                    tep = {
-                        cidr_offset = 4
-                        ip_version = "ipv4"
-                    }
-                }
-              },
-              edges = {
                   vpc_zone_subnet_size = 4
-                  subnets = {
-                    t0-priv = {
-                        cidr_offset = 0
-                        ip_version = "ipv4"
-                    },
-                    t0-pub = {
-                        cidr_offset = 1
-                        ip_version = "ipv4"
-                    }
-                  }
-              }
-            }
-        }
-      }
-    }
-}
-
-### This defines VPC structure for VCF deployment
-
-variable "vpc_vcf" {
-    description = "VPC Data Structure"
-    type        = map
-    default = {
-      vpc = {
-        zones = {
-            vpc_zone = {
-              infrastructure = {
-                  vpc_zone_subnet_size = 3
                   public_gateways = ["subnet-public-gateway"]
                   subnets = {
                     host = {
@@ -570,7 +618,7 @@ variable "vpc_vcf" {
                     tep = {
                         cidr_offset = 4
                         ip_version = "ipv4"
-                    }
+                    },
                 }
               },
               edges = {
@@ -587,7 +635,7 @@ variable "vpc_vcf" {
                     edge-tep = {
                         cidr_offset = 2
                         ip_version = "ipv4"                      
-                    }
+                    },             
                   }
               }
             }
@@ -597,18 +645,169 @@ variable "vpc_vcf" {
 }
 
 
-### Windows AD/DNS server
-
-variable "vsi_profile_bastion" {
-  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
-  default     = "bx2-2x8"
-  type = string
+variable "vpc_vcf_standard" {
+    description = "VPC Data Structure"
+    type        = map
+    default = {
+      vpc = {
+        zones = {
+            vpc_zone = {
+              infrastructure = {
+                  vpc_zone_subnet_size = 4
+                  public_gateways = ["subnet-public-gateway"]
+                  subnets = {
+                    host = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    mgmt = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                        public_gateway = "subnet-public-gateway"
+                    },
+                    vmot = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"
+                    },
+                    vsan = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"
+                    },
+                    tep = {
+                        cidr_offset = 4
+                        ip_version = "ipv4"
+                    },
+                    wl-mgmt = {
+                        cidr_offset = 5
+                        ip_version = "ipv4"
+                        public_gateway = "subnet-public-gateway"
+                    },
+                    wl-vmot = {
+                        cidr_offset = 6
+                        ip_version = "ipv4"
+                    },
+                    wl-vsan = {
+                        cidr_offset = 7
+                        ip_version = "ipv4"
+                    },
+                    wl-tep = {
+                        cidr_offset = 8
+                        ip_version = "ipv4"
+                    },
+                }
+              },
+              edges = {
+                  vpc_zone_subnet_size = 4
+                  subnets = {
+                    t0-priv = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    t0-pub = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                    },
+                    edge-tep = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"                      
+                    },
+                    wl-t0-priv = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"
+                    },
+                    wl-t0-pub = {
+                        cidr_offset = 4
+                        ip_version = "ipv4"
+                    },
+                    wl-edge-tep = {
+                        cidr_offset = 5
+                        ip_version = "ipv4"                      
+                    },                
+                  }
+              }
+            }
+        }
+      }
+    }
 }
 
+
+variable "vpc_ryo" {
+    description = "VPC Data Structure"
+    type        = map
+    default = {
+      vpc = {
+        zones = {
+            vpc_zone = {
+              infrastructure = {
+                  vpc_zone_subnet_size = 3
+                  public_gateways = ["subnet-public-gateway"]
+                  subnets = {
+                    host = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    mgmt = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                        public_gateway = "subnet-public-gateway"
+                    },
+                    vmot = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"
+                    },
+                    vsan = {
+                        cidr_offset = 3
+                        ip_version = "ipv4"
+                    },
+                    tep = {
+                        cidr_offset = 4
+                        ip_version = "ipv4"
+                    }
+                }
+              },
+              edges = {
+                  vpc_zone_subnet_size = 4
+                  subnets = {
+                    t0-priv = {
+                        cidr_offset = 0
+                        ip_version = "ipv4"
+                    },
+                    t0-pub = {
+                        cidr_offset = 1
+                        ip_version = "ipv4"
+                    },
+                  }
+              }
+            }
+        }
+      }
+    }
+}
+
+
+
+### Bastion servers
+
+
+variable "user_provided_ssh_keys" {
+  description = "User provided 'ssh key names'. Must have been uploaded to the IBM ClLoud Region."
+  default = []
+  type = list
+}
 
 variable "vsi_image_architecture" {
   description = "CPU architecture for VSI deployment"
   default = "amd64"
+  type = string
+}
+
+# Windows
+
+
+variable "vsi_profile_bastion" {
+  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
+  default     = "bx2-2x8"
   type = string
 }
 
@@ -624,6 +823,31 @@ variable "number_of_bastion_hosts" {
   type = number
 }
 
+# Linux
+
+variable "vsi_profile_bastion_linux" {
+  description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
+  default     = "bx2-2x8"
+  type = string
+}
+
+variable "vsi_image_os_linux" {
+  description = "OS for VSI deployment"
+  default = "centos-7-amd64"
+  type = string
+}
+
+variable "number_of_bastion_hosts_linux" {
+  description = "Number of bastion hosts to deploy."
+  default = 1
+  type = number
+}
+
+
+
+
+
+
 
 
 ##############################################################
@@ -631,6 +855,19 @@ variable "number_of_bastion_hosts" {
 ##############################################################
 
 ### VCF deployment variables
+
+variable "vcf_architecture" {
+  description = "Defines VMware Cloud Foundation deployment architecture."
+  default = "consolidated"
+
+  validation {
+    condition = (
+        var.vcf_architecture == "consolidated" ||
+        var.vcf_architecture == "standard"
+    )
+    error_message = "VMware VCF architecture optionas are 'consolidated' or 'standard'." 
+  }
+}
 
 variable "vcf_password" {
   description = "Define a common password for all elements. Optional, leave empty to get random passwords."

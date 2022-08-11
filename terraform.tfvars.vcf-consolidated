@@ -1,0 +1,336 @@
+# Services deployment options
+
+deploy_dns = true
+deploy_iam = false
+enable_vcf_mode = true
+deploy_bastion = true
+
+
+# Resource group name to use
+# leave empty if you want to provision a new resource group
+
+resource_group_name = ""
+#resource_group_name = "Default"
+
+
+# Resource prefix for naming assets
+
+resource_prefix = "vcf"
+
+# Tags
+# all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
+
+tags = ["env:test"]
+
+
+# DNS
+
+dns_root_domain = "vcf-consolidated.ibmcloud.local"
+
+dns_servers = ["161.26.0.7", "161.26.0.8"] # IBM Cloud DNS service IPs, replace with your own DNS if 'deploy_dns=false'
+#dns_servers = ["161.26.0.9",""]           # Note provide 2 DNS server IPs here
+
+
+dns_records = [
+    {
+      name = "xint-vrslcm01"
+      ip_address = "172.27.17.20"
+    },
+  ]
+
+
+# NTP
+
+ntp_server = "161.26.0.6"   # IBM Cloud NTP server - use default 
+
+
+# IBM Cloud Region and VPC Zone
+
+ibmcloud_vpc_region = "eu-de"
+vpc_zone = "eu-de-2"
+
+
+# Hosts and clusters
+
+# Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
+
+
+# Define vcf deployment architecture option (valid only for VCF deployments when 'enable_vcf_mode=true')
+
+vcf_architecture = "consolidated" # Deploys a 'consolidated' VCF deployment.
+#vcf_architecture = "standard"    # Deploys a 'standard' VCF deployment.
+
+# Define en estimate of a number of hosts per domain
+
+vcf_mgmt_host_pool_size = 8    # Creates VPC BMS VLAN interfaces for a pool for N hosts total for mgmt domain
+
+# Define deployment structure
+
+zone_clusters = {
+    cluster_0 = {              # Value must "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 4           # Define a host count for this cluster.
+      vcenter = true           # Value must "true" for the first cluster
+      nsx_t_managers = true    # Value must "true" for the first cluster
+      nsx_t_edges = true       # Value must "true" for the first cluster
+      public_ips = 2           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []     # Future use.
+    },   
+  }
+
+
+# Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
+# You must manually configure routing in T0 with static routes.  
+
+/*
+
+# Example with two clusters on consolidated architecture. You can optionally deploy NSX-T edge nodes on the 2nd cluster.
+
+zone_clusters = {
+    cluster_0 = {              # value must "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"          # value must "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 4           # Define a host count for this cluster.
+      vcenter = true           # value must "true" for the first cluster
+      nsx_t_managers = true    # value must "true" for the first cluster
+      nsx_t_edges = true       # value must "true" for the first cluster
+      public_ips = 2           
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []
+    },   
+    cluster_1 = {
+      name = "mgmt-cl-1"
+      domain = "mgmt"         
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_count = 1          # Define a host count for this cluster.
+      vcenter = false           
+      nsx_t_managers = false    
+      nsx_t_edges = false      
+      public_ips = 0
+      overlay_networks = [
+        ]
+      vpc_file_shares = []
+    },
+
+
+*/
+
+esxi_image="esxi-7-byol" # BYOL ESXi lisence
+# esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
+#esxi_image_name = "ibm-esxi-7-byol-amd64-5"   # Use a specific ESXI version to override the latest (use image name). 
+esxi_image_name = "ibm-esxi-7-0u3d-19482537-byol-amd64-1"
+
+# Bastion hosts
+
+number_of_bastion_hosts = 1
+
+number_of_bastion_hosts_linux = 1
+
+vsi_profile_bastion_linux = "bx2-2x8"
+vsi_image_os_linux = "red-8-amd64"
+
+# User provided SSH keys to access the linux bastion. Provide SSH key name here.
+
+user_provided_ssh_keys = []
+
+# Networking
+
+
+vpc_zone_prefix = "10.100.0.0/22"                # infrastucture subnets
+vpc_zone_prefix_t0_uplinks = "192.168.10.0/24"   # edge and tier 0 gateway subnets
+
+mgmt_vlan_id = 1611
+vmot_vlan_id = 1612
+vsan_vlan_id = 1613
+tep_vlan_id	= 1614
+
+edge_uplink_public_vlan_id = 2711
+edge_uplink_private_vlan_id = 2712
+edge_tep_vlan_id = 2713
+
+
+wl_mgmt_vlan_id = 1631
+wl_vmot_vlan_id = 1632
+wl_vsan_vlan_id = 1633
+wl_tep_vlan_id = 1634
+
+wl_edge_uplink_private_vlan_id = 2731
+wl_edge_uplink_public_vlan_id = 2732
+wl_edge_tep_vlan_id = 2733
+
+
+#vpc_t0_public_ips = 1
+
+
+### VCF deployment variables
+
+# Define a common password (optional) for all VCF elements for initial deployment, change after deployment.
+# Password Policy: Each password has its own password policy typically a minimum number of characters in length 
+# and atleast one uppercase, lowercase, number and special character (e.g: @!#$%?^). 
+# Unsupported: Ambiguous Characters (e.g: { } [ ] ( ) / \' " ` *~ , ; : .< >)
+
+vcf_password = ""   # If you leave this empty (default setting), a random password will be generated for you. 
+
+vcf_mgmt_domain_name = "m01" 
+vcf_cluster_name = "cl01" 
+vcf_dc_name = "dc01" 
+
+### VCF license variables
+
+sddc_manager_license = ""
+nsx_t_license = "TN0AJ-LN29Q-Y8TD1-02120-3RT5M"  
+vsan_license = "E4095-L425J-N8LH8-0J1A6-3JEL1"  
+vcenter_license = ""  
+esx_license = "T461H-ZT1D5-282G1-0LCKM-99451"  
+
+
+
+
+# Network security
+
+security_group_rules = {
+      mgmt = [
+        {
+          name      = "allow-all-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+        },
+        {
+          name      = "allow-inbound-10-0-0-0-8"
+          direction = "inbound"
+          remote    = "10.0.0.0/8"
+        },
+        {
+          name      = "allow-inbound-avn-local-network"
+          direction = "inbound"
+          remote    = "172.27.16.0/24"
+        },
+        {
+          name      = "allow-inbound-avn-x-region-network"
+          direction = "inbound"
+          remote    = "172.27.17.0/24"
+        },      
+        {
+          name      = "allow-outbound-any"
+          direction = "outbound"
+          remote    = "0.0.0.0/0"
+        }
+      ]
+      vmot = [
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vmot"
+          direction = "inbound"
+          remote_id = "vmot"
+        },
+        {
+          name      = "allow-outbound-vmot"
+          direction = "outbound"
+          remote_id = "vmot"
+        }
+      ]
+      vsan = [
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-vsan"
+          direction = "inbound"
+          remote_id = "vsan"
+        },
+        {
+          name      = "allow-outbound-vsan"
+          direction = "outbound"
+          remote_id = "vsan"
+        }
+      ]
+      tep = [
+        {
+          name      = "allow-icmp-mgmt"
+          direction = "inbound"
+          remote_id = "mgmt"
+          icmp = {
+          type = 8
+          }
+        },
+        {
+          name      = "allow-inbound-tep"
+          direction = "inbound"
+          remote_id = "tep"
+        },
+        {
+          name      = "allow-outbound-tep"
+          direction = "outbound"
+          remote_id = "tep"
+        }
+      ]
+      uplink-pub = [
+        {
+        name      = "allow-inbound-any"
+        direction = "inbound"
+        remote    = "0.0.0.0/0"
+        icmp = {
+          type = 8
+        }
+        },
+        {
+        name      = "allow-outbound-any"
+        direction = "outbound"
+        remote    = "0.0.0.0/0"
+        }
+      ],
+      uplink-priv = [
+        {
+        name      = "allow-inbound-any"
+        direction = "inbound"
+        remote    = "0.0.0.0/0"
+        },
+        {
+        name      = "allow-outbound-any"
+        direction = "outbound"
+        remote    = "0.0.0.0/0"
+        }
+      ],
+      bastion = [
+        {
+        name      = "allow-inbound-rdp"
+        direction = "inbound"
+        remote    = "0.0.0.0/0"
+        tcp = {
+          port_max = 3389
+          port_min = 3389           
+        }
+        },
+        {
+        name      = "allow-outbound-any"
+        direction = "outbound"
+        remote    = "0.0.0.0/0"
+        }
+      ]
+  }
+
+

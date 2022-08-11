@@ -78,15 +78,15 @@
     "nsxtManagerSize": "medium",
     "nsxtManagers": [
       {
-          "hostname": "nsx-t-0",
+          "hostname": "${nsx_t_0_name}",
           "ip": "${nsx_t_0_ip}"
       },
       {
-          "hostname": "nsx-t-1",
+          "hostname": "${nsx_t_1_name}",
           "ip": "${nsx_t_1_ip}"
       },
       {
-          "hostname": "nsx-t-2",
+          "hostname": "${nsx_t_2_name}",
           "ip": "${nsx_t_2_ip}"
       }
     ],
@@ -104,7 +104,7 @@
         "networkName": "netName-vlan"
     },
     "vip": "${nsx_t_vip}",
-    "vipFqdn": "nsx-t-vip",
+    "vipFqdn": "${nsx_t_vip_name}.${dns_domain}",
     "nsxtLicense": "${nsx_t_license}",
     "transportVlanId": ${vlan_tep},
     "ipAddressPoolSpec": {
@@ -261,7 +261,7 @@
   ],
   "vcenterSpec": {
       "vcenterIp": "${vcenter_ip}",
-      "vcenterHostname": "vcenter",
+      "vcenterHostname": "${vcenter_name}",
       "vcenterId": "vcenter-1",
       "licenseFile": "${vcenter_license}",
       "vmSize": "small",
