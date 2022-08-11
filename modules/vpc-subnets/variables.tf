@@ -30,3 +30,8 @@ variable "vpc_zone_prefix" {
 variable "tags" {
   
 }
+
+
+variable "vpc_id" {
+  
+}

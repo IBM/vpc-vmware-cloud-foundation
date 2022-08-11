@@ -19,7 +19,7 @@ output "esx_host_vcf_mgmt_reserved_ips_list" {
 
 
 ##############################################################
-# Create private Bare Metal Servers
+# Create Bare Metal Server userdata
 ##############################################################
 
 
@@ -65,7 +65,7 @@ data "template_file" "userdata" {
 ##############################################################
 
 locals {
-  allowed_vlans_list = var.vmw_enable_vcf_mode ? [var.vmw_mgmt_vlan_id, var.vmw_vmot_vlan_id, var.vmw_vsan_vlan_id, var.vmw_tep_vlan_id, var.vmw_edge_uplink_public_vlan_id, var.vmw_edge_uplink_private_vlan_id, var.vmw_edge_tep_vlan_id] : [var.vmw_mgmt_vlan_id, var.vmw_vmot_vlan_id, var.vmw_vsan_vlan_id, var.vmw_tep_vlan_id, var.vmw_edge_uplink_public_vlan_id, var.vmw_edge_uplink_private_vlan_id]
+  allowed_vlans_list = var.vmw_enable_vcf_mode ? concat(var.wmv_allow_vlan_list,[var.vmw_mgmt_vlan_id, var.vmw_vmot_vlan_id, var.vmw_vsan_vlan_id, var.vmw_tep_vlan_id, var.vmw_edge_uplink_public_vlan_id, var.vmw_edge_uplink_private_vlan_id, var.vmw_edge_tep_vlan_id]) : concat(var.wmv_allow_vlan_list,[var.vmw_mgmt_vlan_id, var.vmw_vmot_vlan_id, var.vmw_vsan_vlan_id, var.vmw_tep_vlan_id, var.vmw_edge_uplink_public_vlan_id, var.vmw_edge_uplink_private_vlan_id])
 }
 
 
@@ -142,7 +142,7 @@ output "ibm_is_bare_metal_server_id" {
   value = ibm_is_bare_metal_server.esx_host[*].id
 }
 
-output "ibm_is_bare_metal_server_fqdn" {
+output "ibm_is_bare_metal_server_hostname" {
   value = ibm_is_bare_metal_server.esx_host[*].name
 }
 

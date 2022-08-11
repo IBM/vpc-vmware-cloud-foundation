@@ -15,28 +15,16 @@ variable "vmw_vcenter_esx_host_id" {
 }
 
 
-/*
-
-variable "vmw_dns_instance_guid" {
-  
-}
-
-variable "vmw_dns_zone_id" {
-  
-}
-*/
-
-
-
-
 variable "vmw_sg_mgmt" {
   
 }
 
 
-
-###
-
 variable "vmw_mgmt_vlan_id" {
+
+}
+
+
+variable "vmw_vcenter_name" {
 
 }
