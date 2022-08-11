@@ -787,7 +787,7 @@ variable "vpc_ryo" {
 
 
 
-### Windows bastion server
+### Bastion servers
 
 
 variable "user_provided_ssh_keys" {
@@ -801,6 +801,9 @@ variable "vsi_image_architecture" {
   default = "amd64"
   type = string
 }
+
+# Windows
+
 
 variable "vsi_profile_bastion" {
   description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
@@ -820,6 +823,7 @@ variable "number_of_bastion_hosts" {
   type = number
 }
 
+# Linux
 
 variable "vsi_profile_bastion_linux" {
   description = "The profile of compute CPU and memory resources to use when creating the virtual server instance. To list available profiles, run the `ibmcloud is instance-profiles` command."
@@ -835,7 +839,7 @@ variable "vsi_image_os_linux" {
 
 variable "number_of_bastion_hosts_linux" {
   description = "Number of bastion hosts to deploy."
-  default = 0
+  default = 1
   type = number
 }
 
