@@ -48,5 +48,5 @@ SSH_KEYS/*
 OUTPUT/*
 #90_*
 schematics/*
-
+*_temp_README.md
 
