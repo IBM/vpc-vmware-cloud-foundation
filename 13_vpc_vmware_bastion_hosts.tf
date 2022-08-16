@@ -1,6 +1,10 @@
-##############################################################
-# Provision a Windows server for jump, AD/DNS etc.
-##############################################################
+##############################################################################
+# Provision a Windows and/or a Linux server for jump, AD/DNS etc.
+##############################################################################
+
+locals {
+  deploy_bastion = var.number_of_bastion_hosts > 0 ? var.number_of_bastion_hosts_linux > 0 ? true : true : false
+}
 
 
 ##############################################################################
@@ -16,10 +20,10 @@ data "ibm_is_instance_profile" "vsi_profile_bastion_linux" {
 }
 
 
-##############################################################
+##############################################################################
 # Calculate the most recently available OS Image Name for the 
 # OS Provided
-##############################################################
+##############################################################################
 
 data "ibm_is_images"  "os_images_bastion" {
     visibility = "public"
@@ -52,12 +56,12 @@ data "ibm_is_image" "bastion_image_linux" {
 }
 
 
-##############################################################
+##############################################################################
 # Provision bastion Virtual Server Windows
-##############################################################
+##############################################################################
 
 resource "ibm_is_instance" "bastion" {
-  count          = var.deploy_bastion ? var.number_of_bastion_hosts : 0
+  count          = var.number_of_bastion_hosts
 
   name           = "${local.resources_prefix}-bastion-windows-${format("%02s", count.index)}"
   image          = data.ibm_is_image.bastion_image.id
@@ -84,12 +88,12 @@ resource "ibm_is_instance" "bastion" {
 }
 
 
-##############################################################
+##############################################################################
 # Provision bastion Virtual Server Linux
-##############################################################
+##############################################################################
 
 resource "ibm_is_instance" "bastion_linux" {
-  count          = var.deploy_bastion ? var.number_of_bastion_hosts_linux : 0
+  count          = var.number_of_bastion_hosts_linux
 
   name           = "${local.resources_prefix}-bastion-linux-${format("%02s", count.index)}"
   image          = data.ibm_is_image.bastion_image_linux.id
@@ -114,24 +118,24 @@ resource "ibm_is_instance" "bastion_linux" {
 }
 
 
-##############################################################
+##############################################################################
 # Get bastion Virtual Server data for decrypting password 
-##############################################################
+##############################################################################
 
 
 data "ibm_is_instance" "bastion" {
-  count = var.deploy_bastion ? var.number_of_bastion_hosts : 0
-  name = var.deploy_bastion ? ibm_is_instance.bastion[count.index].name : ""
+  count = var.number_of_bastion_hosts
+  name = var.number_of_bastion_hosts == 0 ? ibm_is_instance.bastion[count.index].name : ""
   private_key = tls_private_key.bastion_rsa.private_key_pem
 }
 
 
-##############################################################
+##############################################################################
 # Attach Floating IP to Bastion Virtual Servers
-##############################################################
+##############################################################################
 
 resource "ibm_is_floating_ip" "bastion_floating_ip" {
-  count = var.deploy_bastion ? var.number_of_bastion_hosts : 0
+  count = var.number_of_bastion_hosts
 
   name           = "${local.resources_prefix}-bastion-windows-floating-ip-${format("%02s", count.index)}"
   target         = ibm_is_instance.bastion[count.index].primary_network_interface[0].id
@@ -141,7 +145,7 @@ resource "ibm_is_floating_ip" "bastion_floating_ip" {
 }
 
 resource "ibm_is_floating_ip" "bastion_linux_floating_ip" {
-  count = var.deploy_bastion ? var.number_of_bastion_hosts_linux : 0
+  count = var.number_of_bastion_hosts_linux
 
   name           = "${local.resources_prefix}-bastion-linux-floating-ip-${format("%02s", count.index)}"
   target         = ibm_is_instance.bastion_linux[count.index].primary_network_interface[0].id
@@ -150,28 +154,28 @@ resource "ibm_is_floating_ip" "bastion_linux_floating_ip" {
   tags = local.resource_tags.floating_ip_bastion
 }
 
-##############################################################
+##############################################################################
 # Define Bastion output maps
-##############################################################
+##############################################################################
 
 
 locals {
   bastion_hosts = { 
     windows = [
       for bastion_host in range(var.number_of_bastion_hosts) : {
-        name = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].name : "none"
-        private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-        public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
+        name = var.number_of_bastion_hosts == 0 ? ibm_is_instance.bastion[bastion_host].name : "none"
+        private_ip_address =  var.number_of_bastion_hosts == 0? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+        public_ip_address = var.number_of_bastion_hosts == 0 ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
         username = "Administrator"
-        password = var.deploy_bastion ? nonsensitive(data.ibm_is_instance.bastion[bastion_host].password) : ""
-        #password = var.deploy_bastion ? data.ibm_is_instance.bastion[bastion_host].password : ""
+        password = var.number_of_bastion_hosts == 0 ? nonsensitive(data.ibm_is_instance.bastion[bastion_host].password) : ""
+        #password = var.number_of_bastion_hosts == 0 ? data.ibm_is_instance.bastion[bastion_host].password : ""
       }
     ],
     linux = [
       for bastion_host in range(var.number_of_bastion_hosts_linux) : {
-        name = var.deploy_bastion ? ibm_is_instance.bastion_linux[bastion_host].name : "none"
-        private_ip_address = var.deploy_bastion ? ibm_is_instance.bastion_linux[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-        public_ip_address = var.deploy_bastion ? ibm_is_floating_ip.bastion_linux_floating_ip[bastion_host].address : "0.0.0.0"
+        name = var.number_of_bastion_hosts_linux == 0 ? ibm_is_instance.bastion_linux[bastion_host].name : "none"
+        private_ip_address = var.number_of_bastion_hosts_linux == 0 ? ibm_is_instance.bastion_linux[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+        public_ip_address = var.number_of_bastion_hosts_linux == 0 ? ibm_is_floating_ip.bastion_linux_floating_ip[bastion_host].address : "0.0.0.0"
         username = "root"
         password = "use-SSH-key"
       }

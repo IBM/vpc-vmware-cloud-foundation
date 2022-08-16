@@ -61,11 +61,6 @@ variable "enable_vcf_mode" {
   type = bool
 }
 
-variable "deploy_bastion" {
-  description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
-  default = true
-  type = bool
-}
 
 ### DNS root domain
 

@@ -3,7 +3,6 @@
 deploy_dns = true
 deploy_iam = false
 enable_vcf_mode = true
-deploy_bastion = true
 
 
 # Resource group name to use

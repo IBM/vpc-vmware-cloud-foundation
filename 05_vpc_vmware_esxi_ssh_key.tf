@@ -46,8 +46,9 @@ resource "local_file" "write_bastion_private_key" {
   file_permission = 0600
 }
 
+
 resource "ibm_is_ssh_key" "bastion_key" {
-  count = var.deploy_bastion ? 1 : 0
+  count = local.deploy_bastion ? 1 : 0
   name = "${local.resources_prefix}-bastion-ssh-key"
   public_key = trimspace(tls_private_key.bastion_rsa.public_key_openssh)
 
@@ -59,4 +60,7 @@ data "ibm_is_ssh_key" "user_provided_ssh_keys" {
   for_each = toset(var.user_provided_ssh_keys) 
   name = each.key
 }
+
+
+
 

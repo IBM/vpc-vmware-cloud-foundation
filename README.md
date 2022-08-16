@@ -170,11 +170,6 @@ variable "enable_vcf_mode" {
   description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
   default = false
 }
-
-variable "deploy_bastion" {
-  description = "Boolean to enable Windows Bastion VSI to help VMware SDDC configuration and deployment."
-  default = false
-}
 ```
 
 *Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
@@ -672,7 +667,6 @@ The following provides an example `terraform.tfvars-example-for-ryo` for RYO dep
 deploy_dns = true
 deploy_iam = true
 enable_vcf_mode = false
-deploy_bastion = true
 
 
 # Resource group name to use
@@ -883,7 +877,6 @@ The following provides an example `terraform.tfvars-example-for-vcf` for VCF dep
 deploy_dns = false
 deploy_iam = false
 enable_vcf_mode = true
-deploy_bastion = true
 
 
 # Resource group name to use
