@@ -17,6 +17,7 @@ For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivit
 
 - Terraform 1.1 and above.
 - IBM Cloud Terraform provider 1.44.0 and above
+- VMware Cloud Foundation 4.4.x
 
 ## Install
 
