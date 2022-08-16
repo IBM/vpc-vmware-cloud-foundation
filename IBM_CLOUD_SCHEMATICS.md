@@ -3,9 +3,40 @@
 
 ## Create a workspace
 
+### Create a VCF workspace with IBM Cloud console
+
 Login into IBM Cloud portal and [create a workspace using the console](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui#create-workspace_ui).
 
 Alter the deployment location and other default values if needed.
+
+### Create a VCF workspace with terraform
+
+You can also create Schematics workspace for VCF using the provided terraform in [schematics folder](./schematics/). The *ibmcloud_api_key* terraform variable must be generated prior to running this template. Please refer to [IBM Cloud API Key](https://www.ibm.com/docs/en/app-connect/containers_cd?topic=servers-creating-cloud-api-key). You can create an environmental variable for the API key, for example:
+
+```bash
+export TF_VAR_ibmcloud_api_key=<put_your_key_here>
+```
+
+Clone the template to your local workstation.
+
+```bash
+git clone https://github.com/IBM/vpc-vmware-cloud-foundation
+```
+
+First, create a copy of your desired architecture template tfvars file, e.g. `terraform.tfvars.vcf-consolidated` to `terraform-vcf-consolidated.tfvars` and fill in the desired values. Then you can use [the provided terraform template](./schematics/) to create a workspace with the variables you have chosen.
+
+```bash
+cd ./schematics/
+terraform plan -var-file="terraform-vcf-consolidated.tfvars"
+```
+
+If your plan looks good, you can do apply. Note that this only creates and configures the terraform workspace in IBM Cloud schematics, it does not deploy any assets yet.
+
+```bash
+terraform apply -var-file="terraform-vcf-consolidated.tfvars"
+```
+
+Check the id for the workspace and its status. Check your variable values if you see any errors. You can now login to IBM Cloud console and check your values in the schematics workspace, and run the `generate plan` or `apply plan` through the IBM Cloud console UI or CLI.
 
 
 ## IBM Cloud CLI
