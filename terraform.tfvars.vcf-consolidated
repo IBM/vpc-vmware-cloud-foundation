@@ -189,10 +189,10 @@ vcf_dc_name = "dc01"
 ### VCF license variables
 
 sddc_manager_license = ""
-nsx_t_license = "TN0AJ-LN29Q-Y8TD1-02120-3RT5M"  
-vsan_license = "E4095-L425J-N8LH8-0J1A6-3JEL1"  
+nsx_t_license = ""  
+vsan_license = ""
 vcenter_license = ""  
-esx_license = "T461H-ZT1D5-282G1-0LCKM-99451"  
+esx_license = ""
 
 
 
