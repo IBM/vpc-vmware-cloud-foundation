@@ -3,7 +3,7 @@
 
 ## Create a workspace
 
-Login into IBM CLoud portal and [create a workspace using the console](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui#create-workspace_ui).
+Login into IBM Cloud portal and [create a workspace using the console](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui#create-workspace_ui).
 
 Alter the deployment location and other default values if needed.
 

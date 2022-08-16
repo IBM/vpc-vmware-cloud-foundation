@@ -147,8 +147,6 @@ wl_edge_uplink_public_vlan_id = 2732
 wl_edge_tep_vlan_id = 2733
 
 
-#vpc_t0_public_ips = 1
-
 
 ### VCF deployment variables
 
@@ -166,10 +164,10 @@ vcf_dc_name = "dc01"
 ### VCF license variables
 
 sddc_manager_license = ""
-nsx_t_license = "TN0AJ-LN29Q-Y8TD1-02120-3RT5M"  
-vsan_license = "E4095-L425J-N8LH8-0J1A6-3JEL1"  
+nsx_t_license = ""  
+vsan_license = ""
 vcenter_license = ""  
-esx_license = "T461H-ZT1D5-282G1-0LCKM-99451"  
+esx_license = ""
 
 
 

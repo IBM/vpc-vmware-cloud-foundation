@@ -30,7 +30,7 @@ variable "tags" {
 
 variable "resource_prefix" {
   description = "Resource name prefix to create in the IBM Cloud account."
-  default = "vmw"
+  default = "vcf"
   type = string
 }
 

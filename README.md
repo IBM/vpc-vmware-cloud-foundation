@@ -22,7 +22,7 @@ For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivit
 
 ### Install using terraform through Schematics
 
-You can run this terraform through [Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui). Create a workspace on Schematics and import this terraform template.
+You can run this terraform through [Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui). Create a workspace on Schematics and import this terraform template. See more in a [helper sheet](IBM_CLOUD_SCHEMATICS.md).
 
 
 ### Install using terraform locally
