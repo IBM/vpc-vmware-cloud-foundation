@@ -1,4 +1,4 @@
-# Deploying IUBM Cloud for VMware Cloud Foundation with terraform
+# Deploying IBM Cloud for VMware Cloud Foundation with terraform
 
 VMware Cloud Foundation™ (VCF) provides a ubiquitous hybrid cloud platform for both traditional enterprise apps and modern apps. The IBM Cloud VPC provides the underlying infrastructure for running VCF in IBM Cloud. The architecture for the VMware Cloud Foundation™ in IBM Cloud VPC  is explained in [IBM Cloud Docs](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-vcf-overview).
 
