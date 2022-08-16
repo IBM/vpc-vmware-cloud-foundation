@@ -35,12 +35,6 @@ output "zone_subnets" {
   description = "Created VPC subnets."
 }
 
-/*
-output "zone_subnets_edge" {
-  value = local.nsxt_edge_subnets
-  description = "Created VPC subnets for edge nodes."
-}
-*/
 
 
 ##############################################################
@@ -95,26 +89,6 @@ output "cluster_hosts" {
 }
 
 
-/*
-output "cluster_hosts" {
-  value = local.cluster_host_map
-  description = "Deployed VPC bare metal servers per cluster including created VLAN network interface information for VMkernel adapters."
-}
-*/
-
-/*
-
-locals {
-    cluster_host_map_out_json = jsonencode(local.cluster_host_map)
-}
-
-
-output "cluster_host_map_out_json" {
-  value = local.cluster_host_map_out_json
-}
-
-*/
-
 ##############################################################
 #  Output vcenter
 ##############################################################
@@ -123,13 +97,6 @@ output "vcenters" {
   value = local.zone_clusters_vcenters_values
 }
 
-/*
-
-output "vcenter" {
-  value = local.vcenter
-  description = "Deployed DNS and VLAN network interface information for vCenter Server virtual appliance(es)."
-}
-*/
 
 ##############################################################
 #  Output NSX-T managers
@@ -138,16 +105,9 @@ output "vcenter" {
 
 output "nsx_t_managers" {
   value = local.zone_clusters_nsx_t_managers_values
-}
-
-/*
-
-output "zone_nsx_t_mgr" {
-  value = local.nsx_t_mgr
   description = "Deployed DNS and VLAN network interface information for NSX-T Manager virtual appliance(es)."
 }
 
-*/
 
 ##############################################################
 #  Output NSX-T edge and T0
@@ -166,26 +126,6 @@ output "nsx_t_t0s" {
 }
 
 
-/*
-
-output "zone_nsx_t_edge" {
-  value = local.nsx_t_edge
-  description = "Deployed DNS and VLAN network interface information for NSX-T Edge virtual appliance(es)."
-}
-
-
-
-output "nsx_t_t0" {
-  value = local.nsx_t_t0
-  description = "Deployed VLAN network interface information for NSX-T Tier-0 gateway uplinks."
-}
-
-output "t0_public_ips" {
-  value = ibm_is_floating_ip.floating_ip[*].address
-  description = "Deployed public IPs for NSX-T Tier-0 gateway public uplink."
-}
-
-*/
 
 ##############################################################
 # Output VCF 

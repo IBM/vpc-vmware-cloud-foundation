@@ -103,35 +103,6 @@ zone_clusters = {
 # Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
 # You must manually configure routing in T0 with static routes.  
 
-/*
-zone_clusters = {
-      cluster_0 = { 
-         name = "converged"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4  # Min. 4 hosts for VCF 
-         vpc_file_shares = [ ] 
-         },
-   }
-
-
-zone_clusters = {
-      cluster_0 = { 
-         name = "consolidated"
-         #vmw_host_profile = "bx2d-metaldev8-192x768"
-         #vmw_host_profile = "bx2d-metaldev8-160x768" ## used in stg
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4  # Min. 4 hosts for VCF 
-         vpc_file_shares = [ ] 
-         },
-      cluster_1 = { 
-         name = "workload"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 1  # Min. 4 hosts for VSAN 
-         vpc_file_shares = [ ] 
-         },
-   }
-*/
-
 esxi_image="esxi-7-byol" # BYOL ESXi lisence
 # esxi_image="esxi-7"    # IBM Cloud provided ESXi lisence
 #esxi_image_name = "ibm-esxi-7-byol-amd64-5"   # Use a specific ESXI version to override the latest (use image name). 
