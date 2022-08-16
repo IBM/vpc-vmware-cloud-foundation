@@ -1,6 +1,6 @@
-# Deploying IUBM Cloud for VMware Cloud Foundation with terraform
+# Deploying IBM Cloud for VMware Cloud Foundation with terraform
 
-VMware Cloud Foundation™ (VCF) provides a ubiquitous hybrid cloud platform for both traditional enterprise apps and modern apps. The IBM Cloud VPC provides the underlying infrastructure for running VCF in IBM Cloud. The architecture for the VMware Cloud Foundation™ in IBM Cloud VPC  is explained in [IBM Cloud Docs](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-vcf-overview).
+[VMware Cloud Foundation™ (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) provides a ubiquitous hybrid cloud platform for both traditional enterprise apps and modern apps. The IBM Cloud VPC provides the underlying infrastructure for running VCF in IBM Cloud. The architecture for the VMware Cloud Foundation™ in IBM Cloud VPC  is explained in [IBM Cloud Docs](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-vcf-overview).
 
 The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares. For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui).
 
