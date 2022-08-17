@@ -142,19 +142,19 @@ ibmcloud schematics state pull --id $SCHEMATICS_WORKSPACE_ID --template $TEMPLAT
 Get bastion hosts access information:
 
 ```bash
-ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq '.[0].output_values[0].vpc_bastion_hosts.value'
+ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq '.[0].output_values[0].vpc_bastion_hosts | .value'
 ```
 
 
 Get ssh private key for bastion hosts:
 
 ```bash
-ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].ssh_private_key_bastion.value'
+ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].ssh_private_key_bastion | .value'
 ```
 
 
 Get vcf bringup json:
 
 ```bash
-ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].vcf_bringup_json.value' | jq
+ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].vcf_bringup_json | .value' | jq
 ```
