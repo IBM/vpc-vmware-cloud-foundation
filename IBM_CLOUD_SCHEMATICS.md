@@ -130,14 +130,55 @@ OK
 ## Get terraform state
 
 
-Get terraform state.
+Get terraform state:
 
 ```bash
 ibmcloud schematics state pull --id $SCHEMATICS_WORKSPACE_ID --template $TEMPLATE_ID 
 ```
 
+## Get output data
 
-## Bastion access information
+Get list of outputs:
+
+```bash
+ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq '.[0].output_values[0] | keys[]'
+```
+
+For example:
+
+```bash
+"cluster_hosts"
+"cos_bucket_test_key"
+"dns_records"
+"dns_root_domain"
+"dns_servers"
+"nsx_t_edges"
+"nsx_t_managers"
+"nsx_t_t0s"
+"ntp_server"
+"resource_group_id"
+"resources_prefix"
+"routes_default_egress_per_zone"
+"routes_tgw_dl_ingress_egress_per_zone"
+"ssh_private_key_bastion"
+"ssh_private_key_host"
+"vcenters"
+"vcf"
+"vcf_bringup_json"
+"vcf_network_pools"
+"vcf_vlan_nics"
+"vpc_bastion_hosts"
+"zone_subnets"
+```
+
+Get output values, for example for `zone_subnets`:
+
+```bash
+ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq '.[0].output_values[0].zone_subnets | .value'
+```
+
+
+## Get bastion access information
 
 Get bastion hosts access information:
 
@@ -152,8 +193,9 @@ Get ssh private key for bastion hosts:
 ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].ssh_private_key_bastion | .value'
 ```
 
+## Get VCF Cloud Builder bringup json
 
-Get vcf bringup json:
+You can get VCF bringup json from the output:
 
 ```bash
 ibmcloud schematics output --id $SCHEMATICS_WORKSPACE_ID --json | jq -r '.[0].output_values[0].vcf_bringup_json | .value' | jq
