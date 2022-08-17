@@ -312,6 +312,16 @@ variable "wl_edge_tep_vlan_id" {
 }
 
 
+variable "customer_private_routes" {
+  description = "List of customers routes in at on-premises, other VPCs, advertised through TGW etc."
+  default = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+}
+
+variable "customer_public_routes" {
+  description = "List of customers routes in at on-premises, other VPCs, advertised through TGW etc."
+  default = ["0.0.0.0/0"]
+}
+
 
 
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 

@@ -71,6 +71,7 @@ vcf_vlan_nics                           # Provisioned VLAN interface details for
 
 routes_default_egress_per_zone          # Provisioned VPC egress routes for overlay networks
 routes_tgw_dl_ingress_egress_per_zone   # Provisioned VPC ingress routes for overlay networks
+routes_for_t0s_per_cluster_domain       # Example routes to be configured on T0
 ```
 
 *Please Note*: When you deploy this through Schematics, you can use this [helper sheet](IBM_CLOUD_SCHEMATICS.md) to get the required output values.

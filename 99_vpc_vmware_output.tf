@@ -200,6 +200,19 @@ output "routes_tgw_dl_ingress_egress_per_zone" {
 
 
 ##############################################################
+# Output NSX-T T0 routes
+##############################################################
+
+
+
+output "routes_for_t0s_per_cluster_domain" {
+  value = local.nsx_t_t0_routes_to_be_created_per_cluster_domain
+  description = "Static routes to be created in T0s."
+}
+
+
+
+##############################################################
 # Output private SSH keys for host and bastion
 ##############################################################
 

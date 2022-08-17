@@ -83,45 +83,30 @@ locals {
 ##############################################################
 
 
+
 locals {
   nsx_t_t0_routes_to_be_created_per_cluster_domain = { 
     for k, v in var.zone_clusters : v.name => {
-      public = [
+      public = [ for pubroute_k in var.customer_public_routes : 
         {
-          "name" : "default",
-          "destination" : "0.0.0.0",
+          "name" : "private-${replace(replace(pubroute_k, ".", "-"),"/","-")}",
+          "destination" : pubroute_k,
           "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-pub"].default_gateway : local.subnets_map.edges["wl-t0-pub"].default_gateway,
           "t0_cluster" : v.name,
           "domain" : v.domain
         }
       ],
-      private = [
+      private = [ for privroute_k in var.customer_private_routes : 
         {
-          "name" : "private-10-0-0-0-8",
-          "destination" : "10.0.0.0/8",
+          "name" : "private-${replace(replace(privroute_k, ".", "-"),"/","-")}",
+          "destination" : privroute_k,
           "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
           "t0_cluster" : v.name,
           "domain" : v.domain
-        },
-        {
-          "name" : "private-172-16-0-0-12",
-          "destination" : "172.16.0.0/12",
-          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
-          "t0_cluster" : v.name,
-          "domain" : v.domain
-        },
-        {
-          "name" : "private-192-168-168-0-16",
-          "destination" : "192.168.0.0/16",
-          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
-          "t0_cluster" : v.name,
-          "domain" : v.domain
-        },
+        }
       ]
     } if v.nsx_t_edges == true
   }
 }
 
-output "nsx_t_t0_routes_to_be_created_per_cluster_domain" {
-  value = local.nsx_t_t0_routes_to_be_created_per_cluster_domain
-}
+
