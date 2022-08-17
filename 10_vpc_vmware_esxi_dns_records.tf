@@ -9,11 +9,8 @@
 # and converted to a new map create DNS records. 
 
 
-
-
-
 locals {
-  zone_clusters_dns_records = {
+  zone_clusters_dns_records_sddc = {
     for cluster_k, cluster_v in var.zone_clusters : cluster_v.name => [
       concat(
         [for k, v in local.zone_clusters_vcenters_values : { name = v.hostname, ip_address = v.ip_address} if k == cluster_v.name],
@@ -29,9 +26,8 @@ locals {
 }
 
 
-
 locals {
-  dns_records_mgmt = {
+  zone_clusters_dns_records_hosts = {
     hosts = flatten ([
     for cluster in local.zone_clusters_hosts_values.clusters: [ 
       for hosts in cluster.hosts : {
@@ -39,18 +35,29 @@ locals {
         ip_address = hosts.mgmt.ip_address
         }
       ]
-    ]),
+    ]),  
+  }
+}
+
+locals {
+  zone_clusters_dns_records_vcf = {
     vcf = [
       { name = local.vcf.cloud_builder.hostname, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.cloud_builder[0].primary_ip[0].address : "0.0.0.0"},
       { name = local.vcf.sddc_manager.hostname, ip_address = var.enable_vcf_mode ? ibm_is_bare_metal_server_network_interface_allow_float.sddc_manager[0].primary_ip[0].address : "0.0.0.0"},    
     ],
+  }  
+}
+
+locals {
+  dns_records_other = {
     other = var.dns_records
   }  
 }
 
 locals {
-  dns_records = merge(local.dns_records_mgmt, local.zone_clusters_dns_records)
+  dns_records = merge(local.zone_clusters_dns_records_sddc, local.zone_clusters_dns_records_hosts, local.zone_clusters_dns_records_vcf, local.dns_records_other)
 }
+
 
 locals {
   dns_records_list = flatten([for k, v in local.dns_records : v])
