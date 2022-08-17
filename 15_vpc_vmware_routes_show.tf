@@ -77,3 +77,51 @@ locals {
   }
 }
 
+
+##############################################################
+# Show example routes to be created in NSX-T T0
+##############################################################
+
+
+locals {
+  nsx_t_t0_routes_to_be_created_per_cluster_domain = { 
+    for k, v in var.zone_clusters : v.name => {
+      public = [
+        {
+          "name" : "default",
+          "destination" : "0.0.0.0",
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-pub"].default_gateway : local.subnets_map.edges["wl-t0-pub"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        }
+      ],
+      private = [
+        {
+          "name" : "private-10-0-0-0-8",
+          "destination" : "10.0.0.0/8",
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        },
+        {
+          "name" : "private-172-16-0-0-12",
+          "destination" : "172.16.0.0/12",
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        },
+        {
+          "name" : "private-192-168-168-0-16",
+          "destination" : "192.168.0.0/16",
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        },
+      ]
+    } if v.nsx_t_edges == true
+  }
+}
+
+output "nsx_t_t0_routes_to_be_created_per_cluster_domain" {
+  value = local.nsx_t_t0_routes_to_be_created_per_cluster_domain
+}

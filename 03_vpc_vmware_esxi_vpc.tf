@@ -53,7 +53,7 @@ locals {
 ##############################################################
 
 locals {
-  vpc_subnets_test = {for k, v in local.vpc_structure : var.vpc_name => {
+  vpc_subnets = {for k, v in local.vpc_structure : var.vpc_name => {
       zones = {
         "${var.vpc_zone}" = {      
           for domain_k, domain_v in v.zones.vpc_zone : domain_k => {
@@ -70,32 +70,6 @@ locals {
 
 
 
-##### old
-
-/*
-locals {
-  vpc_subnets = {for k, v in var.enable_vcf_mode ? var.vpc_vcf : var.vpc : var.vpc_name => {
-      zones = {
-        "${var.vpc_zone}" = {
-          infrastructure = {
-            vpc_zone_prefix = var.vpc_zone_prefix
-            vpc_zone_subnet_size = v.zones.vpc_zone.infrastructure.vpc_zone_subnet_size
-            public_gateways = lookup(v.zones.vpc_zone.infrastructure, "public_gateways", [])
-            subnets = v.zones.vpc_zone.infrastructure.subnets
-          }
-          edges = {
-            vpc_zone_prefix = var.vpc_zone_prefix_t0_uplinks
-            vpc_zone_subnet_size = v.zones.vpc_zone.edges.vpc_zone_subnet_size
-            public_gateways = lookup(v.zones.vpc_zone.edges, "public_gateways", [])
-            subnets = v.zones.vpc_zone.edges.subnets
-          }          
-        }
-      }
-    }
-  }
-}
-*/
-
 resource "ibm_is_vpc" "vmware_vpc" {
   name = "${local.resources_prefix}-${var.vpc_name}"
   resource_group = data.ibm_resource_group.resource_group_vmw.id
@@ -104,8 +78,7 @@ resource "ibm_is_vpc" "vmware_vpc" {
 
 module "vpc_subnets" {
   source = "./modules/vpc-subnets"
-  #for_each = local.vpc_subnets
-  for_each = local.vpc_subnets_test
+  for_each = local.vpc_subnets
 
   vpc_id = ibm_is_vpc.vmware_vpc.id
   vpc_name = each.key
@@ -208,93 +181,4 @@ locals {
     }
   }
 }
-
-
-/*
-
-
-
-locals {
-  subnets = {
-    hosts = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-host"].public_gateway == null ? false : true
-      vlan_id =  var.host_vlan_id
-    },
-    mgmt = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-mgmt"].public_gateway == null ? false : true
-      vlan_id = var.mgmt_vlan_id
-    },
-    vmot = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vmot"].public_gateway == null ? false : true
-      vlan_id =  var.vmot_vlan_id
-    },
-    vsan = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-vsan"].public_gateway == null ? false : true
-      vlan_id =  var.vsan_vlan_id
-    },
-    tep = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-tep"].public_gateway == null ? false : true
-      vlan_id =  var.tep_vlan_id
-    }
-  }
-}
-
-locals {
-  nsxt_edge_subnets = {
-    private = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-priv"].public_gateway == null ? false : true
-      vlan_id =  var.edge_uplink_private_vlan_id
-    },
-    public = {
-      name = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].name
-      subnet_id = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].id
-      cidr = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].ipv4_cidr_block
-      prefix_length = split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].ipv4_cidr_block)[1]
-      default_gateway = cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].ipv4_cidr_block,1)
-      pgw = module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-t0-pub"].public_gateway == null ? false : true
-      vlan_id =  var.edge_uplink_public_vlan_id
-    },
-    edge_tep = {
-      name = var.enable_vcf_mode ? module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].name : "none"
-      subnet_id = var.enable_vcf_mode ? module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].id : "none"
-      cidr = var.enable_vcf_mode ? module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block : "none"
-      prefix_length = var.enable_vcf_mode ? split("/", module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block)[1] : "none"
-      default_gateway = var.enable_vcf_mode ? cidrhost(module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].ipv4_cidr_block,1) : "none"
-      pgw = var.enable_vcf_mode ? module.vpc_subnets[var.vpc_name].vpc_subnet_zone_subnet["${var.vpc_name}-${var.vpc_zone}-edge-tep"].public_gateway : null == null ? false : true 
-      vlan_id = var.enable_vcf_mode ? var.edge_tep_vlan_id : "none" 
-    }
-  }
-}
-
-*/
 

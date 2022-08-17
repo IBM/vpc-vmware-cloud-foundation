@@ -35,7 +35,7 @@ data "template_file" "vcf_bringup_json" {
 
 
       vcenter_name = local.zone_clusters_vcenters_values[var.zone_clusters.cluster_0.name].hostname
-       vcenter_ip = local.zone_clusters_vcenters_values[var.zone_clusters.cluster_0.name].ip_address
+      vcenter_ip = local.zone_clusters_vcenters_values[var.zone_clusters.cluster_0.name].ip_address
 
       nsx_t_0_name = local.zone_clusters_nsx_t_managers_values[var.zone_clusters.cluster_0.name].nsx_t_0.hostname
       nsx_t_1_name = local.zone_clusters_nsx_t_managers_values[var.zone_clusters.cluster_0.name].nsx_t_1.hostname
