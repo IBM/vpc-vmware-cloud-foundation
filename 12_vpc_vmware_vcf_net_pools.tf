@@ -12,11 +12,13 @@
 locals {
   mgmt_hosts_total = sum(flatten([
       for cluster_name in keys(var.zone_clusters): 
-          var.zone_clusters[cluster_name].host_count if var.zone_clusters[cluster_name].domain == "mgmt"
+          #var.zone_clusters[cluster_name].host_count if var.zone_clusters[cluster_name].domain == "mgmt"
+          length(var.zone_clusters[cluster_name].host_list) if var.zone_clusters[cluster_name].domain == "mgmt"
       ]))
   wl_hosts_total = var.vcf_architecture == "standard" ? sum(flatten([
       for cluster_name in keys(var.zone_clusters): 
-          var.zone_clusters[cluster_name].host_count if var.zone_clusters[cluster_name].domain == "workload"
+          #var.zone_clusters[cluster_name].host_count if var.zone_clusters[cluster_name].domain == "workload"
+          length(var.zone_clusters[cluster_name].host_list) if var.zone_clusters[cluster_name].domain == "workload"
       ])) : 0
 }
 
@@ -24,7 +26,6 @@ locals {
 locals {
   wl_cluster_keys = [for k, v in var.zone_clusters : k if v.domain == "workload" && v.vcenter == true && v.nsx_t_managers]
   initial_wl_cluster_key = var.vcf_architecture == "standard" ? local.wl_cluster_keys[0] : "cluster_0"
-  #initial_wl_cluster_key = element([for k, v in var.zone_clusters : k if v.domain == "workload" && v.vcenter == true && v.nsx_t_managers],0)
 }
 
 /* todo...work with Terraform v1.2.0 and later...
@@ -150,7 +151,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_wl_tep_pool" {
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vmot" {
     count = var.enable_vcf_mode ? var.vcf_mgmt_host_pool_size : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["vmot"].subnet_id
     vlan = var.vmot_vlan_id
@@ -176,7 +177,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_host_vmot" {
     count = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? var.vcf_wl_host_pool_size : 0 : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[var.zone_clusters[local.initial_wl_cluster_key].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["vmot"].subnet_id
     vlan = var.vmot_vlan_id
@@ -212,7 +213,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_h
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vsan" {
     count = var.enable_vcf_mode ? var.vcf_mgmt_host_pool_size : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["vsan"].subnet_id
     vlan = var.vsan_vlan_id
@@ -238,7 +239,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_host_vsan" {
     count = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? var.vcf_wl_host_pool_size : 0 : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[var.zone_clusters[local.initial_wl_cluster_key].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["wl-vsan"].subnet_id
     vlan = var.wl_vsan_vlan_id
@@ -271,7 +272,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_h
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_teps" {
     count = var.enable_vcf_mode ? var.vcf_mgmt_host_pool_size * 2 : 0  # Note two TEPs per host in VCF
 
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["tep"].subnet_id
     vlan = var.tep_vlan_id
@@ -297,7 +298,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_host_teps" {
     count = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? var.vcf_wl_host_pool_size : 0 : 0
 
-    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[var.zone_clusters[local.initial_wl_cluster_key].host_list[0]]
 
     subnet = local.subnets_map.infrastructure["wl-tep"].subnet_id
     vlan = var.wl_tep_vlan_id
@@ -467,62 +468,4 @@ locals {
   vcf_pools = var.vcf_architecture == "standard" ? merge(local.vcf_pools_wl, local.vcf_pools_mgmt) : local.vcf_pools_mgmt
 }
 
-
-#######
-/*
-
-locals {
-  vcf_pools = {
-    vmot = {
-      ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
-      start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.vmot[0] : ""
-      end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.vmot[length(local.vcf_pool_ip_lists.vmot)-1] : ""
-      cidr = local.subnets_map.infrastructure["vmot"].cidr
-      prefix_length = local.subnets_map.infrastructure["vmot"].prefix_length
-      default_gateway = local.subnets_map.infrastructure["vmot"].default_gateway
-    },
-    vsan = {
-      ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
-      start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.vsan[0] : ""
-      end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.vsan[length(local.vcf_pool_ip_lists.vsan)-1] : ""
-      cidr = local.subnets_map.infrastructure["vsan"].cidr
-      prefix_length = local.subnets_map.infrastructure["vsan"].prefix_length
-      default_gateway = local.subnets_map.infrastructure["vsan"].default_gateway
-    },
-    tep = {
-      ip_list = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
-      start_ip = var.enable_vcf_mode ? local.vcf_pool_ip_lists.tep[0] : ""
-      end_ip = var.enable_vcf_mode ?  local.vcf_pool_ip_lists.tep[length(local.vcf_pool_ip_lists.tep)-1] : ""
-      cidr = local.subnets_map.infrastructure["tep"].cidr
-      prefix_length = local.subnets_map.infrastructure["tep"].prefix_length
-      default_gateway = local.subnets_map.infrastructure["tep"].default_gateway
-    },
-    wl-vmot = {
-      ip_list = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool[*].address : [] : []
-      start_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-vmot[0] : "" : ""
-      end_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-vmot[length(local.vcf_pool_ip_lists.wl-vmot)-1] : "" : ""
-      cidr = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vmot"].cidr : "" : ""
-      prefix_length = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vmot"].prefix_length : "" : ""
-      default_gateway = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vmot"].default_gateway : "" : ""
-    },
-    wl-vsan = {
-      ip_list = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool[*].address : [] : []
-      start_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-vsan[0] : "" : ""
-      end_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-vsan[length(local.vcf_pool_ip_lists.wl-vsan)-1] : "" : ""
-      cidr = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vsan"].cidr : "" : ""
-      prefix_length = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vsan"].prefix_length : "" : ""
-      default_gateway = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-vsan"].default_gateway : "" : ""
-    },
-    wl-tep = {
-      ip_list = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[*].address : [] : []
-      start_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-tep[0] : "" : ""
-      end_ip = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.vcf_pool_ip_lists.wl-tep[length(local.vcf_pool_ip_lists.wl-tep)-1] : "" : ""
-      cidr = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-tep"].cidr : "" : ""
-      prefix_length = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-tep"].prefix_length : "" : ""
-      default_gateway = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? local.subnets_map.infrastructure["wl-tep"].default_gateway : "" : ""
-    },    
-  }
-}
-
-*/
 

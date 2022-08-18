@@ -48,7 +48,8 @@ module "zone_vcenter" {
 
   vmw_resource_group_id       = data.ibm_resource_group.resource_group_vmw.id
   vmw_mgmt_subnet             = each.value.domain == "mgmt" ? local.subnets_map.infrastructure["mgmt"].subnet_id : local.subnets_map.infrastructure["wl-mgmt"].subnet_id
-  vmw_vcenter_esx_host_id     = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]  # Note deploy vcenters on mgmt cluster.
+  #vmw_vcenter_esx_host_id     = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]  # Note deploy vcenters on mgmt cluster.
+  vmw_vcenter_esx_host_id     = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]  # Note deploy vcenters on mgmt cluster.
   vmw_sg_mgmt                 = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id            = each.value.domain == "mgmt" ? var.mgmt_vlan_id : var.wl_mgmt_vlan_id
 

@@ -76,20 +76,16 @@ resource "ibm_is_vpc" "vmware_vpc" {
   address_prefix_management = "manual"
 }
 
-/*
+
 locals {
   vpc = {
     name = ibm_is_vpc.vmware_vpc.name
     id = ibm_is_vpc.vmware_vpc.id
-    subnets = ibm_is_vpc.vmware_vpc.subnets[*].name
-    security_groups = ibm_is_vpc.vmware_vpc.security_group[*].group_name
   }
 }
 
-output "vpc_summary" {
-  value = local.vpc
-}
-*/
+
+
 
 module "vpc_subnets" {
   source = "./modules/vpc-subnets"

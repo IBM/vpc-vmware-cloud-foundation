@@ -341,7 +341,8 @@ variable "zone_clusters" {
 
   validation {
     condition = (
-        var.zone_clusters["cluster_0"].host_count >= 4
+        #length(var.zone_clusters["cluster_0"].host_count) >= 4
+        length(var.zone_clusters["cluster_0"].host_list) >= 4
     )
     error_message = "The number of hosts must be greater than 4." 
   }
@@ -363,16 +364,17 @@ variable "zone_clusters" {
   #}
 
   default     = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                             # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                         # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4           # Define a host count for this cluster.
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      #host_count = 4                         # Define a host count for this cluster.      
+      host_list = [000,001,002,003]           # Define a host count for this cluster.
+      vcenter = true                          # Value must be "true" for the first cluster
+      nsx_t_managers = true                   # Value must be "true" for the first cluster
+      nsx_t_edges = true                      # Value must be "true" for the first cluster
+      public_ips = 2                          # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                    # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },

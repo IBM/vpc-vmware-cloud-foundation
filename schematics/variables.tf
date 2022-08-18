@@ -312,6 +312,16 @@ variable "wl_edge_tep_vlan_id" {
 }
 
 
+variable "customer_private_routes" {
+  description = "List of customers routes in at on-premises, other VPCs, advertised through TGW etc."
+  default = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+}
+
+variable "customer_public_routes" {
+  description = "List of customers routes in at on-premises, other VPCs, advertised through TGW etc."
+  default = ["0.0.0.0/0"]
+}
+
 
 
 # vCenter will be deployed in the first cluster "cluster_0". Please do not change the key if adding new clusters. See examples for alternate configs. 
@@ -331,7 +341,8 @@ variable "zone_clusters" {
 
   validation {
     condition = (
-        var.zone_clusters["cluster_0"].host_count >= 4
+        #length(var.zone_clusters["cluster_0"].host_count) >= 4
+        length(var.zone_clusters["cluster_0"].host_list) >= 4
     )
     error_message = "The number of hosts must be greater than 4." 
   }
@@ -353,16 +364,17 @@ variable "zone_clusters" {
   #}
 
   default     = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                             # Value must "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                         # Value must "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4           # Define a host count for this cluster.
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      #host_count = 4                         # Define a host count for this cluster.      
+      host_list = [000,001,002,003]           # Define a host count for this cluster.
+      vcenter = true                          # Value must "true" for the first cluster
+      nsx_t_managers = true                   # Value must "true" for the first cluster
+      nsx_t_edges = true                      # Value must "true" for the first cluster
+      public_ips = 2                          # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                    # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },
@@ -442,7 +454,7 @@ variable "security_group_rules" {
       bastion = list(object({name=string, direction=string})),
     })
 
-#/*
+
     default = {
         mgmt = [
           {
@@ -575,8 +587,6 @@ variable "security_group_rules" {
           }
         ]
     }
-
-#*/
 }
 
 

@@ -35,21 +35,3 @@ locals {
     floating_ip_bastion = concat(["vmware:${local.resources_prefix}"], var.tags, ["bastion"])
   }
 }
-
-
-/*
-locals {
-  resource_tags = {
-    ssh_key             = concat(["vmware:${local.resources_prefix}"])
-    vpc                 = concat(["vmware:${local.resources_prefix}"])
-    subnets             = concat(["vmware:${local.resources_prefix}"])
-    public_gateway      = concat(["vmware:${local.resources_prefix}"])
-    security_group      = concat(["vmware:${local.resources_prefix}"])
-    bms_esx             = concat(["vmware:${local.resources_prefix}"], ["esx"])
-    vsi_bastion         = concat(["vmware:${local.resources_prefix}"], ["bastion"])
-    dns_services        = concat(["vmware:${local.resources_prefix}"])
-    floating_ip_t0      = concat(["vmware:${local.resources_prefix}"], ["tier0-gateway"])
-    floating_ip_bastion = concat(["vmware:${local.resources_prefix}"], ["bastion"])
-  }
-}
-*/
