@@ -1,7 +1,7 @@
 
 variable "template_git_url" {
-  default = "https://github.com/IBM/vpc-vmware-iaas"
-  #default = "https://github.com/IBM/vpc-vmware-cloud-foundation"
+  #default = "https://github.com/IBM/vpc-vmware-iaas"
+  default = "https://github.com/IBM/vpc-vmware-cloud-foundation"
 }
 
 
