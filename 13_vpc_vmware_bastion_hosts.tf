@@ -121,7 +121,7 @@ resource "ibm_is_instance" "bastion_linux" {
 
 data "ibm_is_instance" "bastion" {
   count = var.number_of_bastion_hosts
-  name = var.number_of_bastion_hosts == 0 ? ibm_is_instance.bastion[count.index].name : ""
+  name = var.number_of_bastion_hosts != 0 ? ibm_is_instance.bastion[count.index].name : ""
   private_key = tls_private_key.bastion_rsa.private_key_pem
 }
 
@@ -159,19 +159,19 @@ locals {
   bastion_hosts = { 
     windows = [
       for bastion_host in range(var.number_of_bastion_hosts) : {
-        name = var.number_of_bastion_hosts == 0 ? ibm_is_instance.bastion[bastion_host].name : "none"
-        private_ip_address =  var.number_of_bastion_hosts == 0? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-        public_ip_address = var.number_of_bastion_hosts == 0 ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
+        name = var.number_of_bastion_hosts != 0 ? ibm_is_instance.bastion[bastion_host].name : "none"
+        private_ip_address =  var.number_of_bastion_hosts != 0 ? ibm_is_instance.bastion[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+        public_ip_address = var.number_of_bastion_hosts != 0 ? ibm_is_floating_ip.bastion_floating_ip[bastion_host].address : "0.0.0.0"
         username = "Administrator"
-        password = var.number_of_bastion_hosts == 0 ? nonsensitive(data.ibm_is_instance.bastion[bastion_host].password) : ""
-        #password = var.number_of_bastion_hosts == 0 ? data.ibm_is_instance.bastion[bastion_host].password : ""
+        password = var.number_of_bastion_hosts != 0 ? nonsensitive(data.ibm_is_instance.bastion[bastion_host].password) : ""
+        #password = var.number_of_bastion_hosts != 0 ? data.ibm_is_instance.bastion[bastion_host].password : ""
       }
     ],
     linux = [
       for bastion_host in range(var.number_of_bastion_hosts_linux) : {
-        name = var.number_of_bastion_hosts_linux == 0 ? ibm_is_instance.bastion_linux[bastion_host].name : "none"
-        private_ip_address = var.number_of_bastion_hosts_linux == 0 ? ibm_is_instance.bastion_linux[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
-        public_ip_address = var.number_of_bastion_hosts_linux == 0 ? ibm_is_floating_ip.bastion_linux_floating_ip[bastion_host].address : "0.0.0.0"
+        name = var.number_of_bastion_hosts_linux != 0 ? ibm_is_instance.bastion_linux[bastion_host].name : "none"
+        private_ip_address = var.number_of_bastion_hosts_linux != 0 ? ibm_is_instance.bastion_linux[bastion_host].primary_network_interface[0].primary_ip[0].address : "0.0.0.0"
+        public_ip_address = var.number_of_bastion_hosts_linux != 0 ? ibm_is_floating_ip.bastion_linux_floating_ip[bastion_host].address : "0.0.0.0"
         username = "root"
         password = "use-SSH-key"
       }

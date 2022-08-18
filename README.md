@@ -324,7 +324,7 @@ variable "vpc_vcf_consolidated" {
 
 The `zone_clusters` variable describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
-In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. We can increase the number of hosts or clusters by manipulating this variable.
+In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. You can increase the number of hosts or clusters by manipulating this variable.
 
 ```hcl
 variable "zone_clusters" {
@@ -332,23 +332,22 @@ variable "zone_clusters" {
   type        = map
 
   default     = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                             # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                         # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4           # Define a host count for this cluster.
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      host_list = ["000","001","002","003"]   # Define a host count for this cluster.
+      vcenter = true                          # Value must be "true" for the first cluster
+      nsx_t_managers = true                   # Value must be "true" for the first cluster
+      nsx_t_edges = true                      # Value must be "true" for the first cluster
+      public_ips = 2                          # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                    # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },
         ]
       vpc_file_shares = []     # Future use.
     },
-  }
 }
 ```
 
@@ -679,16 +678,16 @@ vcf_mgmt_host_pool_size = 8    # Creates VPC BMS VLAN interfaces for a pool for 
 # Define deployment structure
 
 zone_clusters = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4           # Define a host count for this cluster.
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },
@@ -708,14 +707,14 @@ The following shows an example with two clusters on `consolidated architecture` 
 # Example with two clusters on consolidated architecture. You can optionally deploy NSX-T edge nodes on the 2nd cluster.
 
 zone_clusters = {
-    cluster_0 = {              # value must "cluster_0" for the first cluster
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # value must "mgmt" for the first cluster
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4           # Define a host count for this cluster.
-      vcenter = true           # value must "true" for the first cluster
-      nsx_t_managers = true    # value must "true" for the first cluster
-      nsx_t_edges = true       # value must "true" for the first cluster
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
       public_ips = 2           
       overlay_networks = [
           { name = "customer-overlay", destination = "172.16.0.0/16" },
@@ -728,15 +727,16 @@ zone_clusters = {
       name = "mgmt-cl-1"
       domain = "mgmt"         
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 1          # Define a host count for this cluster.
-      vcenter = false         # Value must "false" for the 2nd cluster in the management domain.   
-      nsx_t_managers = false  # Value must "false" for the 2nd cluster in the management domain.   
-      nsx_t_edges = false     # You can optionally deploy a new edge cluster.
-      public_ips = 0          # You can optionally order public IPs, if you selected nsx-t edges on this cluster. 
-      overlay_networks = [    # You can optionally add routes to overlay, if you selected nsx-t edges on this cluster. 
+      host_list = ["000","001"]    # Defines a hosts for this cluster.
+      vcenter = false           
+      nsx_t_managers = false    
+      nsx_t_edges = false      
+      public_ips = 0
+      overlay_networks = [
         ]
       vpc_file_shares = []
     },
+  }
 
 # Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
 # You must manually configure routing in T0 with static routes. 
@@ -761,16 +761,16 @@ vcf_wl_host_pool_size = 10     # Creates VPC BMS VLAN interfaces for a pool for 
 # Define deployment structure
 
 zone_clusters = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },
@@ -779,14 +779,14 @@ zone_clusters = {
     },   
     cluster_1 = {
       name = "vi-wl-1"
-      domain = "workload"     # Value must be set as 'workload' for the workload domain.     
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 3          # Define a host count for this cluster.
-      vcenter = true          # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      nsx_t_managers = true   # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      nsx_t_edges = true      # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      public_ips = 3          # Orders # of Floating IPs for the T0. 
-      overlay_networks = [    # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_managers = true                    # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_edges = true                       # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      public_ips = 3                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
           { name = "customer-overlay", destination = "172.17.0.0/16" },
         ]
       vpc_file_shares = []    # Future use.
@@ -804,16 +804,16 @@ The following shows an example with two clusters on the VI workload domaain in t
 # Define deployment structure
 
 zone_clusters = {
-    cluster_0 = {              # Value must "cluster_0" for the first cluster
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
       name = "mgmt"          
-      domain = "mgmt"          # Value must "mgmt" for the first cluster
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 4
-      vcenter = true           # Value must "true" for the first cluster
-      nsx_t_managers = true    # Value must "true" for the first cluster
-      nsx_t_edges = true       # Value must "true" for the first cluster
-      public_ips = 2           # Orders # of Floating IPs for the T0. 
-      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
           { name = "customer-overlay", destination = "172.16.0.0/16" },
           { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
           { name = "avn-x-region-network", destination = "172.27.17.0/24" },
@@ -822,30 +822,29 @@ zone_clusters = {
     },   
     cluster_1 = {
       name = "vi-wl-1"
-      domain = "workload"     # Value must be set as 'workload' for the workload domain.     
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 3          # Define a host count for this cluster.
-      vcenter = true          # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      nsx_t_managers = true   # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      nsx_t_edges = true      # Value must "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
-      public_ips = 3          # Orders # of Floating IPs for the T0. 
-      overlay_networks = [    # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_managers = true                    # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_edges = true                       # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      public_ips = 3                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
           { name = "customer-overlay", destination = "172.17.0.0/16" },
         ]
       vpc_file_shares = []    # Future use.
     },
-    cluster_1 = {
+    cluster_2 = {
       name = "vi-wl-2"
-      domain = "workload"     # Value must be set as 'workload' for the workload domain.     
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
       vmw_host_profile = "cx2d-metal-96x192"
-      host_count = 3          # Define a host count for this cluster.
-      vcenter = false         # Value must "false" for the 2nd cluster in the vi-workload domain. 
-      nsx_t_managers = false  # Value must "false" for the 2nd cluster in the vi-workload domain.
-      nsx_t_edges = false     # You can optionally deploy a new edge cluster.
-      public_ips = 0          # You can optionally order public IPs, if you selected nsx-t edges on this cluster. 
-      overlay_networks = [    # You can optionally add routes to overlay, if you selected nsx-t edges on this cluster. 
-        ]
-      vpc_file_shares = []    # Future use.
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = false                          # Value must "false" for the 2nd cluster in the vi-workload domain. 
+      nsx_t_managers = false                   # Value must "false" for the 2nd cluster in the vi-workload domain.
+      nsx_t_edges = false                      # You can optionally deploy a new edge cluster.
+      public_ips = 0                           # You can optionally order public IPs, if you selected nsx-t edges on this cluster. 
+      overlay_networks = []                    # You can optionally add routes to overlay, if you selected nsx-t edges on this cluster. 
+      vpc_file_shares = []                     # Future use.
     },
   }
 

@@ -339,7 +339,7 @@ variable "zone_clusters" {
     error_message = "First cluster key must be 'cluster_0'." 
   }
 
-/*
+#/*
   validation {
     condition = (
         length(var.zone_clusters["cluster_0"].host_list) >= 4
@@ -370,7 +370,7 @@ variable "zone_clusters" {
       domain = "mgmt"                         # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
       #host_count = 4                         # Define a host count for this cluster.      
-      host_list = [000,001,002,003]           # Define a host count for this cluster.
+      host_list = ["000","001","002","003"]   # Define a host count for this cluster.
       vcenter = true                          # Value must be "true" for the first cluster
       nsx_t_managers = true                   # Value must be "true" for the first cluster
       nsx_t_edges = true                      # Value must be "true" for the first cluster
