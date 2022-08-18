@@ -53,7 +53,8 @@ ntp_server                              # Used NTP server IP addresses
 resource_group_id                       # Used resource group's id
 resources_prefix                        # Used random resources prefix
 
-zone_subnets                            # Provisioned VPC subnets
+vpc_summary                             # Provisioned VPC information
+zone_subnets                            # Provisioned VPC subnet information
 
 vcf                                     # Provisioned VLAN interface details and other values for VCF Cloud Builder and SDDC Manager
 vcf_bringup_json                        # VCF Cloud Builder bringup json

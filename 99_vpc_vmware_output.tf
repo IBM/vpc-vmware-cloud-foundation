@@ -31,6 +31,7 @@ output "resource_group_id" {
 ##############################################################
 
 output "vpc_summary" {
+  description = "VPC information."
   value = local.vpc
 }
 
@@ -161,7 +162,7 @@ output "vcf_vlan_nics" {
 # Output bringup json
 ##############################################################
 
-/*
+
 
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
@@ -169,7 +170,6 @@ output "vcf_bringup_json" {
   description = "VCF bringup json file."
 } 
 
-#*/
 
 # Note to allow printout though IBM Cloud Schematics.
 
