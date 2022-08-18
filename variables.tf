@@ -339,13 +339,14 @@ variable "zone_clusters" {
     error_message = "First cluster key must be 'cluster_0'." 
   }
 
+/*
   validation {
     condition = (
-        #length(var.zone_clusters["cluster_0"].host_count) >= 4
         length(var.zone_clusters["cluster_0"].host_list) >= 4
     )
     error_message = "The number of hosts must be greater than 4." 
   }
+#*/
 
   validation {
     condition = (

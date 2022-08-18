@@ -9,7 +9,6 @@
 # Reserve an IP from instance mgmt subnet and use that in the userdata/cloud-init to re-configure vmk1 for vcf
 
 resource "ibm_is_subnet_reserved_ip" "esx_host_vcf_mgmt" {
-    #count = var.vmw_enable_vcf_mode ? var.vmw_host_count : 0
     for_each = var.vmw_enable_vcf_mode ? toset(var.vmw_host_list) : toset([])
 
     subnet = var.vmw_mgmt_subnet
@@ -17,11 +16,11 @@ resource "ibm_is_subnet_reserved_ip" "esx_host_vcf_mgmt" {
     auto_delete = false
 }
 
-
+/* to be deleted
 output "esx_host_vcf_mgmt_reserved_ips_list" {
   value = [for k in var.vmw_host_list : ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt[k].address]
 }
-
+*/
 
 ##############################################################
 # Create Bare Metal Server userdata
@@ -46,7 +45,6 @@ data "ibm_is_subnet" "vmw_host_subnet" {
 # Inject values into cloud-init userdata shell template and parse file
 
 data "template_file" "userdata" {
-  #count = var.vmw_host_count
   for_each = toset(var.vmw_host_list)
 
   template = var.vmw_enable_vcf_mode ? "${file("${path.module}/esx_vcf_init.sh.tpl")}" : "${file("${path.module}/esx_init.sh.tpl")}"
@@ -54,7 +52,6 @@ data "template_file" "userdata" {
   vars = {
     hostname_fqdn = "${local.hostname}-${format(each.key)}.${var.vmw_dns_root_domain}"
     mgmt_vlan = var.vmw_mgmt_vlan_id
-    #new_mgmt_ip_address = local.mgmt_ip_list[each.key]
     new_mgmt_ip_address = var.vmw_enable_vcf_mode ? ibm_is_subnet_reserved_ip.esx_host_vcf_mgmt[each.key].address : ""
     new_mgmt_netmask = var.vmw_enable_vcf_mode ? cidrnetmask(data.ibm_is_subnet.vmw_mgmt_subnet.ipv4_cidr_block) : ""
     new_mgmt_default_gateway = var.vmw_enable_vcf_mode ? cidrhost(data.ibm_is_subnet.vmw_mgmt_subnet.ipv4_cidr_block,1) : ""
@@ -101,7 +98,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
       enable_infrastructure_nat = true
     }
     dynamic "network_interfaces" {
-      for_each = var.vmw_enable_vcf_mode ? ["pci-nic-vmnic1"] : []
+      for_each = var.vmw_enable_vcf_mode ? toset(var.vmw_host_list) : toset([])
       content {
         # pci 2 for vcf
         subnet = var.vmw_host_subnet
@@ -129,6 +126,7 @@ resource "ibm_is_bare_metal_server" "esx_host" {
 
 
 
+/* old
 output "ibm_is_bare_metal_server_id" {
   value = [for k in var.vmw_host_list : ibm_is_bare_metal_server.esx_host[k].id]
 }
@@ -138,7 +136,16 @@ output "ibm_is_bare_metal_server_id" {
 output "ibm_is_bare_metal_server_hostname" {
   value = [for k in var.vmw_host_list : ibm_is_bare_metal_server.esx_host[k].name]
 }
+*/
 
+
+output "ibm_is_bare_metal_server_id" {
+  value = { for k in var.vmw_host_list : k => ibm_is_bare_metal_server.esx_host[k].id }
+}
+
+output "ibm_is_bare_metal_server_hostname" {
+  value = { for k in var.vmw_host_list : k => ibm_is_bare_metal_server.esx_host[k].name }
+}
 
 
 
@@ -175,19 +182,26 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "esx_host_vcf_
 
 # Note. Create a dummy list for IPs and IDs to return IF the VCF mode is NOT ceated for conditinal checks in outputs.
 
+/* old
+
 output "ibm_is_bare_metal_server_mgmt_interface_ip_address" {
   value = var.vmw_enable_vcf_mode ? [for k in var.vmw_host_list : ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[k].primary_ip[0].address] : [for k in var.vmw_host_list : ibm_is_bare_metal_server.esx_host[k].primary_network_interface[0].primary_ip[0].address]
 }
 
+
 output "ibm_is_bare_metal_server_mgmt_interface_id" {
   value = var.vmw_enable_vcf_mode ? [for k in var.vmw_host_list : ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[k].id] : [ for host in range(length(var.vmw_host_list)): "primary PCI interface" ]
 }
+*/
 
-
-output "ibm_is_bare_metal_server_network_interface_vcf_mgmt" {
-  value = ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[*]
+output "ibm_is_bare_metal_server_mgmt_interface_ip_address" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k =>  ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[k].primary_ip[0].address } :  { for k in var.vmw_host_list : k => ibm_is_bare_metal_server.esx_host[k].primary_network_interface[0].primary_ip[0].address }
 }
 
+
+output "ibm_is_bare_metal_server_mgmt_interface_id" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k =>  ibm_is_bare_metal_server_network_interface_allow_float.esx_host_vcf_mgmt[k].id } : { for k in var.vmw_host_list : k =>  "primary PCI interface" }
+}
 
 
 ##############################################################
@@ -200,10 +214,16 @@ data "ibm_is_bare_metal_server_initialization" "esx_host_init_values" {
     private_key = var.vmw_instance_ssh_private_key
 }
 
-
+/* old
 output "ibm_is_bare_metal_server_initialization" {
   value = [for k in var.vmw_host_list : data.ibm_is_bare_metal_server_initialization.esx_host_init_values[k]]
 }
+*/
+
+output "ibm_is_bare_metal_server_initialization" {
+  value = { for k in var.vmw_host_list : k => data.ibm_is_bare_metal_server_initialization.esx_host_init_values[k] }
+}
+
 
 ##############################################################
 # Create VLAN NICs
@@ -244,6 +264,7 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vmot" {
     ]
 }
 
+/* old
 output "ibm_is_bare_metal_server_network_interface_vmot_id" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "none" ] : ibm_is_bare_metal_server_network_interface.esx_host_vmot[*].id
 }
@@ -251,6 +272,16 @@ output "ibm_is_bare_metal_server_network_interface_vmot_id" {
 output "ibm_is_bare_metal_server_network_interface_vmot_ip_address" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "use-vcf-pool" ] : ibm_is_bare_metal_server_network_interface.esx_host_vmot[*].primary_ip[0].address
 }
+*/
+
+output "ibm_is_bare_metal_server_network_interface_vmot_id" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "none" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_vmot[k].id }
+}
+
+output "ibm_is_bare_metal_server_network_interface_vmot_ip_address" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "use-vcf-pool" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_vmot[k].primary_ip[0].address }
+}
+
 
 ##############################################################
 # Create VLAN NIC for vSAN
@@ -272,12 +303,22 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_vsan" {
     ]
 }
 
+/* old
 output "ibm_is_bare_metal_server_network_interface_vsan_id" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "none" ] : ibm_is_bare_metal_server_network_interface.esx_host_vsan[*].id
 }
 
 output "ibm_is_bare_metal_server_network_interface_vsan_ip_address" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "use-vcf-pool" ] : ibm_is_bare_metal_server_network_interface.esx_host_vsan[*].primary_ip[0].address
+}
+*/
+
+output "ibm_is_bare_metal_server_network_interface_vsan_id" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "none" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_vsan[k].id }
+}
+
+output "ibm_is_bare_metal_server_network_interface_vsan_ip_address" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "use-vcf-pool" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_vsan[k].primary_ip[0].address }
 }
 
 ##############################################################
@@ -301,15 +342,23 @@ resource "ibm_is_bare_metal_server_network_interface" "esx_host_tep" {
     ]
 }
 
+/* old
 output "ibm_is_bare_metal_server_network_interface_tep_id" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "none" ] : ibm_is_bare_metal_server_network_interface.esx_host_tep[*].id
 }
 
-
 output "ibm_is_bare_metal_server_network_interface_tep_ip_address" {
   value = var.vmw_enable_vcf_mode ? [ for host in range(length(var.vmw_host_list)): "use-vcf-pool" ] : ibm_is_bare_metal_server_network_interface.esx_host_tep[*].primary_ip[0].address
 }
+*/
 
 
+output "ibm_is_bare_metal_server_network_interface_tep_id" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "none" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_tep[k].id }
+}
+
+output "ibm_is_bare_metal_server_network_interface_tep_ip_address" {
+  value = var.vmw_enable_vcf_mode ? { for k in var.vmw_host_list : k => "use-vcf-pool" } : { for k in var.vmw_host_list : k => ibm_is_bare_metal_server_network_interface.esx_host_tep[k].primary_ip[0].address }
+}
 
 

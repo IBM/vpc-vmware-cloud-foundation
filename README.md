@@ -23,7 +23,7 @@ For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivit
 
 ### Install using terraform through Schematics
 
-You can run this terraform through [Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui). Create a workspace on Schematics and import this terraform template. See more in a [helper sheet](IBM_CLOUD_SCHEMATICS.md).
+You can run this terraform through [Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui). Create a workspace on Schematics and import this terraform template. See more in a [helper sheet](README_SCHEMATICS.md).
 
 
 ### Install using terraform locally
@@ -74,7 +74,7 @@ routes_tgw_dl_ingress_egress_per_zone   # Provisioned VPC ingress routes for ove
 routes_for_t0s_per_cluster_domain       # Example routes to be configured on T0
 ```
 
-*Please Note*: When you deploy this through Schematics, you can use this [helper sheet](IBM_CLOUD_SCHEMATICS.md) to get the required output values.
+*Please Note*: When you deploy this through Schematics, you can use this [helper sheet](README_SCHEMATICS.md) to get the required output values.
 
 
 ## Running this template
@@ -852,3 +852,4 @@ zone_clusters = {
 # Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
 # You must manually configure routing in T0 with static routes.  
 ```
+

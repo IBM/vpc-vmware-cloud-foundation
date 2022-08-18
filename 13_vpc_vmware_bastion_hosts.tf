@@ -1,12 +1,6 @@
-
-
 ##############################################################################
 # Provision a Windows and/or a Linux server for jump, AD/DNS etc.
 ##############################################################################
-
-locals {
-  deploy_bastion = var.number_of_bastion_hosts > 0 ? var.number_of_bastion_hosts_linux > 0 ? true : true : false
-}
 
 
 ##############################################################################

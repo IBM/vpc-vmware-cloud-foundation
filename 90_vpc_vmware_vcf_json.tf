@@ -69,21 +69,21 @@ data "template_file" "vcf_bringup_json" {
       vlan_vsan = var.vsan_vlan_id
       vlan_tep = var.tep_vlan_id
 
-      host_000_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[0]].mgmt.ip_address
-      host_000_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[0]].password
-      host_000_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[0]].hostname
+      host_000_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[0].mgmt.ip_address
+      host_000_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[0].password
+      host_000_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[0].hostname
 
-      host_001_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[1]].mgmt.ip_address
-      host_001_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[1]].password
-      host_001_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[1]].hostname
+      host_001_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[1].mgmt.ip_address
+      host_001_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[1].password
+      host_001_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[1].hostname
 
-      host_002_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[2]].mgmt.ip_address
-      host_002_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[2]].password
-      host_002_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[2]].hostname
+      host_002_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[2].mgmt.ip_address
+      host_002_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[2].password
+      host_002_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[2].hostname
 
-      host_003_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[3]].mgmt.ip_address
-      host_003_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[3]].password
-      host_003_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[var.zone_clusters["cluster_0"].host_list[3]].hostname
+      host_003_ip       = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[3].mgmt.ip_address
+      host_003_password = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[3].password
+      host_003_hostname = local.zone_clusters_hosts_values.clusters[var.zone_clusters["cluster_0"].name].hosts[3].hostname
 
   }
 

@@ -3,6 +3,18 @@
 # Deployed specially for VCF deployments
 ##############################################################
 
+##############################################################
+# Identify first workload cluster 
+##############################################################
+
+# This cluster will be used to provision the VLAN interfaces 
+# for networ pools for vMotion, vSAN and host TEPs. 
+
+
+locals {
+  wl_cluster_keys = [for k, v in var.zone_clusters : k if v.domain == "workload" && v.vcenter == true && v.nsx_t_managers]
+  initial_wl_cluster_key = var.vcf_architecture == "standard" ? local.wl_cluster_keys[0] : "cluster_0"
+}
 
 ##############################################################
 # Count number IPs required
@@ -23,10 +35,6 @@ locals {
 }
 
 
-locals {
-  wl_cluster_keys = [for k, v in var.zone_clusters : k if v.domain == "workload" && v.vcenter == true && v.nsx_t_managers]
-  initial_wl_cluster_key = var.vcf_architecture == "standard" ? local.wl_cluster_keys[0] : "cluster_0"
-}
 
 /* todo...work with Terraform v1.2.0 and later...
 
@@ -147,6 +155,9 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_wl_tep_pool" {
 # and count.index is used to distribute is used here.  
 
 # management domain
+
+
+
 
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_host_vmot" {
     count = var.enable_vcf_mode ? var.vcf_mgmt_host_pool_size : 0

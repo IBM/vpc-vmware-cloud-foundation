@@ -161,13 +161,15 @@ output "vcf_vlan_nics" {
 # Output bringup json
 ##############################################################
 
-
+/*
 
 output "vcf_bringup_json" {
   value = var.enable_vcf_mode ? data.template_file.vcf_bringup_json[0].rendered : ""
   #sensitive = true
   description = "VCF bringup json file."
 } 
+
+#*/
 
 # Note to allow printout though IBM Cloud Schematics.
 
