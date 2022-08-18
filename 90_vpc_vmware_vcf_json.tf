@@ -100,6 +100,10 @@ resource "local_file" "write_vcf_bringup_json" {
   content         = data.template_file.vcf_bringup_json[0].rendered
   filename        = "OUTPUT/${local.resources_prefix}-ibm-ems-bringup.json"
   file_permission = 0600
+
+  lifecycle {
+    ignore_changes = [content]
+  }
 }
 
 
