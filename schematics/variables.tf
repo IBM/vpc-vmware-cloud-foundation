@@ -357,6 +357,13 @@ variable "zone_clusters" {
     error_message = "VMware VCF management components must be deployed on the initial cluster." 
   }
 
+  validation {
+    condition = (
+        alltrue([for k,v in var.zone_clusters : length(v.host_list) == length(distinct(v.host_list))])  
+        )
+    error_message = "Host keys must be unique." 
+  }
+
   #validation {
   #  condition = (
   #      var.zone_clusters["cluster_0"].name == "mgmt"
@@ -862,11 +869,6 @@ variable "github_url" {
   description = "GitHub URL to fetch install scripts."
   default = ""
 }
-
-
-
-
-
 
 
 

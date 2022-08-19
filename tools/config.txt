@@ -28,3 +28,4 @@ keys =
 keys =
     ssh_private_key_bastion
     ssh_private_key_host
+    vcf_bringup_json
