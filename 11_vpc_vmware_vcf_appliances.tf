@@ -52,7 +52,7 @@ resource "random_string" "sddc_manager_password" {
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "cloud_builder" {
     count = var.enable_vcf_mode ? 1 : 0
     
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]
     
     subnet = local.subnets_map.infrastructure.mgmt.subnet_id
     vlan = var.mgmt_vlan_id
@@ -76,7 +76,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "cloud_builder
 resource "ibm_is_bare_metal_server_network_interface_allow_float" "sddc_manager" {
     count = var.enable_vcf_mode ? 1 : 0
     
-    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]
+    bare_metal_server = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]
     
     subnet = local.subnets_map.infrastructure.mgmt.subnet_id
     vlan = var.mgmt_vlan_id

@@ -9,7 +9,13 @@ variable "vmw_resource_group_id" {
 }
 
 
+/*
 variable "vmw_host_count" {
+  
+}
+*/
+
+variable "vmw_host_list" {
   
 }
 

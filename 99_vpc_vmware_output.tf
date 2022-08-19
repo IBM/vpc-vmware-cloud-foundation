@@ -27,6 +27,15 @@ output "resource_group_id" {
 }
 
 ##############################################################
+#  Output VPC
+##############################################################
+
+output "vpc_summary" {
+  description = "VPC information."
+  value = local.vpc
+}
+
+##############################################################
 #  Output zone VPC subnets
 ##############################################################
 
@@ -161,6 +170,7 @@ output "vcf_bringup_json" {
   description = "VCF bringup json file."
 } 
 
+
 # Note to allow printout though IBM Cloud Schematics.
 
 
@@ -195,6 +205,19 @@ output "routes_default_egress_per_zone" {
 output "routes_tgw_dl_ingress_egress_per_zone" {
   value = local.vpc_tgw_dl_ingress_routes_per_zone
   description = "Deployed VPC ingress route table (readonly data) per zone."
+}
+
+
+
+##############################################################
+# Output NSX-T T0 routes
+##############################################################
+
+
+
+output "routes_for_t0s_per_cluster_domain" {
+  value = local.nsx_t_t0_routes_to_be_created_per_cluster_domain
+  description = "Static routes to be created in T0s."
 }
 
 

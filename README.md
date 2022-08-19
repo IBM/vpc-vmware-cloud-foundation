@@ -1,62 +1,81 @@
-# VMware on VPC IaaS
+# Deploying IBM Cloud for VMware Cloud Foundation with terraform
 
-The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares. For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui). 
+[VMware Cloud Foundation™ (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) provides a ubiquitous hybrid cloud platform for both traditional enterprise apps and modern apps. The IBM Cloud VPC provides the underlying infrastructure for running VCF in IBM Cloud. The architecture for the VMware Cloud Foundation™ in IBM Cloud VPC  is explained in [IBM Cloud Docs](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-vcf-overview).
 
-After the bare metal server provisioning and initial VMware configurations, you can access and manage the IBM-hosted environment. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools. These options can be combined with IBM Cloud automation solutions, such as using IBM Cloud Terraform provider with Schematics. 
+The IBM Cloud bare metal server is integrated with the VPC network, and you can take advantage of the network, storage, and security capabilities provided by IBM Cloud VPC. Use VMware vSAN™ for storage and VMware NSX-T™ for network capabilities. You can easily and quickly add and remove ESXi hosts. Also, add, configure, and remove VMware vSphere® clusters as you like. If your storage needs grow, you can add and attach IBM Cloud VPC file shares. For more information on Bare Metal Servers on VPC and VMware solution on VPC architecture, see [About Bare Metal Servers for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-about-bare-metal-servers&interface=ui).
 
-In general, with the roll-your-own (RYO) solutions, you are responsible for provisioning the VPC, its prefixes and subnets as well as IBM Cloud Bare Metal Servers and set up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage. To ease up the provisioning process, this terraform provides and example how to provision VPC assets with optional two architectures. 
-
-The default roll-your-own option provisions a VPC, required subnets and IBM Cloud Bare Metal Servers with preinstalled ESXi based on [VMware roll-our-own architecture in VPC](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-vpc-ryo-overview). An overview of the solution is shown below.
-
-![RYO Architecture](images/arch-ryo.png)
-
-Optionally, you can deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture. 
+This repository includes terraform templetes to deploy VPC assets following [VMware Cloud Foundation (VCF)](https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html) architecture in IBM Cloud. You can run this terraform through [IBM Cloud Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui) or using terraform locally. After the bare metal server provisioning and initial VMware configurations, you can access and manage the environment through the bastion hosts and download the VMware Cloud Builder from [https://customerconnect.vmware.com](https://customerconnect.vmware.com), deploy the OVA, and start the Cloud Builder bringup process. To do this step, you can use VMware clients, command line interface (CLI), existing scripts, or other familiar vSphere API-compatible tools.
 
 ![VCF Architecture](images/arch-vcf.png)
 
-For the required common services, such as NTP and DNS, you can use IBM Cloud VPC services and solutions. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure.
+For the required common services, such as NTP and DNS, IBM Cloud VPC services and solutions are used. For Active Directory™, you can use IBM Cloud VPC compute resources to build your Active Directory in IBM Cloud VPC, or interconnect with your existing Active Directory infrastructure after the initial deployment is completed.
 
-For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC. VPC routes are used to route traffic to NSX-T overlay through Tier 0 Gateway.
+For connectivity needs, you can use IBM Cloud VPC and IBM Cloud interconnectivity solutions. For public internet network access capabilities, the options include floating IP addresses and Public Gateway configurations within your VPC. VPC routes are used to route traffic to NSX-T overlay through Tier 0 Gateway. On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in VPN capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
 
-On-premises connectivity over public internet can be arranged by using IBM Cloud VPC VPN services (site-to-site and client-to-site), or alternatively NSX-T built-in VPN capabilities. For private networking, you can use IBM Cloud interconnectivity services to connect your VMware workloads with IBM Cloud classic infrastructure, other VPCs, and on-premises networks.
-
-## Key responsibilities
-
-With the roll-your-own VMware Solutions in IBM Cloud VPC, you are responsible for ordering the VPC, prefixes, and subnets for it. Also, you need to provision the IBM Cloud Bare Metal Servers and set up the vSphere clusters, including installing and configuring VMware vCenter Server®, vSAN, NSX-T, attaching file storage. For ordering the IBM Cloud assets, you can use GUI, IBM Cloud CLI or terraform. This terraform template provides you a simple way to deploy the required assets and you can fill in the required variables or customize the provided templates for your use cases and needs.  
-
-The IBM Cloud bare metal server for IBM Cloud VPC has the VMware ESXi™ 7.x hypervisor preinstalled. IBM can manage the licensing, or you can bring your own license to the solution.
-
-For day two of operation, it is your responsibility to monitor and manage the vCenter and NSX-T, including backups, patching, configuration, and monitoring of the VMware software and the underlying vSphere hypervisor.
-
-## Key benefits
-
-The architecture provides fundamental building blocks, which include VMware vSphere, vCenter Server, VMware NSX-T, and shared storage options, such as VMware vSAN or IBM Cloud VPC file share. These building blocks are needed to flexibly design a VMware software-defined data center solution that best fits your workloads.
-
-*VMware Solutions in IBM Cloud VPC have the following key benefits over IBM Cloud classic deployments:*
-
-- IBM Cloud VPC gives you the ability to easily and rapidly define and control a virtual network, which is logically isolated from all other tenants. The logical isolation is implemented by using virtual network functions and security that is built into the platform.
-- Provisioning the IBM Cloud bare metal server on IBM Cloud VPC takes minutes instead of hours when compared to the IBM Cloud classic IBM Cloud bare metal server.
-- VMware workloads by running in IBM Cloud VPC can take advantage of all original functions for VPC networking capabilities and other IBM Cloud interconnectivity services.
-With this single-tenant IBM Cloud bare metal server infrastructure that is provided in IBM Cloud VPC, you can quickly deploy network, compute, and storage capacity for your VMware environment to the IBM Cloud in minutes.
-- Unlike the managed service offerings, this architecture gives you flexibility to design a solution for your needs, and provides you full and complete access to all components.
 
 ## Compatibility
 
-- Terraform 0.14 and above.
-- IBM Cloud Terraform provider 1.41.1 and above
+- Terraform 1.1 and above.
+- IBM Cloud Terraform provider 1.44.0 and above
+- VMware Cloud Foundation 4.4.x
 
 ## Install
 
-### Terraform
+### Install using terraform through Schematics
+
+You can run this terraform through [Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-workspace-setup&interface=ui). Create a workspace on Schematics and import this terraform template. See more in a [helper sheet](README_SCHEMATICS.md).
+
+
+### Install using terraform locally
 
 Be sure you have the correct Terraform version, you can choose the binary here for your operating system:
-- https://releases.hashicorp.com/terraform/
 
-### Terraform plugins
+- https://releases.hashicorp.com/terraform/
 
 Be sure that you have access to the IBM Cloud terraform provider plugins through Internet or that you have downloaded and compiled the plugins for your operating system on $HOME/.terraform.d/plugins/
 
 - [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+
+### Terraform outputs
+
+The terraform provides the following output values for deployed assets and randomly generated values:
+
+```bash
+vpc_bastion_hosts                       # Provides bastion host acccess details 
+ssh_private_key_bastion                 # Provides genererated SSH private key for bastion hosts 
+ssh_private_key_host                    # Provides genererated SSH private key for ESXi hosts
+
+dns_records                             # Provides deployed DNS records
+dns_root_domain                         # Used DNS root domain
+dns_servers                             # Used DNS server IP addresses
+ntp_server                              # Used NTP server IP addresses
+
+resource_group_id                       # Used resource group's id
+resources_prefix                        # Used random resources prefix
+
+vpc_summary                             # Provisioned VPC information
+zone_subnets                            # Provisioned VPC subnet information
+
+vcf                                     # Provisioned VLAN interface details and other values for VCF Cloud Builder and SDDC Manager
+vcf_bringup_json                        # VCF Cloud Builder bringup json
+
+cluster_hosts                           # Provisioned ESXi host details and their VLAN interfaces per cluster
+
+vcenters                                # Provisioned ESXi host details and their VLAN interfaces per cluster
+
+nsx_t_managers                          # Provisioned VLAN interface details and other values for NSX-T Managers
+nsx_t_edges                             # Provisioned VLAN interface details and other values for NSX-T Edge Nodes
+nsx_t_t0s                               # Provisioned VLAN interface details and other values for NSX-T T0 Gateways 
+
+vcf_network_pools                       # Provisioned vcf_network_pools details
+vcf_vlan_nics                           # Provisioned VLAN interface details for vcf_network_pools
+
+routes_default_egress_per_zone          # Provisioned VPC egress routes for overlay networks
+routes_tgw_dl_ingress_egress_per_zone   # Provisioned VPC ingress routes for overlay networks
+routes_for_t0s_per_cluster_domain       # Example routes to be configured on T0
+```
+
+*Please Note*: When you deploy this through Schematics, you can use this [helper sheet](README_SCHEMATICS.md) to get the required output values.
 
 
 ## Running this template
@@ -168,13 +187,12 @@ variable "deploy_dns" {
 
 variable "enable_vcf_mode" {
   description = "Boolean to enable VCF options for BMS deployment (dual PCI uplinks and vmk1 in instance management subnet)."
-  default = false
+  default = true
 }
+
 ```
 
-*Please Note:* The inclusion of file sharing is only available on a non-public version of the IBM Cloud VPC Terraform provider. Please set to false if this provider is not available.
-
-*Please Note:* The inclusion of VCF mode is not yet publicly available in IBM Cloud VPC. Please set to `false`.
+*Please Note:* The inclusion of file share is not yet available on the public version of the IBM Cloud VPC Terraform provider. Please set to false.
 
 ### VPC network architecture
 
@@ -192,7 +210,7 @@ variable "vpc_zone_prefix_t0_uplinks" {
 }
 ```
 
-`xyz_vlan_id` variables define the VLAN IDs used with BMS VLAN interfaces for `vmks`, SDDC appliances or NSX-T Tier 0 Gateway uplinks. Note that these VLAN IDs have only local significance to the BMS and ESXi host.
+`xyz_vlan_id` variables define the VLAN IDs used with BMS VLAN interfaces for `vmks`, SDDC appliances or NSX-T Tier 0 Gateway uplinks. Note that these VLAN IDs have only local significance to the BMS and ESXi host. The following lists the default values for VLAN ID variables used in the `consolidated architecture`.
 
 ```hcl
 variable "host_vlan_id" {
@@ -242,10 +260,10 @@ variable "edge_tep_vlan_id" {
 }
 ```
 
-The variables `vpc` and `vpc_vcf` define the structure of the VPC, and *subnets* to be created using the created *VPC prefixes*. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`). The following shows an example for a VPC structure for RYO deployment.
+The variables `vpc_vcf_consolidated` and `vpc_vcf_standard` define the structure of the VPC, and *subnets* to be created using the created *VPC prefixes*. The terraform creates the subnets with the subnet size as defined in the variable (e.g. `vpc_zone_subnet_size = 3` for a `/22` prefix means a subnet mask `/25` and likewise a `4` for a `/24` prefix means a subnet mask `/28`). The following shows an example for a VPC structure for `consolidated architecture` deployment.
 
 ```hcl
-variable "vpc" {
+variable "vpc_vcf_consolidated" {
     description = "VPC Data Structure"
     type        = map
     default = {
@@ -253,7 +271,7 @@ variable "vpc" {
         zones = {
             vpc_zone = {
               infrastructure = {
-                  vpc_zone_subnet_size = 3
+                  vpc_zone_subnet_size = 4
                   public_gateways = ["subnet-public-gateway"]
                   subnets = {
                     host = {
@@ -276,7 +294,7 @@ variable "vpc" {
                     tep = {
                         cidr_offset = 4
                         ip_version = "ipv4"
-                    }
+                    },
                 }
               },
               edges = {
@@ -289,7 +307,11 @@ variable "vpc" {
                     t0-pub = {
                         cidr_offset = 1
                         ip_version = "ipv4"
-                    }
+                    },
+                    edge-tep = {
+                        cidr_offset = 2
+                        ip_version = "ipv4"                      
+                    },             
                   }
               }
             }
@@ -299,91 +321,34 @@ variable "vpc" {
 }
 ```
 
-### VPC routing tables and routes
-
-The terraform template will use the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl) with VPC routes and NSX-T overlay.
-
-You can add your own routes with the following map variable:
-
-```hcl
-variable "nsx_t_overlay_networks" {
-  description = "NSX-T overlay network prefixes to create VPC routes"
-  type = map
-  default = {
-    customer_overlay_1 = {
-      name = "customer-overlay"
-      destination = "172.16.0.0/16"
-    },
-  }
-}
-```
-
-This terraform template uses this map to create both `egress` and `ingress` VPC routes with the `NSX-T T0 HA VIP` as the next-hop. In this example, the VPC routes are created automatically for each `zone` to provide an easy way to add connectivity though routes in and out of your VPC.  
-
-For RYO, you can use the following example value for the routes:
-
-```hcl
-nsx_t_overlay_networks = {
-    customer_overlay_1 = {
-      name = "customer-overlay"
-      destination = "172.16.0.0/16"
-    },
-  }
-}
-```
-
-In VCF deployment option, in addition to the NSX-T overlay routes, the AVN networks are routed to the overlay. For example:
-
-```hcl
-nsx_t_overlay_networks = {
-    customer_overlay_1 = {
-      name = "customer-overlay"
-      destination = "172.16.0.0/16"
-    },
-    vcf_avn_local_network = {
-      name = "vcf-avn-local-network"
-      destination = "172.27.16.0/24"      
-    },
-    avn_x_region_network = {
-      name = "avn-x-region-network"
-      destination = "172.27.17.0/24"      
-    }
-  }
-}
-```
-
-*Please Note:* IBM Cloud® Virtual Private Cloud (VPC) automatically generates a default routing table for the VPC to manage traffic in the `zone`. By default, this routing table is empty. You can add routes to the default routing table, or create one or more custom routing tables and then add routes to it. For example, if you want a specialized routing policy for a specific subnet, you can create a routing table and associate it with one or more subnets. Routes are also always specific to a `zone`.
-
-*Please Note:* When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
-
-*Please Note:* This terraform creates a VPC prefix for each NSX-T overlay route automatically to simplify the process, but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing information in VPC. See the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
-
-
 ### Deployment architecture
 
 The `zone_clusters` variable describes the architecture of the deployment, including the *clusters*, *hosts* and *file shares*.
 
-In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. We can increase the number of hosts or clusters by manipulating this variable.
+In this example we will deploy a single cluster with a single host of profile *bx2d-metal-96x384*. You can increase the number of hosts or clusters by manipulating this variable.
 
 ```hcl
 variable "zone_clusters" {
   description = "Clusters in VPC"
   type        = map
+
   default     = {
-    cluster_0 = {
-      name = "mgmt"
+    cluster_0 = {                             # Value must be "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"                         # Value must be "mgmt" for the first cluster
       vmw_host_profile = "bx2d-metal-96x384"
-      host_count = 1
-      vpc_file_shares = [
-        {
-          name = "cluster0_share1" 
-          size = 500 
-          profile = "tier-3iops" 
-          target = "cluster0_share1_target"
-        }
-      ]
-    }
-  }
+      host_list = ["000","001","002","003"]   # Define a host count for this cluster.
+      vcenter = true                          # Value must be "true" for the first cluster
+      nsx_t_managers = true                   # Value must be "true" for the first cluster
+      nsx_t_edges = true                      # Value must be "true" for the first cluster
+      public_ips = 2                          # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                    # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []     # Future use.
+    },
 }
 ```
 
@@ -395,6 +360,16 @@ The ESXI image type is the same across all Bare Metal servers and is described a
 variable "esxi_image" {
   description = "Base ESXI image name, terraform will find the latest available image id"
   default = "esxi-7-byol"
+}
+```
+
+You can optionally name a specific image with:
+
+```hcl
+variable "esxi_image_name" {
+  description = "Use a specific ESXI image version to use for the hosts to override the latest by name."
+  default = "ibm-esxi-7-0u3d-19482537-byol-amd64-1"
+  type = string
 }
 ```
 
@@ -412,7 +387,7 @@ r006-95325076-0a3a-4e2e-8678-56908ddfcea0   ibm-esxi-7-byol-amd64-1             
 
 ```
 
-The key *vmw_host_profile* represents the host profile and may be customised for each cluster. Valid values may be determined fromt the IBM Cloud console:
+The key *vmw_host_profile* represents the host profile and may be customised for each cluster. Available profiles and values may be determined fromt the IBM Cloud console or with CLI:
 
 ```bash
 >  ibmcloud is bm-prs 
@@ -427,6 +402,31 @@ cx2d-metal-96x192    amd64          compute    2                  48            
 mx2-metal-96x768     amd64          memory     2                  48               768           100000          1x960   
 mx2d-metal-96x768    amd64          memory     2                  48               768           100000          1x960, 8x3200   
 ```
+
+*Please Note:* Use the profiles ending with d, for example bx2d or cx2d for hosts with local SSDs for vSAN.
+
+### VPC routing tables and routes
+
+The terraform template uses the [default routing table](https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes) for `egress routing` and it will create an additional routing table for `ingress routing` to enable routing with [Transit Gateway](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-getting-started) and [Direct Link](https://cloud.ibm.com/docs/dl?topic=dl-get-started-with-ibm-cloud-dl) with VPC routes and NSX-T overlay.
+
+You can add your own routes with the `zone_clusters` variable:
+
+```hcl
+      overlay_networks = [     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+```
+
+This terraform template uses this map to create both `egress` and `ingress` VPC routes with the `NSX-T T0 HA VIP` as the next-hop. In this example, the VPC routes are created automatically for each `zone` to provide an easy way to add connectivity though routes in and out of your VPC.  
+
+*Please Note:* IBM Cloud® Virtual Private Cloud (VPC) automatically generates a default routing table for the VPC to manage traffic in the `zone`. By default, this routing table is empty. You can add routes to the default routing table, or create one or more custom routing tables and then add routes to it. For example, if you want a specialized routing policy for a specific subnet, you can create a routing table and associate it with one or more subnets. Routes are also always specific to a `zone`.
+
+*Please Note:* When VPC is attached to Transit Gateway or Direct link, it currently only advertises VPC prefixes. For example, individual VPC subnets nor VPC routes are not currently advertised. For routing to work properly, you first need to create VPC ingress routes for each NSX-T overlay network prefix (or preferably summarize/aggregate the NSX-T networks). Currently, you also need to create a prefix in the zone to enable advertising VPC ingress routes towards Transit Gateway and Direct Link. 
+
+*Please Note:* This terraform creates a VPC prefix for each NSX-T overlay route automatically to simplify the process, but at the same time sacrificing scalability. When adding multiple routes, please consider aggregating routing information in VPC. See the [VPC quotas and service limits](https://cloud.ibm.com/docs/vpc?topic=vpc-quotas#vpc-quotas) for VPC prefixes and routes.
+
 
 ### Security groups
 
@@ -570,12 +570,12 @@ variable "security_group_rules" {
 
 ### DNS Service
 
-The terraform template will optionally provision IBM Cloud DNS service. it will create the zone for the DNS root domain (for example `vmw-terraform.ibmcloud.local`) as defined in the following variable.
+The terraform template will optionally provision IBM Cloud DNS service. it will create the zone for the DNS root domain (for example `vcf.ibmcloud.local`) as defined in the following variable.
 
 ```hcl
 variable "dns_root_domain" {
   description = "Root Domain of Private DNS used with the Virtual Server"
-  default = "vmw-terraform.ibmcloud.local"
+  default = "vcf.ibmcloud.local"
 }
 ```
 
@@ -639,7 +639,7 @@ Note. Each IBM Cloud bare metal server for VPC has a random password provided by
 The terraform file names have been named to indicate the logical order of the resource creation and to group resource types into a single file, this has been done for convenience only.
 
 ```
-00_vpc_vmware_esxi_random.tf
+00_vpc_vmware_esxi_random_tagging.tf
 01_vpc_vmware_esxi_iam.tf
 02_vpc_vmware_esxi_rg.tf
 03_vpc_vmware_esxi_vpc.tf
@@ -649,439 +649,207 @@ The terraform file names have been named to indicate the logical order of the re
 07_vpc_vmware_esxi_vcenter.tf
 08_vpc_vmware_esxi_nsxt.tf
 10_vpc_vmware_esxi_dns_records.tf
-11_vpc_vmware_esxi_vcf.tf
-12_vpc_vmware_bastion_hosts.tf
-13_vpc_vmware_routes.tf
+11_vpc_vmware_vcf_appliances.tf
+12_vpc_vmware_vcf_net_pools.tf
+13_vpc_vmware_bastion_hosts.tf
+14_vpc_vmware_routes.tf
+15_vpc_vmware_routes_show.tf
 90_vpc_vmware_vcf_json.tf
 99_vpc_vmware_output.tf
 ```
 
 
-## Example terraform.tfvars
+## Example terraform.tfvars for VCF deployment
 
-The following provides an example `terraform.tfvars-example-for-ryo` for RYO deployments:
+### Consolidated architecture deployment
 
-```hcl
-# Services deployment options
+When deploying `consolidated architecture` deployment, see the `terraform.tfvars.vcf-consolidated` for example variable values.
 
-deploy_dns = true
-deploy_iam = true
-enable_vcf_mode = false
-
-
-# Resource group name to use
-# leave empty if you want to provision a new resource group
-
-resource_group_name = ""
-
-
-# Tags
-# all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
-
-tags = ["env:test"]
-
-# Resource prefix for naming assets
-
-resource_prefix = "vmw"
-
-
-# DNS
-
-dns_root_domain = "vmw-test-1.ibmcloud.local"
-
-dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
-
-dns_records = {
-     vrslcm = {
-       name = "xint-vrslcm01"
-       ip_address = "172.27.17.20"
-     },
-   }
-
-
-# IBM Cloud Region and VPC Zone
-
-ibmcloud_vpc_region = "us-south"
-vpc_zone = "us-south-1"
-
-
-# Hosts and clusters
-
-# Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
-
-zone_clusters = {
-      cluster_0 = { 
-        name = "converged"
-        vmw_host_profile = "bx2d-metal-96x384"
-        host_count = 4 
-        vpc_file_shares = [ ] 
-        },
-   }
-
-
-# Networking
-
-vpc_zone_prefix = "10.100.0.0/22" # infrastucture subnets
-vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
-
-mgmt_vlan_id = 100
-vmot_vlan_id = 200
-vsan_vlan_id = 300
-tep_vlan_id	= 400
-
-edge_uplink_public_vlan_id	= 700
-edge_uplink_private_vlan_id = 710
-
-vpc_t0_public_ips = 1
-
-nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes
-
-
-# Network security
-
-security_group_rules = {
-      "mgmt" = [
-        {
-          name      = "allow-all-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-        },
-        {
-          name      = "allow-inbound-10-8"
-          direction = "inbound"
-          remote    = "10.0.0.0/8"
-        },
-        {
-          name      = "allow-inbound-t0-uplink"
-          direction = "inbound"
-          remote_id = "uplink-priv"
-        },     
-        {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-        }
-      ]
-      "vmot" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-vmot"
-          direction = "inbound"
-          remote_id = "vmot"
-        },
-        {
-          name      = "allow-outbound-vmot"
-          direction = "outbound"
-          remote_id = "vmot"
-        }
-      ]
-      "vsan" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-vsan"
-          direction = "inbound"
-          remote_id = "vsan"
-        },
-        {
-          name      = "allow-outbound-vsan"
-          direction = "outbound"
-          remote_id = "vsan"
-        }
-      ]
-      "tep" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-tep"
-          direction = "inbound"
-          remote_id = "tep"
-        },
-        {
-          name      = "allow-outbound-tep"
-          direction = "outbound"
-          remote_id = "tep"
-        }
-      ]
-        "uplink-pub" = [
-         {
-          name      = "allow-inbound-any"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-          icmp = {
-            type = 8
-          }
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
-        ],
-        "uplink-priv" = [
-         {
-          name      = "allow-inbound-any"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
-        ],
-        "bastion" = [
-         {
-          name      = "allow-inbound-rdp"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-          tcp = {
-            port_max = 3389
-            port_min = 3389           
-          }
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
-        ]
-  }
-```
-
-
-The following provides an example `terraform.tfvars-example-for-vcf` for VCF deployments:
+The key variables for `consolidated architecture` deployment are listed below: 
 
 ```hcl
-# Services deployment options
+# Define vcf deployment architecture option (valid only for VCF deployments when 'enable_vcf_mode=true')
 
-deploy_dns = false
-deploy_iam = false
-enable_vcf_mode = true
+vcf_architecture = "consolidated" # Deploys a 'consolidated' VCF deployment.
 
+# Define en estimate of a number of hosts per domain
 
-# Resource group name to use
-# leave empty if you want to provision a new resource group
+vcf_mgmt_host_pool_size = 8    # Creates VPC BMS VLAN interfaces for a pool for N hosts total for mgmt domain
 
-resource_group_name = "Default"
-
-
-# Tags
-# all recources will be tagged with a tag "vmware:<resource_prefix>-<3-letter-random>" and a customizable list of tags.
-
-tags = ["env:test"]
-
-
-# Resource prefix for naming assets
-
-resource_prefix = "vcf"
-
-
-# DNS
-
-dns_root_domain = "vcf-fra-test-1.ibmcloud.local"
-
-dns_servers = ["161.26.0.7", "161.26.0.8"] # Note provide 2 DNS server IPs here 
-
-dns_records = {
-     vrslcm = {
-       name = "xint-vrslcm01"
-       ip_address = "172.27.17.20"
-     },
-   }
-
-
-# IBM Cloud Region and VPC Zone
-
-ibmcloud_vpc_region = "us-south"
-vpc_zone = "us-south-1"
-
-
-# Hosts and clusters
-
-# Use 'ibmcloud is bare-metal-server-profiles' to get the profiles.
+# Define deployment structure
 
 zone_clusters = {
-      cluster_0 = { 
-         name = "converged"
-         vmw_host_profile = "bx2d-metal-96x384"
-         host_count = 4 
-         vpc_file_shares = [ ] 
-         },
-   }
-
-
-# Networking
-
-vpc_zone_prefix = "10.100.0.0/22" # infrastucture subnets
-vpc_zone_prefix_t0_uplinks = "192.168.10.0/24" # edge and tier 0 gateway subnets
-
-vcf_avn_local_network_prefix = "172.27.16.0/24" # avn overlay local subnet
-vcf_avn_x_region_network_prefix = "172.27.17.0/24" # avn overlay x-region subnet
-
-
-mgmt_vlan_id = 1611
-vmot_vlan_id = 1612
-vsan_vlan_id = 1613
-tep_vlan_id	= 1614
-
-edge_uplink_public_vlan_id	= 2711
-edge_uplink_private_vlan_id = 2712
-edge_tep_vlan_id = 2713
-
-vcf_mgmt_host_pool_size = 10
-vcf_edge_pool_size = 2   # Note two TEPs per edge nodes in VCF >> double reservation done in resource 
-
-vpc_t0_public_ips = 1
-
-nsx_t_overlay_networks = ["172.16.0.0/16"] # list of private VPC routes 
-
-# Network security
-
-security_group_rules = {
-      "mgmt" = [
-        {
-          name      = "allow-all-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-        },
-        {
-          name      = "allow-inbound-10-8"
-          direction = "inbound"
-          remote    = "10.0.0.0/8"
-        },
-        {
-          name      = "allow-inbound-t0-uplink"
-          direction = "inbound"
-          remote_id = "uplink-priv"
-        },     
-        {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-        }
-      ]
-      "vmot" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-vmot"
-          direction = "inbound"
-          remote_id = "vmot"
-        },
-        {
-          name      = "allow-outbound-vmot"
-          direction = "outbound"
-          remote_id = "vmot"
-        }
-      ]
-      "vsan" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-vsan"
-          direction = "inbound"
-          remote_id = "vsan"
-        },
-        {
-          name      = "allow-outbound-vsan"
-          direction = "outbound"
-          remote_id = "vsan"
-        }
-      ]
-      "tep" = [
-        {
-          name      = "allow-icmp-mgmt"
-          direction = "inbound"
-          remote_id = "mgmt"
-          icmp = {
-          type = 8
-          }
-        },
-        {
-          name      = "allow-inbound-tep"
-          direction = "inbound"
-          remote_id = "tep"
-        },
-        {
-          name      = "allow-outbound-tep"
-          direction = "outbound"
-          remote_id = "tep"
-        }
-      ]
-        "uplink-pub" = [
-         {
-          name      = "allow-inbound-any"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-          icmp = {
-            type = 8
-          }
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
-        ],
-        "uplink-priv" = [
-         {
-          name      = "allow-inbound-any"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
-        ],
-        "bastion" = [
-         {
-          name      = "allow-inbound-rdp"
-          direction = "inbound"
-          remote    = "0.0.0.0/0"
-          tcp = {
-            port_max = 3389
-            port_min = 3389           
-          }
-         },
-         {
-          name      = "allow-outbound-any"
-          direction = "outbound"
-          remote    = "0.0.0.0/0"
-         }
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
         ]
+      vpc_file_shares = []     # Future use.
+    },   
   }
+
+
+# Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
+# You must manually configure routing in T0 with static routes.  
 ```
+
+The following shows an example with two clusters on `consolidated architecture` deployment. You can optionally deploy NSX-T edge nodes on the 2nd cluster.
+
+```hcl
+# Example with two clusters on consolidated architecture. You can optionally deploy NSX-T edge nodes on the 2nd cluster.
+
+zone_clusters = {
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2           
+      overlay_networks = [
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []
+    },   
+    cluster_1 = {
+      name = "mgmt-cl-1"
+      domain = "mgmt"         
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001"]    # Defines a hosts for this cluster.
+      vcenter = false           
+      nsx_t_managers = false    
+      nsx_t_edges = false      
+      public_ips = 0
+      overlay_networks = [
+        ]
+      vpc_file_shares = []
+    },
+  }
+
+# Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
+# You must manually configure routing in T0 with static routes. 
+```
+
+### Standard architecture deployment
+
+When deploying `standard architecture` deployment, see the `terraform.tfvars.vcf-standard` for example variable values.
+
+The key variables for `standard architecture` deployment are listed below: 
+
+```hcl
+# Define vcf deployment architecture option (valid only for VCF deployments when 'enable_vcf_mode=true')
+
+vcf_architecture = "standard"    # Deploys a 'standard' VCF deployment.
+
+# Define en estimate of a number of hosts per domain
+
+vcf_mgmt_host_pool_size = 8    # Creates VPC BMS VLAN interfaces for a pool for N hosts total for mgmt domain
+vcf_wl_host_pool_size = 10     # Creates VPC BMS VLAN interfaces for a pool for N hosts total for workload domain
+
+# Define deployment structure
+
+zone_clusters = {
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []     # Future use.
+    },   
+    cluster_1 = {
+      name = "vi-wl-1"
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_managers = true                    # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_edges = true                       # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      public_ips = 3                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
+          { name = "customer-overlay", destination = "172.17.0.0/16" },
+        ]
+      vpc_file_shares = []    # Future use.
+    },
+  }
+
+# Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
+# You must manually configure routing in T0 with static routes.  
+```
+
+The following shows an example with two clusters on the VI workload domaain in the `standard architecture` deployment.
+
+
+```hcl
+# Define deployment structure
+
+zone_clusters = {
+    cluster_0 = {                              # Value must be "cluster_0" for the first cluster
+      name = "mgmt"          
+      domain = "mgmt"                          # Value must be "mgmt" for the first cluster
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first cluster
+      nsx_t_managers = true                    # Value must be "true" for the first cluster
+      nsx_t_edges = true                       # Value must be "true" for the first cluster
+      public_ips = 2                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on mgmt domain/cluster. 
+          { name = "customer-overlay", destination = "172.16.0.0/16" },
+          { name = "vcf-avn-local-network", destination = "172.27.16.0/24" },
+          { name = "avn-x-region-network", destination = "172.27.17.0/24" },
+        ]
+      vpc_file_shares = []     # Future use.
+    },   
+    cluster_1 = {
+      name = "vi-wl-1"
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
+      vmw_host_profile = "bx2d-metal-96x384"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = true                           # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_managers = true                    # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      nsx_t_edges = true                       # Value must be "true" for the first vi-workload cluster. Deploys VLAN interfaces on the mgmt domain. 
+      public_ips = 3                           # Orders # of Floating IPs for the T0. 
+      overlay_networks = [                     # Add networks to be routed on the overlay for the T0 on workload overlay though the T0 on this domain/cluster. 
+          { name = "customer-overlay", destination = "172.17.0.0/16" },
+        ]
+      vpc_file_shares = []    # Future use.
+    },
+    cluster_2 = {
+      name = "vi-wl-2"
+      domain = "workload"                      # Value must be set as 'workload' for the workload domain.     
+      vmw_host_profile = "cx2d-metal-96x192"
+      host_list = ["000","001","002","003"]    # Defines a hosts for this cluster.
+      vcenter = false                          # Value must "false" for the 2nd cluster in the vi-workload domain. 
+      nsx_t_managers = false                   # Value must "false" for the 2nd cluster in the vi-workload domain.
+      nsx_t_edges = false                      # You can optionally deploy a new edge cluster.
+      public_ips = 0                           # You can optionally order public IPs, if you selected nsx-t edges on this cluster. 
+      overlay_networks = []                    # You can optionally add routes to overlay, if you selected nsx-t edges on this cluster. 
+      vpc_file_shares = []                     # Future use.
+    },
+  }
+
+# Note. 'overlay_networks' list creates VPC egress and ingress routes with a T0 HA VIP as the next-hop. 
+# You must manually configure routing in T0 with static routes.  
+```
+

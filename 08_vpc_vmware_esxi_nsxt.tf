@@ -48,7 +48,7 @@ module "zone_nxt_t_mgrs" {
   vmw_resources_prefix            = local.resources_prefix
   vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
   vmw_mgmt_subnet_id              = each.value.domain == "mgmt" ? local.subnets_map.infrastructure["mgmt"].subnet_id : local.subnets_map.infrastructure["wl-mgmt"].subnet_id
-  vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]   # Note deploy NSX-T managers on mgmt cluster.
+  vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[var.zone_clusters["cluster_0"].host_list[0]]   # Note deploy NSX-T managers on mgmt cluster.
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_mgmt_vlan_id                = each.value.domain == "mgmt" ? var.mgmt_vlan_id : var.wl_mgmt_vlan_id
 
@@ -61,29 +61,6 @@ module "zone_nxt_t_mgrs" {
     ]
 }
 
-/*
-module "zone_nxt_t_mgrs" {
-  source                          = "./modules/vpc-nsx-t"
-  for_each                        = local.zone_clusters_vcenters
-
-  vmw_vpc                         = ibm_is_vpc.vmware_vpc.id
-  vmw_vpc_zone                    = var.vpc_zone
-  vmw_resources_prefix            = local.resources_prefix
-  vmw_resource_group_id           = data.ibm_resource_group.resource_group_vmw.id
-  vmw_mgmt_subnet_id              = local.subnets_map.infrastructure.mgmt.subnet_id
-  vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi["cluster_0"].ibm_is_bare_metal_server_id[0]   # Note deploy NSX-T managers on mgmt cluster.
-  vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
-  vmw_mgmt_vlan_id                = var.mgmt_vlan_id
-
-  vmw_nsx_t_name                  = "${each.value.name}-nsx-t"
-
-  depends_on = [
-      module.vpc_subnets,
-      module.zone_bare_metal_esxi,
-      ibm_is_security_group.sg,
-    ]
-}
-*/
 
 ##############################################################
 # Define output maps for VI Workload NSX-T Managers
@@ -141,59 +118,6 @@ locals {
   }
 }
 
-/*
-
-locals {
-  zone_clusters_nsx_t_managers_values = {
-    for k, v in var.zone_clusters : v.name => {
-      nsx_t_0 = {
-        hostname = "${v.name}-nsx-t-0"
-        fqdn = "${v.name}-nsx-t-0.${var.dns_root_domain}"
-        ip_address = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[0].primary_ip[0].address
-        prefix_length = local.subnets_map.infrastructure.mgmt.prefix_length
-        default_gateway = local.subnets_map.infrastructure.mgmt.default_gateway
-        id = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[0].id
-        username = "admin"
-        password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
-        vlan_id = var.mgmt_vlan_id
-      },
-      nsx_t_1 = {
-        hostname = "${v.name}-nsx-t-1"
-        fqdn = "${v.name}-nsx-t-1.${var.dns_root_domain}"
-        ip_address = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[1].primary_ip[0].address
-        prefix_length = local.subnets_map.infrastructure.mgmt.prefix_length
-        default_gateway = local.subnets_map.infrastructure.mgmt.default_gateway
-        id = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[1].id
-        username = "admin"
-        password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
-        vlan_id = var.mgmt_vlan_id
-      },
-      nsx_t_2 = {
-        hostname = "${v.name}-nsx-t-2"
-        fqdn = "${v.name}-nsx-t-2.${var.dns_root_domain}"
-        ip_address = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[2].primary_ip[0].address
-        prefix_length = local.subnets_map.infrastructure.mgmt.prefix_length
-        default_gateway = local.subnets_map.infrastructure.mgmt.default_gateway
-        id = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip[2].id
-        username = "admin"
-        password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
-        vlan_id = var.mgmt_vlan_id
-      },
-      nsx_t_vip = {
-        hostname = "${v.name}-nsx-t-vip"
-        fqdn = "${v.name}-nsx-t-vip.${var.dns_root_domain}"
-        ip_address = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip_vip.primary_ip[0].address
-        prefix_length = local.subnets_map.infrastructure.mgmt.prefix_length
-        default_gateway = local.subnets_map.infrastructure.mgmt.default_gateway
-        id = module.zone_nxt_t_mgrs[k].vmw_nsx_t_manager_ip_vip.id
-        username = "admin"
-        password = var.vcf_password == "" ? random_string.nsxt_password.result : var.vcf_password
-        vlan_id = var.mgmt_vlan_id
-      }
-    } if v.nsx_t_managers == true
-  }
-}
-*/
 
 ##############################################################
 # Create VLAN interfaces for VI Workload NSX-T Edges
@@ -222,7 +146,7 @@ module "zone_nxt_t_edges" {
   vmw_mgmt_subnet_id              = each.value.domain == "mgmt" ? local.subnets_map.infrastructure["mgmt"].subnet_id : local.subnets_map.infrastructure["wl-mgmt"].subnet_id
   vmw_tep_subnet_id               = var.enable_vcf_mode ? each.value.domain == "mgmt" ? local.subnets_map.edges["edge-tep"].subnet_id : local.subnets_map.edges["wl-edge-tep"].subnet_id : local.subnets_map.infrastructure["tep"].subnet_id
 
-  vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi[each.key].ibm_is_bare_metal_server_id[0] # Deploy edges on workload cluster
+  vmw_vcenter_esx_host_id         = module.zone_bare_metal_esxi[each.key].ibm_is_bare_metal_server_id[var.zone_clusters[each.key].host_list[0]] # Deploy edges on workload cluster
 
   vmw_sg_mgmt                     = ibm_is_security_group.sg["mgmt"].id
   vmw_sg_tep                      = ibm_is_security_group.sg["tep"].id
@@ -414,7 +338,7 @@ resource "ibm_is_floating_ip" "floating_ip_nsx_t" {
 
 resource "ibm_is_bare_metal_server_network_interface_floating_ip" "t0_public_vip_floating_ip_nsx_t" {
   for_each          = local.zone_clusters_vi_nsx_t_t0_flips_map
-  bare_metal_server = module.zone_bare_metal_esxi[each.value.cluster_key].ibm_is_bare_metal_server_id[0]
+  bare_metal_server = module.zone_bare_metal_esxi[each.value.cluster_key].ibm_is_bare_metal_server_id[var.zone_clusters[each.value.cluster_key].host_list[0]]
   network_interface = module.zone_nxt_t_edges[each.value.cluster_key].t0_uplink_public_vip.id
   floating_ip       = ibm_is_floating_ip.floating_ip_nsx_t[each.key].id
   depends_on = [

@@ -33,6 +33,12 @@ resource "ibm_is_ssh_key" "host_ssh_key" {
 ##############################################################
 
 
+locals {
+  deploy_bastion = var.number_of_bastion_hosts > 0 ? var.number_of_bastion_hosts_linux > 0 ? true : true : false
+}
+
+
+
 # Public/Private key for accessing the instance
 
 resource "tls_private_key" "bastion_rsa" {
@@ -60,7 +66,6 @@ data "ibm_is_ssh_key" "user_provided_ssh_keys" {
   for_each = toset(var.user_provided_ssh_keys) 
   name = each.key
 }
-
 
 
 

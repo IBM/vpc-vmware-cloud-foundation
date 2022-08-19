@@ -77,3 +77,36 @@ locals {
   }
 }
 
+
+##############################################################
+# Show example routes to be created in NSX-T T0
+##############################################################
+
+
+
+locals {
+  nsx_t_t0_routes_to_be_created_per_cluster_domain = { 
+    for k, v in var.zone_clusters : v.name => {
+      public = [ for pubroute_k in var.customer_public_routes : 
+        {
+          "name" : "private-${replace(replace(pubroute_k, ".", "-"),"/","-")}",
+          "destination" : pubroute_k,
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-pub"].default_gateway : local.subnets_map.edges["wl-t0-pub"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        }
+      ],
+      private = [ for privroute_k in var.customer_private_routes : 
+        {
+          "name" : "private-${replace(replace(privroute_k, ".", "-"),"/","-")}",
+          "destination" : privroute_k,
+          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        }
+      ]
+    } if v.nsx_t_edges == true
+  }
+}
+
+
