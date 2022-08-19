@@ -13,7 +13,7 @@ import sys
 import json
 import os
 import yaml
-
+import configparser
 from optparse import OptionParser
 
 def format_dict(in_dict, key):
@@ -28,10 +28,9 @@ def format_dict(in_dict, key):
 # Process command line parameters
 
 parser = OptionParser()
-parser.add_option("-o", "--order_file", dest="order_file",
+parser.add_option("-c", "--config_file", dest="config_file",
                   help="Optional file name of the top ordered fields", metavar="FILE")
-
-parser.add_option("-f", "--options", dest="in_file", default='input.json',
+parser.add_option("-i", "--in_file", dest="in_file", default='input.json',
                   help="Optional input file name")
 parser.add_option("--s", "--skip", action="store_true", dest="skip", default=False,
                   help="Skip all fields except for those in the order file")
@@ -40,14 +39,15 @@ parser.add_option("--s", "--skip", action="store_true", dest="skip", default=Fal
 
 # Validate and open files
 order = []
-if options.order_file:
-    if not os.path.isfile(options.order_file) :
-        print("Error: order file does not exist" + options.order_file)
+out_keys = []
+config = configparser.ConfigParser()
+if options.config_file:
+    if not os.path.isfile(options.config_file) :
+        print("Error: config file does not exist" + options.config_file)
         sys.exit()
-    with open(options.order_file) as f:
-        order_in = f.readlines()
-        order = [x.strip() for x in order_in]
-        print("Using field order if field exists - " + str(order))
+    config.read(options.config_file)
+    order = str.split(config['KEYS_PRINT']['keys'], '\n')
+    out_keys = str.split(config['KEYS_OUT']['keys'], '\n')
 
 if not os.path.isfile(options.in_file):
     print("Error: input file does not exist - " + options.in_file)
@@ -77,8 +77,16 @@ for ordered_field in order:
         print_dict = format_dict(input_json[ordered_field], ordered_field)
         print(yaml.dump(print_dict))
 
+
 if not options.skip:
     for unordered_field in input_json.keys():
         if unordered_field not in order:
             print_dict = format_dict(input_json[unordered_field], unordered_field)
             print(yaml.dump(print_dict))
+
+for out_key in out_keys:
+    if out_key in input_json.keys():
+        f = open(out_key, 'w+')
+        f.write(input_json[out_key]["value"])
+        f.close()
+        print("Writing key file - " + out_key)
