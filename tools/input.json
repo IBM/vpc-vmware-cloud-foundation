@@ -1,0 +1,1957 @@
+[
+  {
+    "id": "f00ea8ed-e7fd-45",
+    "folder": ".",
+    "type": "terraform_v1.1",
+    "output_values": [
+      {
+        "cluster_hosts": {
+          "type": [
+            "object",
+            {
+              "clusters": [
+                "object",
+                {
+                  "mgmt": [
+                    "object",
+                    {
+                      "hosts": [
+                        "tuple",
+                        [
+                          [
+                            "object",
+                            {
+                              "fqdn": "string",
+                              "hostname": "string",
+                              "id": "string",
+                              "mgmt": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "password": "string",
+                              "tep": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "username": "string",
+                              "vmot": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "vsan": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ]
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "fqdn": "string",
+                              "hostname": "string",
+                              "id": "string",
+                              "mgmt": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "password": "string",
+                              "tep": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "username": "string",
+                              "vmot": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "vsan": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ]
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "fqdn": "string",
+                              "hostname": "string",
+                              "id": "string",
+                              "mgmt": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "password": "string",
+                              "tep": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "username": "string",
+                              "vmot": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "vsan": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ]
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "fqdn": "string",
+                              "hostname": "string",
+                              "id": "string",
+                              "mgmt": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "password": "string",
+                              "tep": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "username": "string",
+                              "vmot": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ],
+                              "vsan": [
+                                "object",
+                                {
+                                  "cidr": "string",
+                                  "default_gateway": "string",
+                                  "ip_address": "string",
+                                  "prefix_length": "string",
+                                  "vlan_id": "number",
+                                  "vlan_nic_id": "string"
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      ],
+                      "name": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "value": {
+            "clusters": {
+              "mgmt": {
+                "hosts": [
+                  {
+                    "fqdn": "vmw-mgmt-esx-000.vcf-example.ibmcloud.local",
+                    "hostname": "vmw-mgmt-esx-000",
+                    "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e",
+                    "mgmt": {
+                      "cidr": "10.100.0.64/26",
+                      "default_gateway": "10.100.0.65",
+                      "ip_address": "10.100.0.70",
+                      "prefix_length": "26",
+                      "vlan_id": 1611,
+                      "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c80c958f-ad87-4dc9-9d47-b05634c43315"
+                    },
+                    "password": "Kto7843dPTGov8xyO6qT",
+                    "tep": {
+                      "cidr": "10.100.1.0/26",
+                      "default_gateway": "10.100.1.1",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1614,
+                      "vlan_nic_id": "none"
+                    },
+                    "username": "root",
+                    "vmot": {
+                      "cidr": "10.100.0.128/26",
+                      "default_gateway": "10.100.0.129",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1612,
+                      "vlan_nic_id": "none"
+                    },
+                    "vsan": {
+                      "cidr": "10.100.0.192/26",
+                      "default_gateway": "10.100.0.193",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1613,
+                      "vlan_nic_id": "none"
+                    }
+                  },
+                  {
+                    "fqdn": "vmw-mgmt-esx-001.vcf-example.ibmcloud.local",
+                    "hostname": "vmw-mgmt-esx-001",
+                    "id": "02c7-9a00cc78-e084-4ba7-8661-d99cc5a03ba4",
+                    "mgmt": {
+                      "cidr": "10.100.0.64/26",
+                      "default_gateway": "10.100.0.65",
+                      "ip_address": "10.100.0.68",
+                      "prefix_length": "26",
+                      "vlan_id": 1611,
+                      "vlan_nic_id": "02c7-9a00cc78-e084-4ba7-8661-d99cc5a03ba4/02c7-9f26f8e3-ef44-4e1c-b0e4-76168f3d10c8"
+                    },
+                    "password": "Khk9483rCKPfc0ksC8dL",
+                    "tep": {
+                      "cidr": "10.100.1.0/26",
+                      "default_gateway": "10.100.1.1",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1614,
+                      "vlan_nic_id": "none"
+                    },
+                    "username": "root",
+                    "vmot": {
+                      "cidr": "10.100.0.128/26",
+                      "default_gateway": "10.100.0.129",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1612,
+                      "vlan_nic_id": "none"
+                    },
+                    "vsan": {
+                      "cidr": "10.100.0.192/26",
+                      "default_gateway": "10.100.0.193",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1613,
+                      "vlan_nic_id": "none"
+                    }
+                  },
+                  {
+                    "fqdn": "vmw-mgmt-esx-002.vcf-example.ibmcloud.local",
+                    "hostname": "vmw-mgmt-esx-002",
+                    "id": "02c7-b0f491ec-d108-4734-87ef-84c857b1f2e3",
+                    "mgmt": {
+                      "cidr": "10.100.0.64/26",
+                      "default_gateway": "10.100.0.65",
+                      "ip_address": "10.100.0.71",
+                      "prefix_length": "26",
+                      "vlan_id": 1611,
+                      "vlan_nic_id": "02c7-b0f491ec-d108-4734-87ef-84c857b1f2e3/02c7-08a4c76e-f604-443f-9c53-53a21091d937"
+                    },
+                    "password": "Pqt5735uJVNxx5otH2dB",
+                    "tep": {
+                      "cidr": "10.100.1.0/26",
+                      "default_gateway": "10.100.1.1",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1614,
+                      "vlan_nic_id": "none"
+                    },
+                    "username": "root",
+                    "vmot": {
+                      "cidr": "10.100.0.128/26",
+                      "default_gateway": "10.100.0.129",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1612,
+                      "vlan_nic_id": "none"
+                    },
+                    "vsan": {
+                      "cidr": "10.100.0.192/26",
+                      "default_gateway": "10.100.0.193",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1613,
+                      "vlan_nic_id": "none"
+                    }
+                  },
+                  {
+                    "fqdn": "vmw-mgmt-esx-003.vcf-example.ibmcloud.local",
+                    "hostname": "vmw-mgmt-esx-003",
+                    "id": "02c7-3a96d9b2-ce11-4cad-8043-2094315de677",
+                    "mgmt": {
+                      "cidr": "10.100.0.64/26",
+                      "default_gateway": "10.100.0.65",
+                      "ip_address": "10.100.0.69",
+                      "prefix_length": "26",
+                      "vlan_id": 1611,
+                      "vlan_nic_id": "02c7-3a96d9b2-ce11-4cad-8043-2094315de677/02c7-9b36925f-77fe-4e2a-9bcd-4c32d52b7b17"
+                    },
+                    "password": "Fdc3990oUSCvs6htR5iH",
+                    "tep": {
+                      "cidr": "10.100.1.0/26",
+                      "default_gateway": "10.100.1.1",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1614,
+                      "vlan_nic_id": "none"
+                    },
+                    "username": "root",
+                    "vmot": {
+                      "cidr": "10.100.0.128/26",
+                      "default_gateway": "10.100.0.129",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1612,
+                      "vlan_nic_id": "none"
+                    },
+                    "vsan": {
+                      "cidr": "10.100.0.192/26",
+                      "default_gateway": "10.100.0.193",
+                      "ip_address": "use-vcf-pool",
+                      "prefix_length": "26",
+                      "vlan_id": 1613,
+                      "vlan_nic_id": "none"
+                    }
+                  }
+                ],
+                "name": "mgmt"
+              }
+            }
+          }
+        },
+        "cos_bucket_test_key": {
+          "sensitive": true,
+          "type": "string",
+          "value": ""
+        },
+        "dns_records": {
+          "type": [
+            "object",
+            {
+              "hosts": [
+                "tuple",
+                [
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ],
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ],
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ],
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ]
+                ]
+              ],
+              "mgmt": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ],
+                      [
+                        "object",
+                        {
+                          "ip_address": "string",
+                          "name": "string"
+                        }
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "other": [
+                "list",
+                [
+                  "object",
+                  {
+                    "ip_address": "string",
+                    "name": "string"
+                  }
+                ]
+              ],
+              "vcf": [
+                "tuple",
+                [
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ],
+                  [
+                    "object",
+                    {
+                      "ip_address": "string",
+                      "name": "string"
+                    }
+                  ]
+                ]
+              ]
+            }
+          ],
+          "value": {
+            "hosts": [
+              {
+                "ip_address": "10.100.0.70",
+                "name": "vmw-mgmt-esx-000"
+              },
+              {
+                "ip_address": "10.100.0.68",
+                "name": "vmw-mgmt-esx-001"
+              },
+              {
+                "ip_address": "10.100.0.71",
+                "name": "vmw-mgmt-esx-002"
+              },
+              {
+                "ip_address": "10.100.0.69",
+                "name": "vmw-mgmt-esx-003"
+              }
+            ],
+            "mgmt": [
+              [
+                {
+                  "ip_address": "10.100.0.81",
+                  "name": "mgmt-vcenter"
+                },
+                {
+                  "ip_address": "10.100.0.76",
+                  "name": "mgmt-nsx-t-0"
+                },
+                {
+                  "ip_address": "10.100.0.80",
+                  "name": "mgmt-nsx-t-1"
+                },
+                {
+                  "ip_address": "10.100.0.79",
+                  "name": "mgmt-nsx-t-2"
+                },
+                {
+                  "ip_address": "10.100.0.78",
+                  "name": "mgmt-nsx-t-vip"
+                },
+                {
+                  "ip_address": "10.100.0.77",
+                  "name": "mgmt-edge-0"
+                },
+                {
+                  "ip_address": "10.100.0.75",
+                  "name": "mgmt-edge-1"
+                }
+              ]
+            ],
+            "other": [
+              {
+                "ip_address": "172.27.17.20",
+                "name": "xint-vrslcm01"
+              }
+            ],
+            "vcf": [
+              {
+                "ip_address": "10.100.0.73",
+                "name": "cloud-builder"
+              },
+              {
+                "ip_address": "10.100.0.74",
+                "name": "sddc-manager"
+              }
+            ]
+          }
+        },
+        "dns_root_domain": {
+          "type": "string",
+          "value": "vcf-example.ibmcloud.local"
+        },
+        "dns_servers": {
+          "type": [
+            "list",
+            "string"
+          ],
+          "value": [
+            "161.26.0.7",
+            "161.26.0.8"
+          ]
+        },
+        "nsx_t_edges": {
+          "type": [
+            "object",
+            {
+              "mgmt": [
+                "object",
+                {
+                  "edge_0": [
+                    "object",
+                    {
+                      "hostname": "string",
+                      "mgmt": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "fqdn": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "password": "string",
+                      "tep": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "fqdn": "string",
+                          "id": [
+                            "list",
+                            "string"
+                          ],
+                          "ip_address": [
+                            "list",
+                            "string"
+                          ],
+                          "prefix_length": "string",
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "username": "string"
+                    }
+                  ],
+                  "edge_1": [
+                    "object",
+                    {
+                      "hostname": "string",
+                      "mgmt": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "fqdn": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "password": "string",
+                      "tep": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "fqdn": "string",
+                          "id": [
+                            "list",
+                            "string"
+                          ],
+                          "ip_address": [
+                            "list",
+                            "string"
+                          ],
+                          "prefix_length": "string",
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "username": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "value": {
+            "mgmt": {
+              "edge_0": {
+                "hostname": "mgmt-edge-0",
+                "mgmt": {
+                  "default_gateway": "10.100.0.65",
+                  "fqdn": "mgmt-edge-0.vcf-example.ibmcloud.local",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-e3734e11-a306-49f1-8b5c-28ee31c0b8a5",
+                  "ip_address": "10.100.0.77",
+                  "prefix_length": "26",
+                  "vlan_id": 1611
+                },
+                "password": "FatG#NYd@Z?57b5n",
+                "tep": {
+                  "default_gateway": "192.168.10.33",
+                  "fqdn": "",
+                  "id": [
+                    "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-a54f6701-16d5-4fc2-966a-af29f04e4bf3",
+                    "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-a6a291fb-a2c0-4dc1-a901-1090ef18ad3e"
+                  ],
+                  "ip_address": [
+                    "192.168.10.36",
+                    "192.168.10.38"
+                  ],
+                  "prefix_length": "28",
+                  "vlan_id": 2713
+                },
+                "username": "admin"
+              },
+              "edge_1": {
+                "hostname": "mgmt-edge-1",
+                "mgmt": {
+                  "default_gateway": "10.100.0.65",
+                  "fqdn": "mgmt-edge-1.vcf-example.ibmcloud.local",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-61896341-e57e-40ac-9e78-327686fba134",
+                  "ip_address": "10.100.0.75",
+                  "prefix_length": "26",
+                  "vlan_id": 1611
+                },
+                "password": "FatG#NYd@Z?57b5n",
+                "tep": {
+                  "default_gateway": "192.168.10.33",
+                  "fqdn": "",
+                  "id": [
+                    "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-d606d56a-4c31-458b-9aa9-0b9d56075520",
+                    "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-0fcee49e-4efe-4f9d-bc67-b76b53fcc0c4"
+                  ],
+                  "ip_address": [
+                    "192.168.10.39",
+                    "192.168.10.37"
+                  ],
+                  "prefix_length": "28",
+                  "vlan_id": 2713
+                },
+                "username": "admin"
+              }
+            }
+          }
+        },
+        "nsx_t_managers": {
+          "type": [
+            "object",
+            {
+              "mgmt": [
+                "object",
+                {
+                  "nsx_t_0": [
+                    "object",
+                    {
+                      "default_gateway": "string",
+                      "fqdn": "string",
+                      "hostname": "string",
+                      "id": "string",
+                      "ip_address": "string",
+                      "password": "string",
+                      "prefix_length": "string",
+                      "username": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "nsx_t_1": [
+                    "object",
+                    {
+                      "default_gateway": "string",
+                      "fqdn": "string",
+                      "hostname": "string",
+                      "id": "string",
+                      "ip_address": "string",
+                      "password": "string",
+                      "prefix_length": "string",
+                      "username": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "nsx_t_2": [
+                    "object",
+                    {
+                      "default_gateway": "string",
+                      "fqdn": "string",
+                      "hostname": "string",
+                      "id": "string",
+                      "ip_address": "string",
+                      "password": "string",
+                      "prefix_length": "string",
+                      "username": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "nsx_t_vip": [
+                    "object",
+                    {
+                      "default_gateway": "string",
+                      "fqdn": "string",
+                      "hostname": "string",
+                      "id": "string",
+                      "ip_address": "string",
+                      "password": "string",
+                      "prefix_length": "string",
+                      "username": "string",
+                      "vlan_id": "number"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "value": {
+            "mgmt": {
+              "nsx_t_0": {
+                "default_gateway": "10.100.0.65",
+                "fqdn": "mgmt-nsx-t-0.vcf-example.ibmcloud.local",
+                "hostname": "mgmt-nsx-t-0",
+                "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-00b3f932-bf54-4a35-b4b0-4c847b568d2b",
+                "ip_address": "10.100.0.76",
+                "password": "FatG#NYd@Z?57b5n",
+                "prefix_length": "26",
+                "username": "admin",
+                "vlan_id": 1611
+              },
+              "nsx_t_1": {
+                "default_gateway": "10.100.0.65",
+                "fqdn": "mgmt-nsx-t-1.vcf-example.ibmcloud.local",
+                "hostname": "mgmt-nsx-t-1",
+                "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-b993ae55-3f99-4407-9265-90b425fd7a2d",
+                "ip_address": "10.100.0.80",
+                "password": "FatG#NYd@Z?57b5n",
+                "prefix_length": "26",
+                "username": "admin",
+                "vlan_id": 1611
+              },
+              "nsx_t_2": {
+                "default_gateway": "10.100.0.65",
+                "fqdn": "mgmt-nsx-t-2.vcf-example.ibmcloud.local",
+                "hostname": "mgmt-nsx-t-2",
+                "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-87215384-f24c-4d20-85ec-b7d339132a55",
+                "ip_address": "10.100.0.79",
+                "password": "FatG#NYd@Z?57b5n",
+                "prefix_length": "26",
+                "username": "admin",
+                "vlan_id": 1611
+              },
+              "nsx_t_vip": {
+                "default_gateway": "10.100.0.65",
+                "fqdn": "mgmt-nsx-t-vip.vcf-example.ibmcloud.local",
+                "hostname": "mgmt-nsx-t-vip",
+                "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-9bff0c3a-de3a-4cf1-898b-a342278028e3",
+                "ip_address": "10.100.0.78",
+                "password": "FatG#NYd@Z?57b5n",
+                "prefix_length": "26",
+                "username": "admin",
+                "vlan_id": 1611
+              }
+            }
+          }
+        },
+        "nsx_t_t0s": {
+          "type": [
+            "object",
+            {
+              "mgmt": [
+                "object",
+                {
+                  "edge_0": [
+                    "object",
+                    {
+                      "private_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "tuple",
+                            []
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "public_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "tuple",
+                            []
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ]
+                    }
+                  ],
+                  "edge_1": [
+                    "object",
+                    {
+                      "private_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "tuple",
+                            []
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "public_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "tuple",
+                            []
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ]
+                    }
+                  ],
+                  "ha-vip": [
+                    "object",
+                    {
+                      "private_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "tuple",
+                            []
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ],
+                      "public_uplink": [
+                        "object",
+                        {
+                          "default_gateway": "string",
+                          "id": "string",
+                          "ip_address": "string",
+                          "prefix_length": "string",
+                          "public_ips": [
+                            "list",
+                            "string"
+                          ],
+                          "vlan_id": "number"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "value": {
+            "mgmt": {
+              "edge_0": {
+                "private_uplink": {
+                  "default_gateway": "192.168.10.1",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-3bc1c7c1-2a6e-4cfd-b75f-5a3bade966ec",
+                  "ip_address": "192.168.10.5",
+                  "prefix_length": "28",
+                  "public_ips": [],
+                  "vlan_id": 2712
+                },
+                "public_uplink": {
+                  "default_gateway": "192.168.10.17",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-85eff2d4-56aa-411c-a9db-0d7dd31bd04f",
+                  "ip_address": "192.168.10.22",
+                  "prefix_length": "28",
+                  "public_ips": [],
+                  "vlan_id": 2711
+                }
+              },
+              "edge_1": {
+                "private_uplink": {
+                  "default_gateway": "192.168.10.1",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-09c38e1a-c0ac-4fab-a20a-fc9b77ab70a7",
+                  "ip_address": "192.168.10.6",
+                  "prefix_length": "28",
+                  "public_ips": [],
+                  "vlan_id": 2712
+                },
+                "public_uplink": {
+                  "default_gateway": "192.168.10.17",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c165b035-8bc2-46a5-a03e-85f2f9a97a99",
+                  "ip_address": "192.168.10.21",
+                  "prefix_length": "28",
+                  "public_ips": [],
+                  "vlan_id": 2711
+                }
+              },
+              "ha-vip": {
+                "private_uplink": {
+                  "default_gateway": "192.168.10.1",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-cdf1f534-9509-4d92-a6c5-d005362bf899",
+                  "ip_address": "192.168.10.4",
+                  "prefix_length": "28",
+                  "public_ips": [],
+                  "vlan_id": 2712
+                },
+                "public_uplink": {
+                  "default_gateway": "192.168.10.17",
+                  "id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c14b8cbf-7bdc-46f6-9f08-ec5da188497f",
+                  "ip_address": "192.168.10.20",
+                  "prefix_length": "28",
+                  "public_ips": [
+                    "161.156.85.105",
+                    "161.156.82.248"
+                  ],
+                  "vlan_id": 2711
+                }
+              }
+            }
+          }
+        },
+        "ntp_server": {
+          "type": "string",
+          "value": "161.26.0.6"
+        },
+        "resource_group_id": {
+          "type": "string",
+          "value": "8fbed8ccb93f4e509a16b5ccbfd9ee5b"
+        },
+        "resources_prefix": {
+          "type": "string",
+          "value": "vmw-ywm"
+        },
+        "routes_default_egress_per_zone": {
+          "type": [
+            "object",
+            {
+              "eu-de-1": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ],
+              "eu-de-2": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ],
+              "eu-de-3": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ]
+            }
+          ],
+          "value": {
+            "eu-de-1": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              }
+            ],
+            "eu-de-2": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              }
+            ],
+            "eu-de-3": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              }
+            ]
+          }
+        },
+        "routes_tgw_dl_ingress_egress_per_zone": {
+          "type": [
+            "object",
+            {
+              "eu-de-1": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ],
+              "eu-de-2": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ],
+              "eu-de-3": [
+                "set",
+                [
+                  "object",
+                  {
+                    "destination": "string",
+                    "name": "string",
+                    "nexthop": "string",
+                    "zone": "string"
+                  }
+                ]
+              ]
+            }
+          ],
+          "value": {
+            "eu-de-1": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-1",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-1"
+              }
+            ],
+            "eu-de-2": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-2",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-2"
+              }
+            ],
+            "eu-de-3": [
+              {
+                "destination": "172.16.0.0/16",
+                "name": "nsx-t-mgmt-customer-overlay-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              },
+              {
+                "destination": "172.27.16.0/24",
+                "name": "nsx-t-mgmt-vcf-avn-local-network-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              },
+              {
+                "destination": "172.27.17.0/24",
+                "name": "nsx-t-mgmt-avn-x-region-network-eu-de-3",
+                "nexthop": "192.168.10.4",
+                "zone": "eu-de-3"
+              }
+            ]
+          }
+        },
+        "ssh_private_key_bastion": {
+          "type": "string",
+          "value": "-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----\n"
+        },
+        "ssh_private_key_host": {
+          "type": "string",
+          "value": "-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----\n"
+        },
+        "vcenters": {
+          "type": [
+            "object",
+            {
+              "mgmt": [
+                "object",
+                {
+                  "default_gateway": "string",
+                  "fqdn": "string",
+                  "hostname": "string",
+                  "ip_address": "string",
+                  "password": "string",
+                  "prefix_length": "string",
+                  "username": "string",
+                  "vlan_id": "number",
+                  "vpc_subnet_id": "string"
+                }
+              ]
+            }
+          ],
+          "value": {
+            "mgmt": {
+              "default_gateway": "10.100.0.65",
+              "fqdn": "mgmt-vcenter.vcf-example.ibmcloud.local",
+              "hostname": "mgmt-vcenter",
+              "ip_address": "10.100.0.81",
+              "password": "wl1f%RqHaI6jNF5l",
+              "prefix_length": "26",
+              "username": "administrator@vsphere.local",
+              "vlan_id": 1611,
+              "vpc_subnet_id": "02c7-81d54892-325c-442d-8207-e9f07dcf3839"
+            }
+          }
+        },
+        "vcf": {
+          "type": [
+            "map",
+            [
+              "object",
+              {
+                "default_gateway": "string",
+                "fqdn": "string",
+                "hostname": "string",
+                "ip_address": "string",
+                "password": "string",
+                "prefix_length": "string",
+                "username": "string",
+                "vlan_id": "number",
+                "vpc_subnet_id": "string"
+              }
+            ]
+          ],
+          "value": {
+            "cloud_builder": {
+              "default_gateway": "10.100.0.65",
+              "fqdn": "cloud-builder.vcf-example.ibmcloud.local",
+              "hostname": "cloud-builder",
+              "ip_address": "10.100.0.73",
+              "password": "6#rRF?OzgWpRmuD3",
+              "prefix_length": "26",
+              "username": "admin",
+              "vlan_id": 1611,
+              "vpc_subnet_id": "02c7-81d54892-325c-442d-8207-e9f07dcf3839"
+            },
+            "sddc_manager": {
+              "default_gateway": "10.100.0.65",
+              "fqdn": "sddc-manager.vcf-example.ibmcloud.local",
+              "hostname": "sddc-manager",
+              "ip_address": "10.100.0.74",
+              "password": "4#i#WEwlF3$ee9cs",
+              "prefix_length": "26",
+              "username": "admin",
+              "vlan_id": 1611,
+              "vpc_subnet_id": "02c7-81d54892-325c-442d-8207-e9f07dcf3839"
+            }
+          }
+        },
+        "vcf_bringup_json": {
+          "type": "string",
+          "value": "{\n  \"skipEsxThumbprintValidation\": true,\n  \"managementPoolName\": \"eu-de-2-m01-np01\",\n  \"sddcManagerSpec\": {\n    \"secondUserCredentials\": {\n      \"username\": \"vcf\",\n      \"password\": \"4#i#WEwlF3$ee9cs\"\n    },\n    \"ipAddress\": \"10.100.0.74\",\n    \"netmask\": \"255.255.255.192\",\n    \"hostname\": \"sddc-manager\",\n    \"licenseKey\": \"\",\n    \"rootUserCredentials\": {\n      \"username\": \"root\",\n      \"password\": \"4#i#WEwlF3$ee9cs\"\n    },\n    \"localUserPassword\": \"4#i#WEwlF3$ee9cs\",\n    \"vcenterId\": \"vcenter-1\"\n  },\n  \"sddcId\": \"eu-de-2-m01\",\n  \"esxLicense\": \"\",\n  \"taskName\": \"workflowconfig/workflowspec-ems.json\",\n  \"ceipEnabled\": true,\n  \"fipsEnabled\": false,\n  \"ntpServers\": [\"161.26.0.6\"],\n  \"dnsSpec\": {\n    \"subdomain\": \"vcf-example.ibmcloud.local\",\n    \"domain\": \"vcf-example.ibmcloud.local\",\n    \"nameserver\": \"161.26.0.7\",\n    \"secondaryNameserver\" : \"161.26.0.8\"\n  },\n  \"networkSpecs\": [\n    {\n      \"networkType\": \"MANAGEMENT\",\n      \"subnet\": \"10.100.0.64/26\",\n      \"gateway\": \"10.100.0.65\",\n      \"vlanId\": \"1611\",\n      \"mtu\": \"9000\",\n      \"portGroupKey\": \"eu-de-2-m01-cl01-vds01-pg-mgmt\",\n      \"standbyUplinks\":[],\n      \"activeUplinks\":[\n        \"uplink1\",\n        \"uplink2\"\n      ]\n    },\n    {\n      \"networkType\": \"VMOTION\",\n      \"subnet\": \"10.100.0.128/26\",\n      \"gateway\": \"10.100.0.129\",\n      \"vlanId\": \"1612\",\n      \"mtu\": \"9000\",\n      \"portGroupKey\": \"eu-de-2-m01-cl01-vds01-pg-vmotion\",\n      \"association\": \"eu-de-2-m01-dc01\",\n      \"includeIpAddressRanges\": [{\"endIpAddress\": \"10.100.0.141\", \"startIpAddress\": \"10.100.0.132\"}],\n      \"standbyUplinks\":[],\n      \"activeUplinks\":[\n        \"uplink1\",\n        \"uplink2\"\n      ]\n    },\n    {\n      \"networkType\": \"VSAN\",\n      \"subnet\": \"10.100.0.192/26\",\n      \"gateway\": \"10.100.0.193\",\n      \"vlanId\": \"1613\",\n      \"mtu\": \"9000\",\n      \"portGroupKey\": \"eu-de-2-m01-cl01-vds01-pg-vsan\",\n      \"includeIpAddressRanges\": [{\"endIpAddress\": \"10.100.0.205\", \"startIpAddress\": \"10.100.0.196\"}],\n      \"standbyUplinks\":[],\n      \"activeUplinks\":[\n        \"uplink1\",\n        \"uplink2\"\n      ]\n    }\n  ],\n  \"nsxtSpec\":\n  {\n    \"nsxtManagerSize\": \"medium\",\n    \"nsxtManagers\": [\n      {\n          \"hostname\": \"mgmt-nsx-t-0\",\n          \"ip\": \"10.100.0.76\"\n      },\n      {\n          \"hostname\": \"mgmt-nsx-t-1\",\n          \"ip\": \"10.100.0.80\"\n      },\n      {\n          \"hostname\": \"mgmt-nsx-t-2\",\n          \"ip\": \"10.100.0.79\"\n      }\n    ],\n    \"rootNsxtManagerPassword\": \"FatG#NYd@Z?57b5n\",\n    \"nsxtAdminPassword\": \"FatG#NYd@Z?57b5n\",\n    \"nsxtAuditPassword\": \"FatG#NYd@Z?57b5n\",\n    \"rootLoginEnabledForNsxtManager\": \"true\",\n    \"sshEnabledForNsxtManager\": \"true\",\n    \"overLayTransportZone\": {\n        \"zoneName\": \"eu-de-2-m01-tz-overlay01\",\n        \"networkName\": \"netName-overlay\"\n    },\n    \"vlanTransportZone\": {\n        \"zoneName\": \"eu-de-2-m01-tz-vlan01\",\n        \"networkName\": \"netName-vlan\"\n    },\n    \"vip\": \"10.100.0.78\",\n    \"vipFqdn\": \"mgmt-nsx-t-vip.vcf-example.ibmcloud.local\",\n    \"nsxtLicense\": \"\",\n    \"transportVlanId\": 1614,\n    \"ipAddressPoolSpec\": {\n       \"name\": \"eu-de-2-m01-cl01-tep01\",\n       \"description\": \"ESXi Host Overlay TEP IP Pool\",\n       \"subnets\":[\n          {\n             \"ipAddressPoolRanges\":[\n                {\n                   \"start\": \"10.100.1.4\",\n                   \"end\": \"10.100.1.23\"\n                }\n             ],\n             \"cidr\": \"10.100.1.0/26\",\n             \"gateway\": \"10.100.1.1\"\n          }\n       ]\n    }\n  },\n  \"vsanSpec\": {\n      \"vsanName\": \"vsan-1\",\n      \"licenseFile\": \"\",\n      \"vsanDedup\": \"false\",\n      \"datastoreName\": \"eu-de-2-m01-cl01-ds-vsan01\"\n  },\n  \"dvsSpecs\": [\n    {\n      \"dvsName\": \"eu-de-2-m01-cl01-vds01\",\n      \"vcenterId\":\"vcenter-1\",\n      \"vmnics\": [\n        \"vmnic0\",\n        \"vmnic1\"\n      ],\n      \"mtu\": 9000,\n      \"networks\":[\n        \"MANAGEMENT\",\n        \"VMOTION\",\n        \"VSAN\"\n      ],\n      \"niocSpecs\":[\n        {\n          \"trafficType\":\"VSAN\",\n          \"value\":\"HIGH\"\n        },\n        {\n          \"trafficType\":\"VMOTION\",\n          \"value\":\"LOW\"\n        },\n        {\n          \"trafficType\":\"VDP\",\n          \"value\":\"LOW\"\n        },\n        {\n          \"trafficType\":\"VIRTUALMACHINE\",\n          \"value\":\"HIGH\"\n        },\n        {\n          \"trafficType\":\"MANAGEMENT\",\n          \"value\":\"NORMAL\"\n        },\n        {\n          \"trafficType\":\"NFS\",\n          \"value\":\"LOW\"\n        },\n        {\n          \"trafficType\":\"HBR\",\n          \"value\":\"LOW\"\n        },\n        {\n          \"trafficType\":\"FAULTTOLERANCE\",\n          \"value\":\"LOW\"\n        },\n        {\n          \"trafficType\":\"ISCSI\",\n          \"value\":\"LOW\"\n        }\n      ],\n      \"isUsedByNsxt\": true\n    }\n  ],\n  \"clusterSpec\":\n  {\n    \"clusterName\": \"eu-de-2-m01-cl01\",\n    \"vcenterName\": \"vcenter-1\",\n    \"clusterEvcMode\": \"\",\n    \"vmFolders\": {\n      \"MANAGEMENT\": \"eu-de-2-m01-fd-mgmt\",\n      \"NETWORKING\": \"eu-de-2-m01-fd-nsx\",\n      \"EDGENODES\": \"eu-de-2-m01-fd-edge\"\n    },\n    \"resourcePoolSpecs\": [{\n      \"name\": \"eu-de-2-m01-cl01-rp-sddc-mgmt\",\n      \"type\": \"management\",\n      \"cpuReservationPercentage\": 0,\n      \"cpuLimit\": -1,\n      \"cpuReservationExpandable\": true,\n      \"cpuSharesLevel\": \"normal\",\n      \"cpuSharesValue\": 0,\n      \"memoryReservationMb\": 0,\n      \"memoryLimit\": -1,\n      \"memoryReservationExpandable\": true,\n      \"memorySharesLevel\": \"normal\",\n      \"memorySharesValue\": 0\n    }, {\n      \"name\": \"eu-de-2-m01-cl01-rp-sddc-edge\",\n      \"type\": \"network\",\n      \"cpuReservationPercentage\": 0,\n      \"cpuLimit\": -1,\n      \"cpuReservationExpandable\": true,\n      \"cpuSharesLevel\": \"normal\",\n      \"cpuSharesValue\": 0,\n      \"memoryReservationPercentage\": 0,\n      \"memoryLimit\": -1,\n      \"memoryReservationExpandable\": true,\n      \"memorySharesLevel\": \"normal\",\n      \"memorySharesValue\": 0\n    }, {\n      \"name\": \"eu-de-2-m01-cl01-rp-user-edge\",\n      \"type\": \"compute\",\n      \"cpuReservationPercentage\": 0,\n      \"cpuLimit\": -1,\n      \"cpuReservationExpandable\": true,\n      \"cpuSharesLevel\": \"normal\",\n      \"cpuSharesValue\": 0,\n      \"memoryReservationPercentage\": 0,\n      \"memoryLimit\": -1,\n      \"memoryReservationExpandable\": true,\n      \"memorySharesLevel\": \"normal\",\n      \"memorySharesValue\": 0\n    }, {\n      \"name\": \"eu-de-2-m01-cl01-rp-user-vm\",\n      \"type\": \"compute\",\n      \"cpuReservationPercentage\": 0,\n      \"cpuLimit\": -1,\n      \"cpuReservationExpandable\": true,\n      \"cpuSharesLevel\": \"normal\",\n      \"cpuSharesValue\": 0,\n      \"memoryReservationPercentage\": 0,\n      \"memoryLimit\": -1,\n      \"memoryReservationExpandable\": true,\n      \"memorySharesLevel\": \"normal\",\n      \"memorySharesValue\": 0\n    }]\n  },\n  \"pscSpecs\": [\n    {\n      \"pscId\": \"psc-1\",\n      \"vcenterId\": \"vcenter-1\",\n      \"adminUserSsoPassword\": \"wl1f%RqHaI6jNF5l\",\n      \"pscSsoSpec\": {\n        \"ssoDomain\": \"vsphere.local\"\n      }\n    }\n  ],\n  \"vcenterSpec\": {\n      \"vcenterIp\": \"10.100.0.81\",\n      \"vcenterHostname\": \"mgmt-vcenter\",\n      \"vcenterId\": \"vcenter-1\",\n      \"licenseFile\": \"\",\n      \"vmSize\": \"small\",\n      \"storageSize\": \"\",\n      \"rootVcenterPassword\": \"wl1f%RqHaI6jNF5l\"\n  },\n  \"hostSpecs\": [\n    {\n      \"association\": \"eu-de-2-m01-dc01\",\n      \"ipAddressPrivate\": {\n        \"ipAddress\": \"10.100.0.70\"\n      },\n      \"hostname\": \"vmw-mgmt-esx-000\",\n      \"credentials\": {\n        \"username\": \"root\",\n        \"password\": \"Kto7843dPTGov8xyO6qT\"\n      },\n      \"vSwitch\": \"vSwitch0\",\n      \"serverId\": \"host-1\"\n    },\n    {\n      \"association\": \"eu-de-2-m01-dc01\",\n      \"ipAddressPrivate\": {\n        \"ipAddress\": \"10.100.0.68\"\n      },\n      \"hostname\": \"vmw-mgmt-esx-001\",\n      \"credentials\": {\n        \"username\": \"root\",\n        \"password\": \"Khk9483rCKPfc0ksC8dL\"\n      },\n      \"vSwitch\": \"vSwitch0\",\n      \"serverId\": \"host-2\"\n    },\n    {\n      \"association\": \"eu-de-2-m01-dc01\",\n      \"ipAddressPrivate\": {\n        \"ipAddress\": \"10.100.0.71\"\n      },\n      \"hostname\": \"vmw-mgmt-esx-002\",\n      \"credentials\": {\n        \"username\": \"root\",\n        \"password\": \"Pqt5735uJVNxx5otH2dB\"\n      },\n      \"vSwitch\": \"vSwitch0\",\n      \"serverId\": \"host-3\"\n    },\n    {\n      \"association\": \"eu-de-2-m01-dc01\",\n      \"ipAddressPrivate\": {\n        \"ipAddress\": \"10.100.0.69\"\n      },\n      \"hostname\": \"vmw-mgmt-esx-003\",\n      \"credentials\": {\n        \"username\": \"root\",\n        \"password\": \"Fdc3990oUSCvs6htR5iH\"\n      },\n      \"vSwitch\": \"vSwitch0\",\n      \"serverId\": \"host-4\"\n    }\n  ],\n  \"excludedComponents\": [\"AVN\", \"EBGP\"]\n}"
+        },
+        "vcf_network_pools": {
+          "type": [
+            "map",
+            [
+              "object",
+              {
+                "cidr": "string",
+                "default_gateway": "string",
+                "end_ip": "string",
+                "ip_list": [
+                  "list",
+                  "string"
+                ],
+                "prefix_length": "string",
+                "start_ip": "string"
+              }
+            ]
+          ],
+          "value": {
+            "tep": {
+              "cidr": "10.100.1.0/26",
+              "default_gateway": "10.100.1.1",
+              "end_ip": "10.100.1.23",
+              "ip_list": [
+                "10.100.1.4",
+                "10.100.1.5",
+                "10.100.1.6",
+                "10.100.1.7",
+                "10.100.1.8",
+                "10.100.1.9",
+                "10.100.1.10",
+                "10.100.1.11",
+                "10.100.1.12",
+                "10.100.1.13",
+                "10.100.1.14",
+                "10.100.1.15",
+                "10.100.1.16",
+                "10.100.1.17",
+                "10.100.1.18",
+                "10.100.1.19",
+                "10.100.1.20",
+                "10.100.1.21",
+                "10.100.1.22",
+                "10.100.1.23"
+              ],
+              "prefix_length": "26",
+              "start_ip": "10.100.1.4"
+            },
+            "vmot": {
+              "cidr": "10.100.0.128/26",
+              "default_gateway": "10.100.0.129",
+              "end_ip": "10.100.0.141",
+              "ip_list": [
+                "10.100.0.132",
+                "10.100.0.133",
+                "10.100.0.134",
+                "10.100.0.135",
+                "10.100.0.136",
+                "10.100.0.137",
+                "10.100.0.138",
+                "10.100.0.139",
+                "10.100.0.140",
+                "10.100.0.141"
+              ],
+              "prefix_length": "26",
+              "start_ip": "10.100.0.132"
+            },
+            "vsan": {
+              "cidr": "10.100.0.192/26",
+              "default_gateway": "10.100.0.193",
+              "end_ip": "10.100.0.205",
+              "ip_list": [
+                "10.100.0.196",
+                "10.100.0.197",
+                "10.100.0.198",
+                "10.100.0.199",
+                "10.100.0.200",
+                "10.100.0.201",
+                "10.100.0.202",
+                "10.100.0.203",
+                "10.100.0.204",
+                "10.100.0.205"
+              ],
+              "prefix_length": "26",
+              "start_ip": "10.100.0.196"
+            }
+          }
+        },
+        "vcf_vlan_nics": {
+          "type": [
+            "map",
+            [
+              "list",
+              [
+                "object",
+                {
+                  "ip_address": "string",
+                  "reserved_ip": "string",
+                  "vlan_nic_id": "string",
+                  "vlan_nic_name": "string"
+                }
+              ]
+            ]
+          ],
+          "value": {
+            "tep": [
+              {
+                "ip_address": "10.100.1.4",
+                "reserved_ip": "02c7-047da8b0-c99b-4ff9-87b0-95b2f7609b05",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-8492b05e-50bc-4e44-84b2-023cd7aa9f55",
+                "vlan_nic_name": "vlan-nic-tep-pool-000"
+              },
+              {
+                "ip_address": "10.100.1.5",
+                "reserved_ip": "02c7-45cc61be-690e-4fdd-b243-f78d8ae831de",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-f80d8dbe-e565-4021-a953-f586df4a7362",
+                "vlan_nic_name": "vlan-nic-tep-pool-001"
+              },
+              {
+                "ip_address": "10.100.1.6",
+                "reserved_ip": "02c7-2b68056e-1dfc-4ea2-a93c-966a34f69239",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-81e64419-3d3f-4bac-bd45-0bda3696013e",
+                "vlan_nic_name": "vlan-nic-tep-pool-002"
+              },
+              {
+                "ip_address": "10.100.1.7",
+                "reserved_ip": "02c7-86086ccc-6828-464e-a987-6dc6bf53b2df",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-3c1b484b-7b6c-44da-b07e-afdeceaacd1c",
+                "vlan_nic_name": "vlan-nic-tep-pool-003"
+              },
+              {
+                "ip_address": "10.100.1.8",
+                "reserved_ip": "02c7-43e8d979-6dab-4681-8ae3-55b9cec2dceb",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-e50e06d0-50f4-4cb4-81df-ded3980cdb45",
+                "vlan_nic_name": "vlan-nic-tep-pool-004"
+              },
+              {
+                "ip_address": "10.100.1.9",
+                "reserved_ip": "02c7-0d91d7e5-2feb-4d89-a025-bd1a64fc4e6d",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-dd296f14-f091-458a-9330-7faf1f1853b2",
+                "vlan_nic_name": "vlan-nic-tep-pool-005"
+              },
+              {
+                "ip_address": "10.100.1.10",
+                "reserved_ip": "02c7-ac9336c2-d08c-4cfb-acdd-585e0f67e129",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-5da53089-3237-42e0-8504-07d873adb48f",
+                "vlan_nic_name": "vlan-nic-tep-pool-006"
+              },
+              {
+                "ip_address": "10.100.1.11",
+                "reserved_ip": "02c7-03d561c0-6f8e-400a-9e62-e245a8ac5764",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-289dfd36-f6d8-4694-b7cb-25f899c16ba5",
+                "vlan_nic_name": "vlan-nic-tep-pool-007"
+              },
+              {
+                "ip_address": "10.100.1.12",
+                "reserved_ip": "02c7-9ff5d8b7-5d38-4e59-8484-ef68dc45d949",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-9494f419-d442-4e4c-b4f6-26b4947c38af",
+                "vlan_nic_name": "vlan-nic-tep-pool-008"
+              },
+              {
+                "ip_address": "10.100.1.13",
+                "reserved_ip": "02c7-1ca87e75-7c4a-4a45-b6f2-58ceb0b422f2",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-22b0830d-b218-4d7c-9665-582b3eb295dc",
+                "vlan_nic_name": "vlan-nic-tep-pool-009"
+              },
+              {
+                "ip_address": "10.100.1.14",
+                "reserved_ip": "02c7-951da72c-a19c-4720-992d-c3e707ebce19",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-a58aaf45-52c7-4ee6-bcba-8d292aacd485",
+                "vlan_nic_name": "vlan-nic-tep-pool-010"
+              },
+              {
+                "ip_address": "10.100.1.15",
+                "reserved_ip": "02c7-356f61a6-6aa1-493f-bc89-74d18390b96c",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-192b32e0-c82d-441b-820d-956661b4c8ad",
+                "vlan_nic_name": "vlan-nic-tep-pool-011"
+              },
+              {
+                "ip_address": "10.100.1.16",
+                "reserved_ip": "02c7-b21e945b-168f-4782-824c-dc25a438721c",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c7a926db-056f-4ded-a646-7d1fa12b56dc",
+                "vlan_nic_name": "vlan-nic-tep-pool-012"
+              },
+              {
+                "ip_address": "10.100.1.17",
+                "reserved_ip": "02c7-c1624ee4-7f5b-4105-aba5-bdc08036a200",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-57bfa085-058f-4cc2-a958-a6773586ee26",
+                "vlan_nic_name": "vlan-nic-tep-pool-013"
+              },
+              {
+                "ip_address": "10.100.1.18",
+                "reserved_ip": "02c7-4a6e25ee-758e-4928-9327-a5afc83a8201",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-7b18a1d9-153e-4ced-ad82-f093f3379632",
+                "vlan_nic_name": "vlan-nic-tep-pool-014"
+              },
+              {
+                "ip_address": "10.100.1.19",
+                "reserved_ip": "02c7-c38902b2-7c08-49ce-94bb-14e7cb8d91ee",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-8324087e-c4e9-411b-9544-26ef4f8fca29",
+                "vlan_nic_name": "vlan-nic-tep-pool-015"
+              },
+              {
+                "ip_address": "10.100.1.20",
+                "reserved_ip": "02c7-82545dba-2048-400f-a279-a3beeaeb0d62",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-744025df-032a-458d-b3bc-81c6f884f2f0",
+                "vlan_nic_name": "vlan-nic-tep-pool-016"
+              },
+              {
+                "ip_address": "10.100.1.21",
+                "reserved_ip": "02c7-526f1502-eff5-4ace-9cb9-2373663bc71a",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-89f41c2e-1be0-4731-9a7f-18501b0304bd",
+                "vlan_nic_name": "vlan-nic-tep-pool-017"
+              },
+              {
+                "ip_address": "10.100.1.22",
+                "reserved_ip": "02c7-4bec55bc-f5e6-45b4-b68b-4fdb200349be",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-667a24bb-2dd8-42d5-a925-b06a7301a963",
+                "vlan_nic_name": "vlan-nic-tep-pool-018"
+              },
+              {
+                "ip_address": "10.100.1.23",
+                "reserved_ip": "02c7-ed97915e-094b-4315-9ad1-11bb48f4501b",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-588b22bf-be35-4bf3-98b7-dac64da3a240",
+                "vlan_nic_name": "vlan-nic-tep-pool-019"
+              }
+            ],
+            "vmot": [
+              {
+                "ip_address": "10.100.0.132",
+                "reserved_ip": "02c7-f108a8b0-14fd-4dfc-b703-56d024557e5a",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-342f20b8-8619-42a8-8fa4-b83e33fd1456",
+                "vlan_nic_name": "vlan-nic-vmot-pool-000"
+              },
+              {
+                "ip_address": "10.100.0.133",
+                "reserved_ip": "02c7-e5a73627-2691-4a89-88a4-b574d921b9af",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-7408efec-8989-4d44-bc80-30322a59e750",
+                "vlan_nic_name": "vlan-nic-vmot-pool-001"
+              },
+              {
+                "ip_address": "10.100.0.134",
+                "reserved_ip": "02c7-55767b3d-8439-4751-8ffc-3e52cf5b9156",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-79c8cecf-0a36-410d-8d28-623ac0bd07bd",
+                "vlan_nic_name": "vlan-nic-vmot-pool-002"
+              },
+              {
+                "ip_address": "10.100.0.135",
+                "reserved_ip": "02c7-fef46db3-61a5-4c40-b4b4-a5788e4ccaa7",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-f6f73e5d-a80d-47fc-86f4-4efa36da187a",
+                "vlan_nic_name": "vlan-nic-vmot-pool-003"
+              },
+              {
+                "ip_address": "10.100.0.136",
+                "reserved_ip": "02c7-6f125f42-0708-4d05-b93f-8eec71142ca1",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-f5ff4bd7-a5be-4b7f-a938-38d9ed325928",
+                "vlan_nic_name": "vlan-nic-vmot-pool-004"
+              },
+              {
+                "ip_address": "10.100.0.137",
+                "reserved_ip": "02c7-e211ab21-58f3-4b95-b7b6-e00648150b46",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-7d59a276-74ea-4f81-91d1-9b57e62bab01",
+                "vlan_nic_name": "vlan-nic-vmot-pool-005"
+              },
+              {
+                "ip_address": "10.100.0.138",
+                "reserved_ip": "02c7-83b33cec-6ede-48e1-98ab-df7f173a2e0e",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c6293003-5a09-4246-8303-e7fdff0c3ec1",
+                "vlan_nic_name": "vlan-nic-vmot-pool-006"
+              },
+              {
+                "ip_address": "10.100.0.139",
+                "reserved_ip": "02c7-18f0ae68-ff87-4ccf-9372-a09d74c53fa5",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-02ec8920-07b9-4608-91a9-dbcd05b4b4d8",
+                "vlan_nic_name": "vlan-nic-vmot-pool-007"
+              },
+              {
+                "ip_address": "10.100.0.140",
+                "reserved_ip": "02c7-199cd5fd-ac8e-4a62-9e80-c4f05495652a",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-b96a5f9e-cb64-4f7a-b806-923047697bde",
+                "vlan_nic_name": "vlan-nic-vmot-pool-008"
+              },
+              {
+                "ip_address": "10.100.0.141",
+                "reserved_ip": "02c7-b157eccf-033b-44e2-851b-1c9aecc716a6",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-3b31cb09-1991-4f06-adec-6fd855da815e",
+                "vlan_nic_name": "vlan-nic-vmot-pool-009"
+              }
+            ],
+            "vsan": [
+              {
+                "ip_address": "10.100.0.196",
+                "reserved_ip": "02c7-fc562ef9-4243-467f-87b8-eca259cb3c96",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-d2071f01-5401-4934-a596-a7f75e709a72",
+                "vlan_nic_name": "vlan-nic-vsan-pool-000"
+              },
+              {
+                "ip_address": "10.100.0.197",
+                "reserved_ip": "02c7-d404cf49-0a52-487f-b4ea-0cb27a983adb",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-bbede16b-37b7-4852-93a2-8c43334200ac",
+                "vlan_nic_name": "vlan-nic-vsan-pool-001"
+              },
+              {
+                "ip_address": "10.100.0.198",
+                "reserved_ip": "02c7-df0f104c-62d9-4336-9628-a2afff6e242e",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-87cd7915-5a3e-485e-a15a-f8eac2d9f5b8",
+                "vlan_nic_name": "vlan-nic-vsan-pool-002"
+              },
+              {
+                "ip_address": "10.100.0.199",
+                "reserved_ip": "02c7-80c8559b-eb2c-4b41-a376-112105869a1d",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-2b4491ab-8e72-45fe-9b36-fcb10ef187f5",
+                "vlan_nic_name": "vlan-nic-vsan-pool-003"
+              },
+              {
+                "ip_address": "10.100.0.200",
+                "reserved_ip": "02c7-af46dfda-15f8-44c7-84a9-4083f323a7a5",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-0ca46060-342e-4840-998b-fd6c3aed80fe",
+                "vlan_nic_name": "vlan-nic-vsan-pool-004"
+              },
+              {
+                "ip_address": "10.100.0.201",
+                "reserved_ip": "02c7-e8f0ef58-3975-4c9d-9d31-3bc52ca1aaa5",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-e87300b8-12ff-4306-9d59-71c18e35c2f5",
+                "vlan_nic_name": "vlan-nic-vsan-pool-005"
+              },
+              {
+                "ip_address": "10.100.0.202",
+                "reserved_ip": "02c7-173eb6db-e835-461a-a646-62faf534b021",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-c4e7e7a2-908d-4a7f-8959-50f75bbaa53e",
+                "vlan_nic_name": "vlan-nic-vsan-pool-006"
+              },
+              {
+                "ip_address": "10.100.0.203",
+                "reserved_ip": "02c7-342f28dd-9919-4547-b51b-b8ed92926750",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-7a9583eb-1c0e-4242-bedd-38d0cb9da476",
+                "vlan_nic_name": "vlan-nic-vsan-pool-007"
+              },
+              {
+                "ip_address": "10.100.0.204",
+                "reserved_ip": "02c7-ec7d6ba5-906c-46ef-b0f2-9b64c5728975",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-82ca9847-1c7b-42ea-90c6-6cba7487ef9f",
+                "vlan_nic_name": "vlan-nic-vsan-pool-008"
+              },
+              {
+                "ip_address": "10.100.0.205",
+                "reserved_ip": "02c7-b0092d2b-d69e-4e10-96fe-66315de747d7",
+                "vlan_nic_id": "02c7-480a01e2-9705-4a2f-be59-4c4575f6750e/02c7-79c429b4-fb81-4947-9717-110a571d0087",
+                "vlan_nic_name": "vlan-nic-vsan-pool-009"
+              }
+            ]
+          }
+        },
+        "vpc_bastion_hosts": {
+          "type": [
+            "map",
+            [
+              "tuple",
+              [
+                [
+                  "object",
+                  {
+                    "name": "string",
+                    "password": "string",
+                    "private_ip_address": "string",
+                    "public_ip_address": "string",
+                    "username": "string"
+                  }
+                ]
+              ]
+            ]
+          ],
+          "value": {
+            "linux": [
+              {
+                "name": "vmw-ywm-bastion-linux-00",
+                "password": "use-SSH-key",
+                "private_ip_address": "10.100.0.82",
+                "public_ip_address": "161.156.170.147",
+                "username": "root"
+              }
+            ],
+            "windows": [
+              {
+                "name": "vmw-ywm-bastion-windows-00",
+                "password": "25F845W4mt2lMpJmF167",
+                "private_ip_address": "10.100.0.72",
+                "public_ip_address": "161.156.86.184",
+                "username": "Administrator"
+              }
+            ]
+          }
+        },
+        "zone_subnets": {
+          "type": [
+            "object",
+            {
+              "edges": [
+                "object",
+                {
+                  "edge-tep": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "t0-priv": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "t0-pub": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ]
+                }
+              ],
+              "infrastructure": [
+                "object",
+                {
+                  "host": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "mgmt": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "tep": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "vmot": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ],
+                  "vsan": [
+                    "object",
+                    {
+                      "cidr": "string",
+                      "default_gateway": "string",
+                      "name": "string",
+                      "pgw": "bool",
+                      "prefix_length": "string",
+                      "subnet_id": "string",
+                      "vlan_id": "number"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "value": {
+            "edges": {
+              "edge-tep": {
+                "cidr": "192.168.10.32/28",
+                "default_gateway": "192.168.10.33",
+                "name": "vmw-ywm-vpc-eu-de-2-edge-tep",
+                "pgw": true,
+                "prefix_length": "28",
+                "subnet_id": "02c7-4facd629-de7a-4eae-b32b-00c08cd6b25a",
+                "vlan_id": 2713
+              },
+              "t0-priv": {
+                "cidr": "192.168.10.0/28",
+                "default_gateway": "192.168.10.1",
+                "name": "vmw-ywm-vpc-eu-de-2-t0-priv",
+                "pgw": true,
+                "prefix_length": "28",
+                "subnet_id": "02c7-279cf074-efa1-44bd-91b6-e620feed3621",
+                "vlan_id": 2712
+              },
+              "t0-pub": {
+                "cidr": "192.168.10.16/28",
+                "default_gateway": "192.168.10.17",
+                "name": "vmw-ywm-vpc-eu-de-2-t0-pub",
+                "pgw": true,
+                "prefix_length": "28",
+                "subnet_id": "02c7-b22d7ec2-79ac-48f7-b74c-f845381839a3",
+                "vlan_id": 2711
+              }
+            },
+            "infrastructure": {
+              "host": {
+                "cidr": "10.100.0.0/26",
+                "default_gateway": "10.100.0.1",
+                "name": "vmw-ywm-vpc-eu-de-2-host",
+                "pgw": true,
+                "prefix_length": "26",
+                "subnet_id": "02c7-a4ef3c54-ab8b-4b32-b7db-5cb436c8763f",
+                "vlan_id": 0
+              },
+              "mgmt": {
+                "cidr": "10.100.0.64/26",
+                "default_gateway": "10.100.0.65",
+                "name": "vmw-ywm-vpc-eu-de-2-mgmt",
+                "pgw": true,
+                "prefix_length": "26",
+                "subnet_id": "02c7-81d54892-325c-442d-8207-e9f07dcf3839",
+                "vlan_id": 1611
+              },
+              "tep": {
+                "cidr": "10.100.1.0/26",
+                "default_gateway": "10.100.1.1",
+                "name": "vmw-ywm-vpc-eu-de-2-tep",
+                "pgw": true,
+                "prefix_length": "26",
+                "subnet_id": "02c7-1c3376ff-9035-4087-8615-44367f297564",
+                "vlan_id": 1614
+              },
+              "vmot": {
+                "cidr": "10.100.0.128/26",
+                "default_gateway": "10.100.0.129",
+                "name": "vmw-ywm-vpc-eu-de-2-vmot",
+                "pgw": true,
+                "prefix_length": "26",
+                "subnet_id": "02c7-fd6c419f-9b70-4b81-a9cd-e360235bce04",
+                "vlan_id": 1612
+              },
+              "vsan": {
+                "cidr": "10.100.0.192/26",
+                "default_gateway": "10.100.0.193",
+                "name": "vmw-ywm-vpc-eu-de-2-vsan",
+                "pgw": true,
+                "prefix_length": "26",
+                "subnet_id": "02c7-1a1e0d30-ce15-4c18-8f95-90d8a28421c7",
+                "vlan_id": 1613
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
+
+
