@@ -51,3 +51,4 @@ OUTPUT/*
 #schematics/*
 *_temp_README.md
 
+tools/input.json
