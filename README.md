@@ -622,7 +622,7 @@ The terraform creates a json file for initial bringup. This file can be passed t
 
 Template file location:
 ```
-TEMPLATE/vcf-ibm-ems-template_json.tpl
+templates/vcf-ibm-template_json.tpl
 ```
 
 Output file location:
