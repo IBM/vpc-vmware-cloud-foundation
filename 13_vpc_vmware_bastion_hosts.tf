@@ -108,10 +108,16 @@ resource "ibm_is_instance" "bastion_linux" {
   
   tags = local.resource_tags.vsi_bastion
 
+  user_data        = templatefile("scripts/bastion_linux_userdata.yaml", { 
+      GITHUB_TOKEN = var.github_token,
+      GITHUB_URL   = replace(var.github_url, "https://", "") 
+    })
+
   depends_on = [
     module.security_group_rules
   ]
 }
+
 
 
 ##############################################################################

@@ -852,6 +852,16 @@ variable "number_of_bastion_hosts_linux" {
 }
 
 
+variable "github_token" {
+  description = "GitHub token to fetch install scripts."  
+}
+
+
+variable "github_url" {
+  description = "GitHub URL to fetch install scripts."
+}
+
+
 
 
 

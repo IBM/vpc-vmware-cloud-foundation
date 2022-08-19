@@ -7,7 +7,7 @@
 
 data "template_file" "vcf_bringup_json" {
   count = var.enable_vcf_mode ? 1 : 0 
-  template = "${file("TEMPLATE/vcf-ibm-ems-template_json.tpl")}"
+  template = "${file("templates/vcf-ibm-template_json.tpl")}"
 
   vars = {
       vcf_mgmt_domain = "${var.vpc_zone}-${var.vcf_mgmt_domain_name}"
