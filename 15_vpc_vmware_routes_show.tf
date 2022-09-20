@@ -85,6 +85,11 @@ locals {
 
 
 locals {
+  customer_private_routes_mgmt = concat(var.customer_private_routes,[local.subnets_map.infrastructure.mgmt.cidr])
+}
+
+
+locals {
   nsx_t_t0_routes_to_be_created_per_cluster_domain = { 
     for k, v in var.zone_clusters : v.name => {
       public = [ for pubroute_k in var.customer_public_routes : 
@@ -96,11 +101,19 @@ locals {
           "domain" : v.domain
         }
       ],
-      private = [ for privroute_k in var.customer_private_routes : 
+      private = v.domain == "mgmt" ? [ for privroute_k in local.customer_private_routes_mgmt : 
         {
           "name" : "private-${replace(replace(privroute_k, ".", "-"),"/","-")}",
           "destination" : privroute_k,
-          "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-priv"].default_gateway : local.subnets_map.edges["wl-t0-priv"].default_gateway,
+          "nexthop" : local.subnets_map.edges["t0-priv"].default_gateway,
+          "t0_cluster" : v.name,
+          "domain" : v.domain
+        }
+      ] : [ for privroute_k in var.customer_private_routes : 
+        {
+          "name" : "private-${replace(replace(privroute_k, ".", "-"),"/","-")}",
+          "destination" : privroute_k,
+          "nexthop" : local.subnets_map.edges["wl-t0-priv"].default_gateway,
           "t0_cluster" : v.name,
           "domain" : v.domain
         }
