@@ -22,7 +22,7 @@ locals {
     for route in data.ibm_is_vpc_routing_table_routes.routes_default_egress.routes : {
       "name" : route.name,
       "destination" : route.destination,
-      "nexthop" : route.nexthop,
+      "nexthop" : route.next_hop,
       "zone" : route.zone,
     }
   ]
@@ -57,10 +57,10 @@ data "ibm_is_vpc_routing_table_routes" "routes_tgw_dl_ingress" {
 
 locals {
   vpc_routes_tgw_dl_ingress = [
-    for route in data.ibm_is_vpc_routing_table_routes.routes_default_egress.routes : {
+    for route in data.ibm_is_vpc_routing_table_routes.routes_tgw_dl_ingress.routes : {
       "name" : route.name,
       "destination" : route.destination,
-      "nexthop" : route.nexthop,
+      "nexthop" : route.next_hop,
       "zone" : route.zone,
     }
   ]
@@ -89,7 +89,7 @@ locals {
     for k, v in var.zone_clusters : v.name => {
       public = [ for pubroute_k in var.customer_public_routes : 
         {
-          "name" : "private-${replace(replace(pubroute_k, ".", "-"),"/","-")}",
+          "name" : "public-${replace(replace(pubroute_k, ".", "-"),"/","-")}",
           "destination" : pubroute_k,
           "nexthop" : v.domain == "mgmt" ? local.subnets_map.edges["t0-pub"].default_gateway : local.subnets_map.edges["wl-t0-pub"].default_gateway,
           "t0_cluster" : v.name,
