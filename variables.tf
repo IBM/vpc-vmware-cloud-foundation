@@ -452,6 +452,7 @@ variable "security_group_rules" {
 variable "security_group_rules" {
     description = "Security groups and rules rules to create"
 
+/*
     type = object({
       mgmt = list(object({name=string, direction=string})),
       vmot = list(object({name=string, direction=string})),
@@ -461,6 +462,9 @@ variable "security_group_rules" {
       uplink-priv = list(object({name=string, direction=string})),
       bastion = list(object({name=string, direction=string})),
     })
+*/
+
+    type = any
 
 
     default = {
