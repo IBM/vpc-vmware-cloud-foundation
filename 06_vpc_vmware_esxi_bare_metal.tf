@@ -47,18 +47,26 @@ module "zone_bare_metal_esxi" {
   vmw_cluster_prefix = each.value.name
   vmw_dns_servers = var.dns_servers
   vmw_host_subnet = local.subnets_map.infrastructure.host.subnet_id
-  vmw_mgmt_subnet = local.subnets_map.infrastructure.mgmt.subnet_id
+  #vmw_mgmt_subnet = local.subnets_map.infrastructure.mgmt.subnet_id
+  vmw_mgmt_subnet = each.value.domain == "mgmt" ? local.subnets_map.infrastructure["mgmt"].subnet_id : local.subnets_map.infrastructure["wl-mgmt"].subnet_id
   vmw_vmot_subnet = local.subnets_map.infrastructure.vmot.subnet_id
   vmw_vsan_subnet = local.subnets_map.infrastructure.vsan.subnet_id
   vmw_tep_subnet = local.subnets_map.infrastructure.tep.subnet_id
-  vmw_mgmt_vlan_id = var.mgmt_vlan_id
-  vmw_vmot_vlan_id = var.vmot_vlan_id
-  vmw_vsan_vlan_id = var.vsan_vlan_id
-  vmw_tep_vlan_id = var.tep_vlan_id
+  vmw_mgmt_vlan_id = each.value.domain == "mgmt" ? var.mgmt_vlan_id : var.wl_mgmt_vlan_id
+  vmw_vmot_vlan_id = each.value.domain == "mgmt" ? var.vmot_vlan_id : var.wl_vmot_vlan_id
+  vmw_vsan_vlan_id = each.value.domain == "mgmt" ? var.vsan_vlan_id : var.wl_vsan_vlan_id
+  vmw_tep_vlan_id = each.value.domain == "mgmt" ? var.tep_vlan_id : var.wl_tep_vlan_id
+  #vmw_mgmt_vlan_id = var.mgmt_vlan_id
+  #vmw_vmot_vlan_id = var.vmot_vlan_id
+  #vmw_vsan_vlan_id = var.vsan_vlan_id
+  #vmw_tep_vlan_id = var.tep_vlan_id
+  vmw_edge_tep_vlan_id = each.value.domain == "mgmt" ? var.edge_tep_vlan_id : var.wl_edge_tep_vlan_id
+  vmw_edge_uplink_public_vlan_id = each.value.domain == "mgmt" ? var.edge_uplink_public_vlan_id : var.wl_edge_uplink_public_vlan_id
+  vmw_edge_uplink_private_vlan_id = each.value.domain == "mgmt" ? var.edge_uplink_private_vlan_id : var.wl_edge_uplink_private_vlan_id
+  #vmw_edge_tep_vlan_id = var.edge_tep_vlan_id
+  #vmw_edge_uplink_public_vlan_id = var.edge_uplink_public_vlan_id
+  #vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id  
   wmv_allow_vlan_list = var.vcf_architecture == "standard" ? each.value.domain == "mgmt" ? [var.wl_mgmt_vlan_id] : [] : []   # On standard deployments, add workload mgmt vlan ID to mgmt domain hosts 
-  vmw_edge_tep_vlan_id = var.edge_tep_vlan_id
-  vmw_edge_uplink_public_vlan_id = var.edge_uplink_public_vlan_id
-  vmw_edge_uplink_private_vlan_id = var.edge_uplink_private_vlan_id
   vmw_sg_mgmt = ibm_is_security_group.sg["mgmt"].id
   vmw_sg_vmot = ibm_is_security_group.sg["vmot"].id
   vmw_sg_vsan = ibm_is_security_group.sg["vsan"].id

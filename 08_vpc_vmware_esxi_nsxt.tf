@@ -24,7 +24,7 @@ resource "random_string" "nsxt_password" {
   min_lower        = 2
   min_numeric      = 2
   min_upper        = 2
-  override_special = "@!#$%?"
+  override_special = "@!$?"
 }
 
 
@@ -154,9 +154,9 @@ module "zone_nxt_t_edges" {
   vmw_sg_uplink_priv              = ibm_is_security_group.sg["uplink-priv"].id
 
   vmw_mgmt_vlan_id                = each.value.domain == "mgmt" ? var.mgmt_vlan_id : var.wl_mgmt_vlan_id
-  vmw_tep_vlan_id                 = var.enable_vcf_mode ? each.value.domain == "mgmt" ? var.edge_tep_vlan_id : var.wl_mgmt_vlan_id : var.tep_vlan_id
+  vmw_tep_vlan_id                 = var.enable_vcf_mode ? each.value.domain == "mgmt" ? var.edge_tep_vlan_id : var.wl_edge_tep_vlan_id : var.tep_vlan_id
   vmw_edge_uplink_public_vlan_id  = each.value.domain == "mgmt" ? var.edge_uplink_public_vlan_id : var.wl_edge_uplink_public_vlan_id
-  vmw_edge_uplink_private_vlan_id = each.value.domain == "mgmt" ? var.edge_uplink_private_vlan_id : var.wl_edge_uplink_public_vlan_id
+  vmw_edge_uplink_private_vlan_id = each.value.domain == "mgmt" ? var.edge_uplink_private_vlan_id : var.wl_edge_uplink_private_vlan_id
 
   vmw_edge_name                   = "${each.value.name}-edge"
   vmw_t0_name                     = "${each.value.name}-t0"

@@ -108,7 +108,7 @@ resource "ibm_is_subnet_reserved_ip" "zone_vcf_wl_vmot_pool" {
     auto_delete   = false
 
     subnet        = local.subnets_map.infrastructure["wl-vmot"].subnet_id
-    name          = "pool-wl-vcf-vmot-${format("%03s", count.index)}"
+    name          = "pool-wl-vmot-${format("%03s", count.index)}"
     address       = cidrhost(local.subnets_map.infrastructure["wl-vmot"].cidr, count.index + 4) # Reserve IP addresses from 4th onwards on a subnet 
 
     depends_on = [
@@ -190,15 +190,15 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_h
 
     bare_metal_server = module.zone_bare_metal_esxi[local.initial_wl_cluster_key].ibm_is_bare_metal_server_id[var.zone_clusters[local.initial_wl_cluster_key].host_list[0]]
 
-    subnet = local.subnets_map.infrastructure["vmot"].subnet_id
-    vlan = var.vmot_vlan_id
+    subnet = local.subnets_map.infrastructure["wl-vmot"].subnet_id
+    vlan = var.wl_vmot_vlan_id
 
     name   = "vlan-nic-wl-vmot-pool-${format("%03s", count.index)}"
     security_groups = [ibm_is_security_group.sg["vmot"].id]
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[count.index].reserved_ip
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool[count.index].reserved_ip
     }
 
     depends_on = [
@@ -260,14 +260,14 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_h
     allow_ip_spoofing = false
 
     primary_ip {
-        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[count.index].reserved_ip
+        reserved_ip = ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool[count.index].reserved_ip
     }
 
     depends_on = [
       module.vpc_subnets,
       ibm_is_security_group.sg,
       module.zone_bare_metal_esxi,
-      ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool
+      ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool
     ] 
 }
 
@@ -314,7 +314,7 @@ resource "ibm_is_bare_metal_server_network_interface_allow_float" "zone_vcf_wl_h
     subnet = local.subnets_map.infrastructure["wl-tep"].subnet_id
     vlan = var.wl_tep_vlan_id
 
-    name   = "vlan-nic-wl-vsan-pool-${format("%03s", count.index)}"
+    name   = "vlan-nic-wl-tep-pool-${format("%03s", count.index)}"
     security_groups = [ibm_is_security_group.sg["tep"].id]
     allow_ip_spoofing = false
 
@@ -392,17 +392,17 @@ locals {
     vmot     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
     vsan     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
     tep      = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
-    wl-vmot  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool[*].address : [] : []
-    wl-vsan  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool[*].address : [] : []
-    wl-tep   = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[*].address : [] : [] 
+    #wl-vmot  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool[*].address : [] : []
+    #wl-vsan  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool[*].address : [] : []
+    #wl-tep   = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[*].address : [] : [] 
   }
 }
 
 locals {
   vcf_pool_ip_lists_wl = {
-    vmot     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
-    vsan     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
-    tep      = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
+    #vmot     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vmot_pool[*].address : []
+    #vsan     = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_vsan_pool[*].address : []
+    #tep      = var.enable_vcf_mode ? ibm_is_subnet_reserved_ip.zone_vcf_tep_pool[*].address : []
     wl-vmot  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vmot_pool[*].address : [] : []
     wl-vsan  = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_vsan_pool[*].address : [] : []
     wl-tep   = var.enable_vcf_mode ? var.vcf_architecture == "standard" ? ibm_is_subnet_reserved_ip.zone_vcf_wl_tep_pool[*].address : [] : [] 
